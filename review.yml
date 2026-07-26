@@ -1,0 +1,404 @@
+aid: twentyci
+name: TwentyCi
+review:
+  question: Does TwentyCi expose a real, reachable public API surface, and what is
+    its RESO posture and access gate?
+  answer: partial
+  date: '2026-07-26'
+  reviewer: API Evangelist
+  tier: proptech-data
+  homeMarket: United Kingdom
+  summary: |
+    TwentyCi runs a genuine, live, publicly readable API documentation portal at
+    https://api.twentyci.co.uk/documentation describing roughly 57 operations across
+    eight product families of the TwentyAPI v2 REST API. The documentation is real
+    and harvestable. The DATA is not open: every endpoint under
+    https://api.twentyci.co.uk/api/v2 returns HTTP 401 "Unauthenticated." without a
+    TwentyCi-issued OAuth 2.0 bearer token, there is no signup or registration route,
+    no published pricing, and no free tier. Credentials are issued commercially
+    through a sales conversation. RESO is entirely absent, which is the expected and
+    honest answer for a United Kingdom provider.
+
+# ---------------------------------------------------------------------------
+# THE SECTOR BLOCK: certification is not reachability
+# ---------------------------------------------------------------------------
+sectorPosture:
+  homeMarket: United Kingdom
+
+  reso:
+    posture: >-
+      No RESO reference of any kind. TwentyCi is a UK provider in a market with no
+      MLS and no RESO regime; property identity is UPRN, not a RESO UPI.
+    certified: false
+    certificationType: none
+    dataDictionaryVersion: null
+    webApiCertified: false
+    directoryEvidence: >-
+      No RESO certification directory listing was sought or found for TwentyCi, and
+      none would be expected: RESO certification is administered in the United States
+      under NAR/MLS governance and TwentyCi operates only in the United Kingdom. The
+      UK has no MLS, no NAR-equivalent mandate, and no industry body issuing a
+      machine-readable listing contract.
+    evidenceProbed:
+      - probe: Case-insensitive word-boundary grep for "RESO" across TwentyCi's entire
+          published documentation corpus (247,074 bytes, 66 nodes)
+        result: 0 matches. The 33 substring hits for "reso" are all the English words
+          "resource" (19) and "resources" (14).
+      - probe: Grep for "OData", "$metadata", "Data Dictionary", "Universal Property
+          Identifier", "UPI", "IDX", "VOW", "MLS" across the same corpus
+        result: 0 matches for every term.
+      - probe: GET https://api.twentyci.co.uk/$metadata
+        result: HTTP 404. No OData metadata document is served; TwentyAPI is plain
+          JSON REST, not OData.
+    ukEquivalentIdentifier: >-
+      Where a RESO-certified US system would carry a Universal Property Identifier,
+      TwentyAPI carries the UPRN - the Unique Property Reference Number issued through
+      Ordnance Survey / GeoPlace and the de facto national property key in the UK.
+      "UPRN" appears 75 times in TwentyCi's documentation corpus and is the primary
+      path parameter across the Properties family (GET /properties/{uprn},
+      GET /properties/{uprn}/plannings, GET /{uprn}/likely-to-sell). TwentyCi's own
+      glossary defines it as "a digital fingerprint for a property". This is the
+      structural counterpart to a UPI, but it is a government-issued addressing key,
+      not an industry-mandated listing contract.
+
+  accessGate:
+    gate: partner-only
+    gated: true
+    selfServeSignup: false
+    freeTier: false
+    publishedPricing: false
+    whatADeveloperMustDo: >-
+      Contact TwentyCi sales and enter a commercial data agreement. TwentyCi then
+      issues four secrets - a client_id, a client_secret, a username and a password -
+      which the developer exchanges at POST https://api.twentyci.co.uk/oauth/token for
+      a bearer token. There is no self-service registration form, no API key request
+      form, no application-approval workflow published, and no MLS, board, association
+      or licensing body to join. The DOMUS product page routes every visitor to a
+      "Contact Us" button; it publishes no licence text, no terms of data use and no
+      rate card. Nothing about the gate is documented as a signable agreement - it is
+      a sales-led partnership, which is why this is classified partner-only rather
+      than licence-agreement or application-approval.
+    evidenceProbed:
+      - url: https://api.twentyci.co.uk/api/v2/properties
+        status: 401
+        note: 'Anonymous GET returns {"message":"Unauthenticated.","error":{"status":true,"messages":[]}}.
+          Confirms the data plane is closed.'
+      - url: https://api.twentyci.co.uk/register
+        status: 404
+      - url: https://api.twentyci.co.uk/signup
+        status: 404
+      - url: https://api.twentyci.co.uk/sign-up
+        status: 404
+      - url: https://api.twentyci.co.uk/pricing
+        status: 404
+      - url: https://api.twentyci.co.uk/plans
+        status: 404
+      - url: https://www.twentyci.co.uk/developers
+        status: 404
+      - url: https://www.twentyci.co.uk/api
+        status: 404
+      - url: https://www.twentyci.co.uk/products-services/domus-property-database/
+        status: 200
+        note: >-
+          Publishes three delivery methods - "You can receive DOMUS via a secure data
+          transfer (SFTP)", "DOMUS is also accessible through a range of APIs which
+          allow you to retrieve details of a specific property at a point of need",
+          and a SaaS search UI. Names no endpoint, no developer portal and no terms.
+          Call to action is Contact Us.
+    documentationIsOpenEvenThoughDataIsNot: >-
+      An important split. The developer DOCUMENTATION is genuinely public: the React /
+      Markdoc single-page app at https://api.twentyci.co.uk/documentation is backed by
+      GET https://api.twentyci.co.uk/api/documentation/markdocs, which returns HTTP 200
+      and the complete 66-node documentation tree as JSON with no authentication
+      whatsoever. The SPA calls a separate GET /api/documentation/auth (HTTP 401
+      anonymously) purely to toggle authoring UI - it does not gate reading. So a
+      developer can read every endpoint, parameter and example without an account, and
+      cannot call a single one of them.
+
+  openData:
+    hasOpenData: false
+    note: >-
+      TwentyCi publishes no open, unlicensed, publicly callable dataset. Everything it
+      sells is proprietary aggregation. This is worth stating precisely because the UK
+      market DOES have a real open-government property data layer - HM Land Registry
+      Price Paid Data and ownership data under the Open Government Licence, and
+      Ordnance Survey open products including the UPRN addressing layer via
+      OS Open UPRN / GeoPlace. TwentyCi consumes and enriches from that public layer
+      (its entire property identity model is UPRN-keyed, and it advertises "over 450
+      core data sources"), then resells the result under commercial terms. The open
+      data in this sector belongs to the UK public sector, not to TwentyCi.
+    freeArtifacts:
+      - what: TwentyAPI documentation corpus
+        url: https://api.twentyci.co.uk/api/documentation/markdocs
+        status: 200
+        note: Free to read, but it is documentation, not data.
+      - what: Property & Homemover Report
+        url: https://www.twentyci.co.uk/property-homemover-report/
+        note: Periodic free market report - a marketing publication, not an open dataset
+          and not machine-readable.
+
+  authModel:
+    scheme: OAuth 2.0 bearer token
+    tokenEndpoint: https://api.twentyci.co.uk/oauth/token
+    tokenEndpointConfirmed: >-
+      GET https://api.twentyci.co.uk/oauth/token returned HTTP 405 with
+      {"message":"The GET method is not supported for route oauth/token. Supported
+      methods: POST."} - independent confirmation the route exists and is POST-only.
+    grant: >-
+      Resource-owner password credentials. The documented request body carries
+      client_id, client_secret, username, password, grant_type=password and scope=*.
+    documentedFlowLabel: >-
+      TwentyCi's own security-scheme table labels this "OAuth2" with "OAuth2 Flow:
+      Implicit". That label contradicts the request body it documents on the same
+      page, which is a password grant. Both facts are recorded rather than reconciled;
+      the harvested OpenAPI models it as the password flow because that is what the
+      documented request actually performs.
+    scopes:
+      - value: '*'
+        note: The only scope value TwentyCi publishes. No granular scope vocabulary exists.
+    tokenLifetime: expires_in 1296000 seconds (15 days) in the documented example, with
+      a refresh_token returned alongside.
+    headerUsage: 'Authorization: Bearer <token-key>, with Content-Type: application/json
+      and Accept: application/json.'
+    openidConnect:
+      url: https://api.twentyci.co.uk/.well-known/openid-configuration
+      status: 404
+      note: No OpenID Connect discovery document is served. Fetched anonymously.
+    backingStack: >-
+      Response shapes and error envelopes are consistent with Laravel Passport
+      (route-not-found and method-not-allowed messages are Laravel's verbatim
+      wording). Noted as an observation, not as a TwentyCi claim.
+
+# ---------------------------------------------------------------------------
+findings:
+  developerPortal:
+    url: https://api.twentyci.co.uk/documentation
+    status: 200
+    confirmed: true
+    type: React / create-react-app single-page app rendering Markdoc content
+    note: >-
+      https://api.twentyci.co.uk/ redirects (HTTP 200 after redirect) to
+      /documentation. The host is a catch-all SPA - any unknown path under it returns
+      the same 629-byte index.html with HTTP 200, so path probes against this host
+      must be content-verified, not status-verified. /documentation/openapi.json and
+      /docs both "returned 200" but served the SPA shell, not JSON. Both were
+      discarded as false positives.
+  rootURL: https://api.twentyci.co.uk/api/v2
+  rootURLEvidence: >-
+    Published verbatim in the TwentyAPI Overview page under a "Root URL" box.
+    GET https://api.twentyci.co.uk/api/v2 itself returns HTTP 404
+    ("The route api/v2 could not be found.") - there is no index resource - while
+    GET https://api.twentyci.co.uk/api/v2/properties returns HTTP 401, confirming the
+    prefix is live and gated.
+  advertisedSpecIsMissing:
+    url: https://api.twentyci.co.uk/docs/v2/spec.json
+    status: 404
+    note: >-
+      This is the headline contract finding. TwentyCi's Overview page states "We have
+      developed this API collection with the ability to download it's specification,
+      click here to download it" and links to this URL. It returns an nginx HTTP 404.
+      Variants probed and also 404: /docs/spec.json, /docs/v1/spec.json,
+      /api/v2/spec.json, /api/documentation/spec, /api/documentation/openapi,
+      /api/documentation/spec.json, /swagger.json, /openapi.json, /swagger/v1/swagger.json,
+      /api-docs. TwentyCi therefore ADVERTISES a machine-readable contract and does
+      not serve one.
+  machineReadableContractHarvested: true
+  specsHarvested: 2
+  harvestMethod: >-
+    Because no provider-published spec is served, two OpenAPI 3.1 documents were
+    derived by API Evangelist from TwentyCi's own public documentation corpus. Every
+    path, method, parameter name, parameter type and required flag is transcribed
+    verbatim from the corpus's own {% route %} and {% param %} declarations. Nothing
+    was invented. Response schemas beyond HTTP status codes are deliberately NOT
+    modelled, because TwentyCi does not publish them in machine-readable form. Both
+    documents carry x-provenance with providerPublished:false and both pass Redocly
+    lint with zero errors.
+  operationsDocumented: 57
+  productFamilies:
+    - Properties (property record, detail, attributes, imagery, transactions,
+      transport links, planning, floor plans, comparables, likely-to-sell, and the
+      AVM valuation endpoint)
+    - Agent Performance (sales and rental brand benchmarking - SSTC, new instructions,
+      exchange, PIPA, days-to-SSTC, let-agreed, time-to-let, let ratios)
+    - Trigger Information (home-mover transaction lifecycle events)
+    - Categories (property attribute vocabulary)
+    - Address Match (partial address matching)
+    - Schools (nearby schools by postcode)
+    - UK Housing Market Metrics (new instructions, SSTCs, PCDs by timeframe)
+    - This is Now (retail propensity to buy goods - local and national)
+  segmentationNote: >-
+    TwentyCi's segmentation is data-supply-shaped, not transaction-shaped. There is no
+    listings/IDX surface, no offers or contracts surface, no escrow or title surface,
+    no tenancy management surface, and no payments surface - because in the UK those
+    live with the portals (Rightmove, Zoopla), the agency CRMs (Reapit, Alto, Street,
+    Apex27), HM Land Registry and the conveyancers. What TwentyCi sells through an API
+    is property RECORDS, VALUATION and market/agent ANALYTICS.
+  absences:
+    webhooks: >-
+      None. No webhook, callback, subscription or event-delivery mechanism appears
+      anywhere in the documentation corpus. Trigger Information is polled, not pushed,
+      despite "trigger" being event language.
+    asyncapi: None. No WebSocket, SSE, streaming or message-broker surface documented.
+    graphql: None documented.
+    sdks: >-
+      None. github.com/twentyci exists and is a genuine GitHub Organization (name
+      "TwentyCI", blog https://www.twentyci.co.uk) but has 0 public repositories. No
+      client library is published in any language.
+    postmanCollection: >-
+      None published. Postman is mentioned three times in the corpus, but only as
+      advice: "At TwentyCi, before intergrating the API endpoints into your code, we
+      suggest to use a third-party software to test this. We use a program called
+      Postman". TwentyCi does not ship a collection.
+    rateLimits: None documented. HTTP 503 is described generically as "overloaded with
+      requests" but no quota, limit or retry policy is published.
+    sandbox: None. No test environment, mock server or sample credentials.
+    changelog: None. The corpus is versioned only as "V2"; no release notes exist.
+    statusPage: None found.
+    mcpServer: None.
+  documentationQualityNotes:
+    - The corpus contains real typographical and structural defects, transcribed
+      verbatim rather than corrected. The AVM route is published as
+      "api/v2/propertiesavm2/{property}" (missing a slash) and Likely To Sell as
+      "api/v2/{uprn}/likely-to-sell" (no resource segment).
+    - The page "Obtain a Specific Trigger" declares the route "/categories", which
+      contradicts its own section index route "/trigger/{trigger}" - a copy-paste
+      defect.
+    - The page "National Search" declares the same route as "Local Search"
+      (/api/v2/this-is-now/search) rather than /this-is-now/search-national.
+    - Six routes are listed on a section index page with no dedicated parameter
+      documentation at all (/properties/{uprn}/floor-plans, /trigger/{trigger},
+      /this-is-now/search-national, /rentals/agent-performance/brand/time-to-let,
+      /rentals/agent-performance/brand/time-to-let-all-brands,
+      /rentals/agent-performance/brand/let-percentage-all-brands). They are recorded
+      in the harvested OpenAPI with zero asserted parameters and an explicit note.
+    - Route prefixes are inconsistent throughout - some declared relative
+      (/properties/{property}/details), some absolute (/api/v2/properties/{property}/image),
+      some fully qualified. Normalised against the published Root URL.
+    - The Overview copy is generic marketing boilerplate that does not match the
+      product ("weather forecasts, financial data, or the latest trends"), suggesting
+      an unedited template.
+
+httpProbeLog:
+  - {url: 'https://twentyci.co.uk/', status: 200, note: redirects to www}
+  - {url: 'https://www.twentyci.co.uk/', status: 200}
+  - {url: 'https://developer.twentyci.co.uk/', status: 000, note: DNS does not resolve}
+  - {url: 'https://developers.twentyci.co.uk/', status: 000, note: DNS does not resolve}
+  - {url: 'https://docs.twentyci.co.uk/', status: 000, note: DNS does not resolve}
+  - {url: 'https://api.twentyci.co.uk/', status: 200, note: redirects to /documentation}
+  - {url: 'https://api.twentyci.co.uk/documentation', status: 200, contentType: text/html,
+     bytes: 629, note: SPA shell}
+  - {url: 'https://api.twentyci.co.uk/documentation/static/js/main.f51d7aa0.js', status: 200,
+     bytes: 977630, note: 'JS bundle; source of the documentation API base URL
+       https://api.twentyci.co.uk/api/documentation'}
+  - {url: 'https://api.twentyci.co.uk/api/documentation/markdocs', status: 200,
+     contentType: application/json, bytes: 247074, note: 'PUBLIC full documentation
+       corpus, 66 nodes - the harvest source'}
+  - {url: 'https://api.twentyci.co.uk/api/documentation/markdoc-templates', status: 200,
+     contentType: application/json, note: authoring templates, also public}
+  - {url: 'https://api.twentyci.co.uk/api/documentation/auth', status: 401,
+     note: '{"message":"Unauthenticated."} - authoring check only, does not gate reading'}
+  - {url: 'https://api.twentyci.co.uk/api/documentation/user-reports', status: 405,
+     note: POST-only feedback endpoint}
+  - {url: 'https://api.twentyci.co.uk/oauth/token', status: 405, note: POST-only; confirms
+      the token route exists}
+  - {url: 'https://api.twentyci.co.uk/api/v2', status: 404}
+  - {url: 'https://api.twentyci.co.uk/api/v2/properties', status: 401, note: '{"message":"Unauthenticated."}'}
+  - {url: 'https://api.twentyci.co.uk/docs/v2/spec.json', status: 404, note: ADVERTISED
+      spec download, not served}
+  - {url: 'https://api.twentyci.co.uk/docs/spec.json', status: 404}
+  - {url: 'https://api.twentyci.co.uk/docs/v1/spec.json', status: 404}
+  - {url: 'https://api.twentyci.co.uk/api/v2/spec.json', status: 404}
+  - {url: 'https://api.twentyci.co.uk/api/documentation/spec', status: 404}
+  - {url: 'https://api.twentyci.co.uk/api/documentation/openapi', status: 404}
+  - {url: 'https://api.twentyci.co.uk/openapi.json', status: 404}
+  - {url: 'https://api.twentyci.co.uk/swagger.json', status: 404}
+  - {url: 'https://api.twentyci.co.uk/swagger/v1/swagger.json', status: 404}
+  - {url: 'https://api.twentyci.co.uk/api-docs', status: 404}
+  - {url: 'https://api.twentyci.co.uk/$metadata', status: 404, note: no OData metadata
+      document}
+  - {url: 'https://api.twentyci.co.uk/.well-known/openid-configuration', status: 404}
+  - {url: 'https://api.twentyci.co.uk/register', status: 404}
+  - {url: 'https://api.twentyci.co.uk/signup', status: 404}
+  - {url: 'https://api.twentyci.co.uk/sign-up', status: 404}
+  - {url: 'https://api.twentyci.co.uk/pricing', status: 404}
+  - {url: 'https://api.twentyci.co.uk/plans', status: 404}
+  - {url: 'https://api.twentyci.co.uk/documentation/openapi.json', status: 200,
+     note: 'FALSE POSITIVE - SPA catch-all returned the 629-byte index.html, not JSON.
+       Discarded.'}
+  - {url: 'https://api.twentyci.co.uk/docs', status: 200, note: 'FALSE POSITIVE - SPA
+      catch-all. Discarded.'}
+  - {url: 'https://www.twentyci.co.uk/developers', status: 404}
+  - {url: 'https://www.twentyci.co.uk/api', status: 404}
+  - {url: 'https://www.twentyci.co.uk/docs', status: 404}
+  - {url: 'https://www.twentyci.co.uk/openapi.json', status: 404}
+  - {url: 'https://www.twentyci.co.uk/swagger.json', status: 404}
+  - {url: 'https://www.twentyci.co.uk/products-services/twenty-api', status: 404}
+  - {url: 'https://www.twentyci.co.uk/products-services/domus-property-database/', status: 200}
+  - {url: 'https://www.twentyci.co.uk/contact-us', status: 200}
+  - {url: 'https://www.twentyci.co.uk/feed/', status: 200, contentType: application/rss+xml}
+  - {url: 'https://news.twentyci.co.uk/blog', status: 200}
+  - {url: 'https://www.linkedin.com/company/twentyci', status: 200}
+  - {url: 'https://github.com/twentyci', status: 200, note: 'real Organization, 0 public repos'}
+  - {url: 'https://www.twentyea.co.uk/', status: 200, note: sister brand for estate agents}
+  - {url: 'https://www.twentyci.co.uk/favicon.ico', status: 200, contentType: image/x-icon,
+     bytes: 58482}
+
+artifacts:
+  - path: openapi/twentyci-twentyapi-openapi.json
+    type: OpenAPI
+    version: 3.1.0
+    operations: 57
+    tags: 8
+    derived: true
+    providerPublished: false
+    source: https://api.twentyci.co.uk/api/documentation/markdocs
+    sourceStatus: 200
+    fetchDate: '2026-07-26'
+    validated: 'Redocly lint: 0 errors (3 warnings: 2 no-ambiguous-paths reflecting
+      TwentyCi''s own overlapping routes, 1 info-license). JSON parses.'
+  - path: openapi/twentyci-twentyapi-oauth-openapi.json
+    type: OpenAPI
+    version: 3.1.0
+    operations: 1
+    derived: true
+    providerPublished: false
+    source: https://api.twentyci.co.uk/api/documentation/markdocs
+    sourceStatus: 200
+    fetchDate: '2026-07-26'
+    validated: 'Redocly lint: 0 errors (1 warning: info-license). JSON parses.'
+
+sources:
+  - url: https://api.twentyci.co.uk/documentation
+    type: Documentation
+    note: Live TwentyAPI documentation portal, publicly readable, no login.
+  - url: https://api.twentyci.co.uk/api/documentation/markdocs
+    type: DocumentationCorpus
+    note: The 66-node JSON corpus that backs the portal. Primary harvest source.
+  - url: https://www.twentyci.co.uk/
+    type: Website
+    note: '"31.5 million addresses", "30 billion data points", "over 450 primary
+      sources", UK only.'
+  - url: https://www.twentyci.co.uk/products-services/domus-property-database/
+    type: Documentation
+    note: DOMUS delivery methods - SFTP, API/DaaS, SaaS. ~32.4m properties, 350+ data
+      points, "updated daily from over 4,500 different data sources".
+  - url: https://www.twentyci.co.uk/products-services/automated-valuation-model-avm/
+    type: Documentation
+    note: The AVM product behind the TwentyAPI valuation endpoint.
+
+conclusion: |
+  Classified built. TwentyCi has a real, live, publicly readable developer portal and
+  a real 57-operation REST API with a real OAuth 2.0 token endpoint - all of which was
+  captured. What it does not have is reachability: the data plane is 401 to everyone
+  without a commercially issued credential, and the specification it advertises as
+  downloadable is a 404.
+
+  For the sector question, TwentyCi is the clean UK counter-example. Where a US real
+  estate provider might be RESO-certified but unreachable, TwentyCi is the inverse
+  shape: no certification exists at all because no industry body mandates one in the
+  UK, yet the provider still publishes better human documentation than many certified
+  US systems - and still gates the data just as hard. Certification and reachability
+  are independent axes, and the UK proves it from the other direction. The genuinely
+  open layer in this market is public-sector (HM Land Registry Price Paid, Ordnance
+  Survey / GeoPlace UPRN) and TwentyCi is a commercial enrichment tier sitting on top
+  of it, keyed on the government's own identifier.

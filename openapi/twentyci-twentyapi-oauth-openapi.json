@@ -1,0 +1,167 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TwentyAPI (TwentyCi) OAuth 2.0 Token API",
+    "version": "v2",
+    "summary": "Token issuance endpoint for TwentyCi's TwentyAPI.",
+    "description": "The single documented authentication endpoint for TwentyCi's TwentyAPI. A caller exchanges a client_id, client_secret, username and password - all issued by TwentyCi under a commercial data agreement, not by self-serve signup - for a bearer access token and refresh token. The access token is then presented as 'Authorization: Bearer <token-key>' against https://api.twentyci.co.uk/api/v2.\n\nTwentyCi's documentation labels the security scheme 'OAuth2' with an 'Implicit' flow, while the request body it documents is a resource-owner password-credentials grant (grant_type=password). Both facts are recorded here rather than reconciled. The only documented scope value is '*'. No OpenID Connect discovery document is served: https://api.twentyci.co.uk/.well-known/openid-configuration returned HTTP 404 on 2026-07-26.\n\nPROVENANCE: harvested by API Evangelist on 2026-07-26 from TwentyCi's own published documentation node 'Authorisation for API Requests' in the public JSON corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200). The endpoint's existence was independently confirmed: GET https://api.twentyci.co.uk/oauth/token returned HTTP 405 with {\"message\":\"The GET method is not supported for route oauth/token. Supported methods: POST.\"}. This is an API Evangelist derivation, not a provider-published artifact.",
+    "contact": {
+      "name": "TwentyCi",
+      "url": "https://www.twentyci.co.uk/contact-us/"
+    }
+  },
+  "externalDocs": {
+    "description": "Authorisation for API Requests",
+    "url": "https://api.twentyci.co.uk/documentation#authorisation-for-api-requests"
+  },
+  "servers": [
+    {
+      "url": "https://api.twentyci.co.uk",
+      "description": "TwentyAPI host."
+    }
+  ],
+  "x-provenance": {
+    "harvestedBy": "API Evangelist",
+    "harvestDate": "2026-07-26",
+    "derived": true,
+    "providerPublished": false,
+    "sources": [
+      {
+        "url": "https://api.twentyci.co.uk/api/documentation/markdocs",
+        "status": 200,
+        "note": "Node 'Authorisation for API Requests' documents the parameters and the success response body verbatim."
+      },
+      {
+        "url": "https://api.twentyci.co.uk/oauth/token",
+        "status": 405,
+        "note": "GET probe on 2026-07-26 confirms the route exists and accepts POST only."
+      },
+      {
+        "url": "https://api.twentyci.co.uk/.well-known/openid-configuration",
+        "status": 404,
+        "note": "No OpenID Connect discovery document is served."
+      }
+    ]
+  },
+  "tags": [
+    {
+      "name": "Authorisation",
+      "description": "Bearer-token issuance for TwentyAPI."
+    }
+  ],
+  "paths": {
+    "/oauth/token": {
+      "post": {
+        "operationId": "issueTwentyApiToken",
+        "summary": "Issue a TwentyAPI bearer token",
+        "tags": [
+          "Authorisation"
+        ],
+        "description": "Exchanges TwentyCi-issued credentials for a bearer access token. TwentyCi's documentation states: 'To ensure that the necessary fields are entered, one must include the Client ID, Client Secret, Username, Password, Grant Type (with a value set as password), and Scope (valid with an asterisk *) within the body of the request.'",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRequest"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token issued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                },
+                "example": {
+                  "token_type": "Bearer",
+                  "expires_in": 1296000,
+                  "access_token": "your_access_token",
+                  "refresh_token": "your_refresh_token"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TokenRequest": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "client_secret",
+          "username",
+          "password",
+          "grant_type"
+        ],
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "description": "Your Client ID, issued by TwentyCi."
+          },
+          "client_secret": {
+            "type": "string",
+            "description": "Client Secret, issued by TwentyCi."
+          },
+          "username": {
+            "type": "string",
+            "description": "Username for access to TwentyAPI."
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "description": "Password for the username."
+          },
+          "grant_type": {
+            "type": "string",
+            "const": "password",
+            "description": "Valid value: password."
+          },
+          "scope": {
+            "type": "string",
+            "description": "Valid value: *. Documented as nullable; * is the only value TwentyCi publishes."
+          }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "token_type": {
+            "type": "string",
+            "description": "Always 'Bearer' in the documented example."
+          },
+          "expires_in": {
+            "type": "integer",
+            "description": "Access-token lifetime in seconds; the documented example shows 1296000 (15 days)."
+          },
+          "access_token": {
+            "type": "string",
+            "description": "Send as 'Authorization: Bearer <token-key>'."
+          },
+          "refresh_token": {
+            "type": "string",
+            "description": "Refresh token."
+          }
+        }
+      }
+    }
+  }
+}

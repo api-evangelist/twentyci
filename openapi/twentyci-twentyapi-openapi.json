@@ -1,0 +1,4419 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TwentyAPI (TwentyCi) v2",
+    "version": "v2",
+    "summary": "UK residential property, valuation (AVM), transaction-trigger and agent-performance data from TwentyCi.",
+    "description": "TwentyAPI is TwentyCi's RESTful data-as-a-service API over the DOMUS UK residential property database. Properties are addressed by UPRN (Unique Property Reference Number), the UK national property identifier, rather than by any MLS or RESO identifier. Access is credentialed: an OAuth 2.0 password-grant token is minted at POST https://api.twentyci.co.uk/oauth/token using a client_id, client_secret, username and password issued by TwentyCi under a commercial data agreement. There is no self-serve developer signup.\n\nPROVENANCE: This document was harvested by API Evangelist on 2026-07-26 from TwentyCi's own published documentation corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200, application/json, 247,074 bytes), which is served publicly without authentication and backs the TwentyAPI documentation SPA at https://api.twentyci.co.uk/documentation. Every path, method, parameter name, parameter type and required flag below is transcribed from that corpus's own \"{% route %}\" and \"{% param %}\" declarations. Response schemas beyond HTTP status codes are NOT modelled, because TwentyCi does not publish them in machine-readable form. TwentyCi advertises a downloadable specification at https://api.twentyci.co.uk/docs/v2/spec.json, but that URL returned HTTP 404 on 2026-07-26; this document is an API Evangelist derivation, not a provider-published artifact.",
+    "contact": {
+      "name": "TwentyCi",
+      "url": "https://www.twentyci.co.uk/contact-us/"
+    }
+  },
+  "externalDocs": {
+    "description": "TwentyAPI documentation",
+    "url": "https://api.twentyci.co.uk/documentation"
+  },
+  "servers": [
+    {
+      "url": "https://api.twentyci.co.uk/api/v2",
+      "description": "TwentyAPI v2 root URL, as published in the TwentyAPI Overview."
+    }
+  ],
+  "x-provenance": {
+    "harvestedBy": "API Evangelist",
+    "harvestDate": "2026-07-26",
+    "derived": true,
+    "providerPublished": false,
+    "sources": [
+      {
+        "url": "https://api.twentyci.co.uk/api/documentation/markdocs",
+        "status": 200,
+        "contentType": "application/json",
+        "bytes": 247074,
+        "note": "Public, unauthenticated JSON documentation corpus (66 nodes) backing the TwentyAPI docs SPA."
+      },
+      {
+        "url": "https://api.twentyci.co.uk/documentation",
+        "status": 200,
+        "contentType": "text/html",
+        "note": "React/Markdoc single-page app shell; renders the corpus above."
+      },
+      {
+        "url": "https://api.twentyci.co.uk/docs/v2/spec.json",
+        "status": 404,
+        "note": "Specification download advertised in the TwentyAPI Overview page. NOT served."
+      }
+    ],
+    "anomalies": [
+      "TwentyCi advertises https://api.twentyci.co.uk/docs/v2/spec.json as a downloadable specification; it returned HTTP 404 on 2026-07-26. No provider-published OpenAPI exists.",
+      "Several documented route strings are irregular (e.g. \"api/v2/propertiesavm2/{property}\", \"api/v2/{uprn}/likely-to-sell\"). They are transcribed verbatim and flagged with x-documented-route-note rather than corrected.",
+      "The documentation page \"Obtain a Specific Trigger\" declares the route \"/categories\", which is inconsistent with its own section index route \"/trigger/{trigger}\".",
+      "Several routes are listed only on a section index page with no parameter documentation; they are included with no asserted parameters.",
+      "TwentyCi labels the security scheme OAuth2 with the \"Implicit\" flow while documenting a resource-owner password-credentials request body. Modelled as the password flow."
+    ]
+  },
+  "tags": [
+    {
+      "name": "Categories",
+      "description": "- Obtain a List of Categories for a Property - Obtain a Specific Categories for a Property"
+    },
+    {
+      "name": "Properties",
+      "description": "- Property Information by Pagination - Properties Information by UPRN - Properties Details by UPRN - Recent Property Sales in the Area - Similar properties for sale in the area - Average Property Values by Postcode - Searching Properties by Postcode and Radius - Searching Properties by Postcode and Address - Property Attributes - Property Attributes for a Given Category - Obtaining a Google Map UR"
+    },
+    {
+      "name": "Trigger Information",
+      "description": "- Obtain a Specific Trigger - Get Properties by Trigger Type - Get no UPRN Properties by Trigger Type - Trigger History"
+    },
+    {
+      "name": "Agent Performance",
+      "description": "- Agent Performance based on Sales Data - Agent Performance based on Rental Data"
+    },
+    {
+      "name": "Address Match",
+      "description": "- Partial Address Matching"
+    },
+    {
+      "name": "Schools",
+      "description": "- Nearby Schools by Postcode"
+    },
+    {
+      "name": "UK Housing Market Metrics",
+      "description": "- New Instructions, SSTC's and PCD's for a Specific Timeframe"
+    },
+    {
+      "name": "This is Now | Retail Propensity To Buy Goods",
+      "description": "- Local Search - National Search"
+    }
+  ],
+  "security": [
+    {
+      "twentyapiOAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "twentyapiOAuth": {
+        "type": "oauth2",
+        "description": "OAuth 2.0 bearer token. TwentyCi's documentation labels the scheme \"OAuth2\" with flow \"Implicit\" but describes a resource-owner password-credentials exchange: POST /oauth/token with client_id, client_secret, username, password, grant_type=password and scope=* returns {token_type: Bearer, expires_in, access_token, refresh_token}. The token is then sent as \"Authorization: Bearer <token-key>\". Modelled here as the password flow because that is what the documented request body performs. No OpenID Connect discovery document is served (/.well-known/openid-configuration returned 404).",
+        "flows": {
+          "password": {
+            "tokenUrl": "https://api.twentyci.co.uk/oauth/token",
+            "refreshUrl": "https://api.twentyci.co.uk/oauth/token",
+            "scopes": {
+              "*": "Full access; the only scope value documented by TwentyCi."
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/categories": {
+      "get": {
+        "operationId": "obtain_a_list_of_categories_for_a_property",
+        "summary": "Obtain a List of Categories for a Property",
+        "tags": [
+          "Categories"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#obtain-a-list-of-categories-for-a-property"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/categories",
+        "description": "The /categories endpoint in TwentyAPI allows developers to retrieve essential property category data, emphasizing efficient organisation and seamless API integration. This endpoint's output, including Category ID and Category information, proves invaluable for streamlined communication and improved development processes.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "The page number of the paginated result set you wish to retrieve",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/categories/{category}": {
+      "get": {
+        "operationId": "obtain_a_specific_category_for_a_property",
+        "summary": "Obtain a Specific Category for a Property",
+        "tags": [
+          "Categories"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#obtain-a-specific-category-for-a-property"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/categories/{category}",
+        "description": "The /categories/{category} in TwentyAPI is designed to return a specific category and its relevant data using information from the output of /categories. This targeted data retrieval enhances efficiency, optimizes performance, and supports modular development.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "ID of category to fetch",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{uprn}": {
+      "get": {
+        "operationId": "property_information_by_uprn",
+        "summary": "Property Information by UPRN",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#property-information-by-uprn"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{uprn}",
+        "description": "The properties/{uprn} endpoint in TwentyAPI retrieves results by using a specific UPRN (Unique Property Reference Number) provided in the URL. This endpoint offers detailed information, including the full address, postcode, coordinates, AVM (Automated Valuation Model) price, AVM minimum and maximum prices, and the confidence interval of the model on the specified property.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "This is the UPRN for the property that the infromation is required for.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "uprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/details": {
+      "get": {
+        "operationId": "property_details_by_uprn",
+        "summary": "Property Details by UPRN",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#property-details-by-uprn"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{property}/details",
+        "description": "The /properties/{uprn}/details endpoint in TwentyAPI provides detailed property information by utilising a specific UPRN - Unique Property Reference Number passed through the URL. This includes the full address, postcode, coordinates, and a wealth of property details such as bedrooms, garden presence, parking availability, area information, infrastructure details, running costs, and demographics.",
+        "parameters": [
+          {
+            "name": "uprn",
+            "in": "query",
+            "required": true,
+            "description": "The UPRN of the property in which the details are required for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/recent-sale-in-the-area": {
+      "get": {
+        "operationId": "recent_property_sales_in_the_area",
+        "summary": "Recent Property Sales in the Area",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#recent-property-sales-in-the-area"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{property}/recent-sale-in-the-area",
+        "description": "The /properties/{property}/recent-sale-in-the-area endpoint in TwentyAPI is designed to retrieve information about similar properties that have been sold within the last 12 months in the vicinity of a property by utilising a specific UPRN - Unique Property Reference Number. This information is based on factors such as Postcode District, Property Type, and the number of bedrooms. It is recommended to use the perpage parameter followed by an integer to limit the number of properties within the payload and prevent timeouts.",
+        "parameters": [
+          {
+            "name": "uprn",
+            "in": "query",
+            "required": true,
+            "description": "This is the UPRN of the property in which the details are required for.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "description": "The amount of records that you want to limit the payload to provide",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/for-sale-in-the-area": {
+      "get": {
+        "operationId": "similar_properties_for_sale_in_area",
+        "summary": "Similar Properties For Sale in Area",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#similar-properties-for-sale-in-area"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{property}/for-sale-in-the-area",
+        "description": "The /properties/{uprn}/for-sale-in-the-area endpoint in TwentyAPI is designed to call similar properties currently for sale in the local area of a specified property. This is based on Postcode District, Property Type, and bedrooms.",
+        "parameters": [
+          {
+            "name": "uprn",
+            "in": "query",
+            "required": true,
+            "description": "This is the UPRN of the property in which the details are required for.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/area-value-price": {
+      "post": {
+        "operationId": "average_property_values_by_postcode",
+        "summary": "Average Property Values by Postcode",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#average-property-values-by-postcode"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/area-value-price",
+        "description": "Description The /properties/area-value-price endpoint in TwentyAPI is designed to retrieve prices generated by an AVM (Automated Valuation Model) for the postcode sector. The results include the average price for all properties and individual averages for different property types within the specified area.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postcode": {
+                    "type": "string",
+                    "description": "The postcode for which the Property Values are to be obtained. Example: MK5 8FT"
+                  },
+                  "page": {
+                    "type": "integer",
+                    "description": "The page number of the paginated result set you wish to retrieve"
+                  }
+                },
+                "required": [
+                  "postcode"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/propertiesavm2/{property}": {
+      "post": {
+        "operationId": "valuation_of_property_by_uprn_avm",
+        "summary": "Valuation of Property by UPRN | AVM",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#valuation-of-property-by-uprn-avm"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "api/v2/propertiesavm2/{property}",
+        "description": "The TwentyCi Decision Automated Valuation Model (AVM) endpoint is a Data as a Service (DaaS) API that provides an AVM value range and accuracy for a single property at a point of need. It can be used to obtain the current AVM value and accuracy rating of a property, enabling users to perform on-demand property valuations efficiently. This endpoint provides valuable information for making informed decisions in property transactions, risk management, and market analysis. The data output includes the property address, UPRN, completion date, completion price, AVM value, AVM accuracy, and property attributes such as type, size, and location.",
+        "parameters": [
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "description": "The UPRN for which the property valuation is required. Example: 38288388",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer",
+                    "description": "The page number of the paginated result set you wish to retrieve"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/area-search": {
+      "post": {
+        "operationId": "searching_properties_by_postcode_and_radius",
+        "summary": "Searching Properties by Postcode and Radius",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-radius"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/area-search",
+        "description": "The /properties/area-search endpoint in TwentyAPI is designed to retrieve AVM (Automated Valuation Model) prices for properties within a specified radius in miles from a given location. The results include the average price for all properties and individual averages for different property types.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postcode": {
+                    "type": "string",
+                    "description": "The postcode for which the centre point would be for the search area. Example: MK5 8FT"
+                  },
+                  "radius": {
+                    "type": "integer",
+                    "description": "This is the number of miles a property can be from the given postcode. Example: 5"
+                  },
+                  "page": {
+                    "type": "integer",
+                    "description": "The page number of the paginated result set you wish to retrieve"
+                  }
+                },
+                "required": [
+                  "postcode"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/postcode-search": {
+      "post": {
+        "operationId": "searching_properties_by_postcode_and_address",
+        "summary": "Searching Properties by Postcode and Address",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-address"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/properties/postcode-search",
+        "description": "The /properties/postcode-search endpoint in TwentyAPI is designed to retrieve properties matching a specific postcode and address. The results include the average price for all properties and individual averages for different property types within the specified postcode.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "postcode": {
+                    "type": "string",
+                    "description": "The postcode for which the centre point would be for the search area. Example: MK5 8FT"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "The first line of the address to indentify the property Example: Unit 8"
+                  },
+                  "page": {
+                    "type": "integer",
+                    "description": "The page number of the paginated result set you wish to retrieve"
+                  }
+                },
+                "required": [
+                  "postcode",
+                  "address"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/properties/{property}/category/_all": {
+      "get": {
+        "operationId": "property_attributes",
+        "summary": "Property Attributes",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#property-attributes"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{property}/category/_all",
+        "description": "The /properties/{uprn}/category/all endpoint in TwentyAPI is designed to retrieve various property attributes for a given UPRN (Unique Property Reference Number). Leveraging this API for obtaining property attributes can streamline processes, improve efficiency, and enhance the overall quality of service provided by estate agents. It enables them to stay competitive in the real estate market by leveraging technology for better data management and decision-making.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "This is the UPRN of the property in which the details are required for.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/image": {
+      "get": {
+        "operationId": "obtaining_a_google_maps_url_for_a_property",
+        "summary": "Obtaining a Google Maps URL for a Property",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#obtaining-a-google-maps-url-for-a-property"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/properties/{property}/image",
+        "description": "The /properties/{property}/image endpoint in TwentyAPI is designed to retrieve the specific Street View image from Google Maps for a property.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "UPRN of property to use to generate the Google Maps URL",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/transactions": {
+      "get": {
+        "operationId": "obtain_all_transactions_for_property_via_uprn",
+        "summary": "Obtain all Transactions for Property via UPRN",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#obtain-all-transactions-for-property-via-uprn"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/properties/{property}/transactions",
+        "description": "The /properties/{property}/transactions endpoint in TwentyAPI is designed to retrieve all transactions associated with a property, displaying its pricing history. This lightweight endpoint provides information on transaction values and dates.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "ID of property to fetch",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/transport-links": {
+      "get": {
+        "operationId": "obtain_transport_links_near_a_property",
+        "summary": "Obtain Transport Links near a Property",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#obtain-transport-links-near-a-property"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/properties/{property}/transport-links",
+        "description": "The /api/v2/properties/{property}/transport-links endpoint in TwentyAPI is designed to retrieve information about the nearest rail stations and airports in proximity to a property based on its UPRN (Unique Property Reference Number). This endpoint provides valuable insights into the property's accessibility and convenience for potential buyers. The data output includes key data elements such as the name of the rail station or airport, the distance from the UPRN, and the type of terminal (airport or rail). Purpose Objective 1: To assist developers in retrieving information about the nearest transportation hubs to a property, enhancing its marketability and appeal to potential buyers. Objective 2: To provide valuable insights into the convenience and accessibility of a property by highlighting its proximity to rail stations and airports. Use Case Scenario: A developer can use this endpoint to enhance property listings by showcasing the convenience of nearby transportation options, attracting potential buyers who prioritize accessibility. Scenario: By knowing the distance to rail stations and airports, developers can target specific buyer segments, such as commuters or frequent travellers, effectively increasing the property's marketability. Scenario: This endpoint enables developers to provide valuable information to clients about the lifestyle benefits of living near transportation hubs, aiding in the decision-making process for property purchases. Conclusion In summary, the /",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "UPRN of the property to fetch the data for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{uprn}/plannings": {
+      "get": {
+        "operationId": "obtain_planning_permission_data_near_a_property",
+        "summary": "Obtain Planning Permission Data near a Property",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#obtain-planning-permission-data-near-a-property"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/properties/{uprn}/plannings",
+        "description": "The /properties/{uprn}/plannings endpoint in TwentyAPI is designed to retrieve information about planning permissions associated with a property based on its Unique Property Reference Number (UPRN). This endpoint provides valuable insights into the property's planning history, which is essential for estate agents when selling properties. The data output includes key data elements such as Planning ID, Address, Received Date, and Decision. Purpose Full Picture of the Area: To assist developers in retrieving detailed information about planning permissions for properties, enabling estate agents to provide accurate and transparent information to potential buyers, enhancing trust and transparency in the sales process. Pricing Strategy: To empower estate agents with insights into the planning status of properties, facilitating value assessment, risk management, negotiation, and legal compliance throughout the sales process. Use Case Scenario: Significant Information for Vendors A developer can use this endpoint to retrieve planning permission details for a property, helping estate agents address buyer inquiries effectively and build trust by providing transparent information. Scenario: Advanced Marketing Strategy By leveraging the planning permission data retrieved from this endpoint, developers can assess the marketability of properties and negotiate favorable terms based on the property's planning status. Scenario: Legal Compilance This endpoint enables developers to ensure legal ",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "UPRN of property to fetch the data for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "uprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/{uprn}/likely-to-sell": {
+      "get": {
+        "operationId": "likely_to_sell",
+        "summary": "Likely To Sell",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#likely-to-sell"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "api/v2/{uprn}/likely-to-sell",
+        "description": "Likely To Sell (LTS) score for a property Returns the Likely To Sell percentile for a given UPRN. The score shows how likely a property is to sell compared to all other UK residential properties. Lower percentile = higher likelihood to sell. Example: 10 = top 10 percent most likely to sell 30 = top 30 percent most likely to sell",
+        "parameters": [
+          {
+            "name": "uprn",
+            "in": "path",
+            "required": true,
+            "description": "The UPRN of the property in which the details are required for",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/price-per-square/comparables": {
+      "get": {
+        "operationId": "comparables",
+        "summary": "Comparables",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#comparables"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "api/v2/price-per-square/comparables",
+        "description": "The /price-per-square/comparables endpoint in TwentyAPI is designed to return comparable property transactions and calculated price-per-square-foot (PPSF) metrics based on postcode and property characteristics.",
+        "parameters": [
+          {
+            "name": "postcode",
+            "in": "query",
+            "required": true,
+            "description": "The postcode used as the centre point for comparable selection. Example: AB12 3CD",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_type",
+            "in": "query",
+            "required": false,
+            "description": "Property type of the comparable properties. Example: Terraced",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bedrooms",
+            "in": "query",
+            "required": false,
+            "description": "Number of bedrooms in the comparable properties. Example: 2",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "bathrooms",
+            "in": "query",
+            "required": false,
+            "description": "Number of bathrooms in the comparable properties. Example: 2",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "garage",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether the filtered properties should have a garage (1 = Yes, 0 = No).",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "driveway",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether the filtered properties should have a driveway (1 = Yes, 0 = No).",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "ensuite",
+            "in": "query",
+            "required": false,
+            "description": "Indicates whether the filtered properties should have an ensuite bathroom (1 = Yes, 0 = No).",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "energy_rating",
+            "in": "query",
+            "required": false,
+            "description": "Energy Performance Certificate rating filter. Multiple ratings can be supplied using a pipe separator (|). Example: C|A",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "floor_area_band",
+            "in": "query",
+            "required": false,
+            "description": "Predefined floor area band classification used to match similar-sized properties.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "eaa_or_rics",
+            "in": "query",
+            "required": false,
+            "description": "Defines the valuation methodology standard to apply. Example: EAA",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/trigger-type/{typeId}/properties": {
+      "get": {
+        "operationId": "get_properties_by_trigger_type",
+        "summary": "Get Properties by Trigger Type",
+        "tags": [
+          "Trigger Information"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#get-properties-by-trigger-type"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/trigger-type/{typeId}/properties",
+        "description": "The /trigger-type/{typeId}/properties endpoint in TwentyAPI is designed to retrieve properties with the same trigger type within a specific postcode over a defined day range between 7 and 30 days in the past. This endpoint provides valuable insights into recent transactions in the real estate industry, including sales prices, property types, and neighbourhood trends. Purpose Obtaining Transactional Data To assist developers in retrieving recent transaction data within a specific postcode area and timeframe, enabling real estate professionals to analyze market trends, determine property values, and provide informed guidance to clients. Strategic Marketing To empower real estate professionals with access to specific transaction records, facilitating client education, competitive advantage, networking opportunities, and market updates. Use Case Scenario: Transactional History Aiding Future Analysis A developer can use this endpoint to retrieve recent transaction data for properties with the same trigger type within a specific postcode district, helping real estate professionals stay informed about market trends and provide accurate guidance to clients. Scenario: Partnership Building By leveraging the transaction records retrieved from this endpoint, developers can assist real estate professionals in networking with industry peers, sharing valuable insights, and strengthening partnerships to enhance their business opportunities. Scenario: Detailed Insights This endpoint enables d",
+        "parameters": [
+          {
+            "name": "postcode_district",
+            "in": "query",
+            "required": true,
+            "description": "Postcode District for where the data is to be retrived from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "max_days",
+            "in": "query",
+            "required": true,
+            "description": "Valid values are between 7 and 30",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "postcode_sector",
+            "in": "query",
+            "required": false,
+            "description": "Postcode Sector for where the data is to be retrived from",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "typeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/trigger-type/{typeId}/no-uprn-properties": {
+      "get": {
+        "operationId": "get_no_uprn_properties_by_trigger_type",
+        "summary": "Get no UPRN Properties by Trigger Type",
+        "tags": [
+          "Trigger Information"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#get-no-uprn-properties-by-trigger-type"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/trigger-type/{typeId}/no-uprn-properties",
+        "description": "The /api/v2/trigger-type/{typeId}/no-uprn-properties endpoint in TwentyAPI is designed to retrieve a count of properties with the same trigger type within a specific postcode over a defined day range, ranging from 7 to 30 days in the past. Purpose Historical Data with Limited Information: To assist developers in retrieving a count of properties with the same trigger type within a specific postcode over a defined day range, facilitating analysis of market trends and comparable sales in the real estate industry. Insights for Future Planning: To provide developers with a tool that enables them to gain valuable insights into market dynamics, educate clients, gain a competitive advantage, foster networking opportunities, and stay updated on market trends. Use Case Scenario: Obtaining valuable information with a Partial Address A developer can use this endpoint to retrieve data on properties with the same trigger type within a postcode, helping real estate professionals analyze market trends and provide informed guidance to clients. Scenario: Enhancing Local Market Knowledge By leveraging the data obtained from this endpoint, developers can assist real estate professionals in educating clients about market conditions, identifying competitive advantages, and establishing networking opportunities within the industry. Scenario: Strategic Decision Making rather than Tactical This endpoint simplifies the development process for developers working on real estate applications by offering ",
+        "parameters": [
+          {
+            "name": "postcode_district",
+            "in": "query",
+            "required": true,
+            "description": "Postcode District of the areas you would like to obtain the data for.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "max_days",
+            "in": "query",
+            "required": true,
+            "description": "Min is 7 and Max is 30",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "postcode_sector",
+            "in": "query",
+            "required": false,
+            "description": "Postcode Sector of the areas you would like to obtain the data for, if the data needs to be more granular that Districts",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "typeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{property}/triggers": {
+      "get": {
+        "operationId": "trigger_history",
+        "summary": "Trigger History",
+        "tags": [
+          "Trigger Information"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#trigger-history"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/properties/{property}/triggers",
+        "description": "The /api/v2/properties/[uprn]/triggers endpoint in TwentyAPI retrieves the previous listing history for a given UPRN (Unique Property Reference Number). This endpoint covers both sale and rental tenures. Understanding a property's sales history is essential for estate agents, providing a dynamic tool that seamlessly integrates historical data. This integration transforms each property listing into a comprehensive narrative, streamlining the selling process and fostering transparency and trust with potential buyers.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "UPRN of property to fetch the data for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/agent/best": {
+      "get": {
+        "operationId": "list_of_best_agents",
+        "summary": "List of Best Agents",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#list-of-best-agents"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent/best",
+        "description": "The /agent/best endpoint in TwentyAPI is designed to retrieve valuable data for identifying the best estate agents within a specified area. Leveraging proprietary algorithms, this endpoint calculates a score for each agent, offering a comprehensive ranking based on multiple data points. Users gain actionable insights for performance evaluation, client satisfaction monitoring, market trend analysis, strategic planning, and benchmarking against industry standards and competitors. This real-time snapshot ensures informed decision-making with accurate and unbiased data.",
+        "parameters": [
+          {
+            "name": "postcode",
+            "in": "query",
+            "required": true,
+            "description": "This is the postcode unit for where the user would like to find the list of Best Agents. This will be in the standard UK Postcode format. For further information, click here",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "bedroom",
+            "in": "query",
+            "required": false,
+            "description": "This is the number of bedrooms withn specific properties",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "propsubtype",
+            "in": "query",
+            "required": false,
+            "description": "Refers to what type of Property can be filtered by. Only the following parameters can be used: - Flat / Apartment - Bungalow - Houses",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "achieve_asking_price",
+            "in": "query",
+            "required": false,
+            "description": "The paramter refers to whether or not an agent has acheived the listed asking price. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - fastestsale - experiencedagent",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "fastest_sale",
+            "in": "query",
+            "required": false,
+            "description": "The paramter refers to whether or not an agent can record a quick sale. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - achieveaskingprice - experiencedagent",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "experienced_agent",
+            "in": "query",
+            "required": false,
+            "description": "The paramter refers to whether or not an agent is a known agent with extensive experince. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - fastestsale - achieveaskingprice",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/rankings/sstc": {
+      "get": {
+        "operationId": "brands_ranked_by_sstc_s",
+        "summary": "Brands Ranked by SSTC's",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#brands-ranked-by-sstc-s"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/rankings/sstc",
+        "description": "The /agent-performance/rankings/sstc endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by agreed property sales. This API (Application Programming Interface) endpoint assists estate agents in gaining valuable market intelligence, understanding their competitiveness, and identifying opportunities for growth.",
+        "parameters": [
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/rankings/new-instructions": {
+      "get": {
+        "operationId": "brands_ranked_by_new_instructions",
+        "summary": "Brands Ranked by New Instructions",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/rankings/new-instructions",
+        "description": "The /agent-performance/rankings/new-instructions endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by new instructions. This API call is crucial for estate agents, providing insights into market trends, facilitating competitive analysis, and supporting strategic planning.",
+        "parameters": [
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/rankings/percentage-of-initial-price-achieved": {
+      "get": {
+        "operationId": "brands_ranked_by_pipa",
+        "summary": "Brands Ranked by PIPA",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#brands-ranked-by-pipa"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/rankings/percentage-of-initial-price-achieved",
+        "description": "The /agent-performance/rankings/percentage-of-initial-price-achieved endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by the percentage change of the initial listing price (PIPA). This API call is crucial for estate agents, providing insights into market pricing trends, facilitating competitive analysis, and supporting strategic positioning.",
+        "parameters": [
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/rankings/days-to-sstc": {
+      "get": {
+        "operationId": "brands_ranked_by_days_from_new_instruction_to_sstc",
+        "summary": "Brands Ranked by Days from New Instruction to SSTC",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#brands-ranked-by-days-from-new-instruction-to-sstc"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/rankings/days-to-sstc",
+        "description": "The /agent-performance/rankings/days-to-sstc endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by how quickly properties transition from for sale to sold subject to contract (SSTC). This API call is essential for estate agents, providing insights into market efficiency and sales processes.",
+        "parameters": [
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/new-instructions": {
+      "get": {
+        "operationId": "new_instructions_statistics_for_a_brand",
+        "summary": "New Instructions Statistics for a Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/new-instructions",
+        "description": "The /agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve the volume of new instructions for a specific estate agency within the last 12 months. Additionally, it provides the agency's overall rank based on optional parameters. If no parameters are set, the ranking is done on a national level.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/sstc": {
+      "get": {
+        "operationId": "sstc_statistics_for_a_brand",
+        "summary": "SSTC statistics for a Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#sstc-statistics-for-a-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/sstc",
+        "description": "The /agent-performance/brand/sstc endpoint in TwentyAPI is designed to retrieve information on properties sold subject to contract (SSTC) by a specific estate agency within the last 12 months. Additionally, it provides the agency's overall rank based on optional parameters. If no parameters are set, the ranking is done on a national level."
+      }
+    },
+    "/agent-performance/brand/time-to-sell": {
+      "get": {
+        "operationId": "days_to_sstc_for_a_specific_brand",
+        "summary": "Days to SSTC for a Specific Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-specific-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/time-to-sell",
+        "description": "The /agent-performance/brand/time-to-sell endpoint in TwentyAPI is designed to retrieve the average time it takes for a property to be sold after being instructed for a specific brand. This data is based on optional parameters, allowing for a customised analysis. If no parameters are set, the calculation is done on a national level.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/time-to-sell-all-brands": {
+      "get": {
+        "operationId": "days_to_sstc_for_all_brands",
+        "summary": "Days to SSTC for all Brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#days-to-sstc-for-all-brands"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/time-to-sell-all-brands",
+        "description": "The /agent-performance/brand/time-to-sell-all-brands endpoint in TwentyAPI is designed to retrieve the average time it takes for a property to be sold after being instructed by all brands within a specific area defined by additional parameters. If no parameters are set, the calculation is done on a national level.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/property-sale-difference": {
+      "get": {
+        "operationId": "difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands",
+        "summary": "Difference in Sold price for a Property for a Specific Brand and all other Brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#difference-in-sold-price-for-a-property-for-a-specific-brand-and-all-other-brands"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/property-sale-difference",
+        "description": "The /agent-performance/brand/property-sale-differenceendpoint in TwentyAPI is designed to calculate the difference between the average sale price from a Property for a given brand and the average sale price of all brands with the specified filter. The volume attribute is in GBP. A positive value indicates the brand sells properties above the average, while a negative value signifies sales below the average. This calculation is performed within a specific area defined by additional parameters. If no parameters are set, the analysis is done on a national level.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/percentage-of-initial-price-achieved": {
+      "get": {
+        "operationId": "difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands",
+        "summary": "Difference in PIPA for a Property for a Specific Brand and all other Brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#difference-in-pipa-for-a-property-for-a-specific-brand-and-all-other-brands"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/agent-performance/brand/percentage-of-initial-price-achieved",
+        "description": "The /api/v2/agent-performance/brand/initial-price-achieve endpoint in TwentyAPI is designed to calculate the difference between the Percentage of Initial Price Achieved (PIPA)) for a given brand and the PIPA of all brands with the specified filter. The volume attribute is in percentage format but displayed as a decimal. A positive value indicates the brand achieves a higher rate of sales price compared to its initial listing price, while a negative value indicates the opposite. This analysis is performed within a specific area defined by additional parameters. If no parameters are set, the analysis is done on a national level.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/property-sale-value": {
+      "get": {
+        "operationId": "average_listing_price_for_a_brand",
+        "summary": "Average Listing Price for a Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#average-listing-price-for-a-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/property-sale-value",
+        "description": "The /agent-performance/brand/property-listing-value endpoint in TwentyAPI is designed to retrieve the average listing price of properties for a specific brand. This data can be further filtered by optional parameters, allowing estate agents to gain insights into market trends. If no parameters are set, the analysis encompasses all property types nationally.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/sold-percentage": {
+      "get": {
+        "operationId": "properties_sales_ratio_for_a_given_brand",
+        "summary": "Properties Sales Ratio for a Given Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-a-given-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/sold-percentage",
+        "description": "The /agent-performance/brand/sold-percentage endpoint in TwentyAPI is designed to calculate the percentage of properties sold compared to new instructions for a given brand. This ratio indicates the agency's efficiency in converting property instructions into successful sales. A ratio above 100% signifies that the agency is selling properties more quickly than new instructions are received.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/sold-percentage-all-brands": {
+      "get": {
+        "operationId": "properties_sales_ratio_for_all_brands",
+        "summary": "Properties Sales Ratio for all Brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-all-brands"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/sold-percentage-all-brands",
+        "description": "The /agent-performance/brand/sold-percentage-all-brands endpoint in TwentyAPI is designed to calculate the percentage of properties sold compared to new instructions for all brands within a specified area. If no parameters are provided, the calculation is based nationally. A ratio above 100% indicates that the agency is selling properties more quickly than instructing new ones.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/agent-performance/brand/days-to-sstc": {
+      "get": {
+        "operationId": "days_to_sstc_for_a_given_brand",
+        "summary": "Days to SSTC for a given Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-given-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/days-to-sstc",
+        "description": "This will give you a volume stat which is the Day to SSTC for a Brand.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/rentals/agent-performance/rankings/let-agreed": {
+      "get": {
+        "operationId": "brands_ranked_by_let_agreed",
+        "summary": "Brands ranked by Let Agreed",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#brands-ranked-by-let-agreed"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/rankings/let-agreed",
+        "description": "The /rentals/agent-performance/rankings/let-agreed endpoint in TwentyAPI is designed to retrieve information on agent performance regarding agreed lets in a specific patch, over the last 12 months. This data can be filtered by region, postcode area, postcode district, and postcode sector.",
+        "parameters": [
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/rentals/agent-performance/rankings/new-instructions": {
+      "get": {
+        "operationId": "brands_ranked_by_new_instructions_2",
+        "summary": "Brands ranked by New Instructions",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions-2"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/rankings/new-instructions",
+        "description": "The /rentals/agent-performance/rankings/new-instructions endpoint in TwentyAPI is tailored to retrieve crucial insights on an agent's proficiency in securing new property instructions for lettings within a specified patch. This resource aims to empower estate agents by aiding them in discerning top-performing agents based on their instructions over the last 12 months. Additional parameters, such as minimal and maximal rental value, rental price bands, postcode areas, districts or sectors, regions, property types, and result limits, enhance the precision of the results.",
+        "parameters": [
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/rentals/agent-performance/brand/let-agreed": {
+      "get": {
+        "operationId": "let_agreed_statistics_for_a_brand",
+        "summary": "Let Agreed statistics for a Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#let-agreed-statistics-for-a-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/brand/let-agreed",
+        "description": "The /rentals/agent-performance/brand/let-agreed endpoint in TwentyAPI is designed to retrieve information on the number of properties let by a brand in the last 12 months. This API (Application Programming Interface) call assists estate agents in evaluating their performance and making informed decisions based on rental statistics.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/rentals/agent-performance/brand/new-instructions": {
+      "get": {
+        "operationId": "new_instructions_statistics_for_a_brand_2",
+        "summary": "New Instructions statistics for a Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand-2"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/brand/new-instructions",
+        "description": "The /rentals/agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve information on the number of properties instructed for rental by a brand in the last 12 months. This API (Application Programming Interface) call assists estate agents in evaluating their performance and making informed decisions based on new instruction statistics.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/rentals/agent-performance/brand/let-percentage": {
+      "get": {
+        "operationId": "properties_let_ratio_for_a_given_brand",
+        "summary": "Properties Let Ratio for a Given Brand",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#properties-let-ratio-for-a-given-brand"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/brand/let-percentage",
+        "description": "The rentals/agent-performance/brand/let-percentage endpoint in TwentyAPI is designed to calculate the percentage of properties let compared to new instructions for a given brand. This ratio indicates the agency's efficiency in converting property instructions into successful sales. A ratio above 100% signifies that the agency is selling properties more quickly than new instructions are received.",
+        "parameters": [
+          {
+            "name": "brand_id",
+            "in": "query",
+            "required": true,
+            "description": "The ID of the brand/agent you want the stats for",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "required": false,
+            "description": "Minimum price of the properties to evaluate (rounded down to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "required": false,
+            "description": "Maximum price of the properties to evaluate (rounded up to the nearest \u00a350k). Cannot not be used with pricebrands.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "price_bands",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of price bands.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_sectors",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode sectors.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_areas",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode areas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postcode_districts",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of postcode districts.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "regions",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of regions.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "property_types",
+            "in": "query",
+            "required": false,
+            "description": "Only evaluate properties within the given list (comma separated) of property types.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/match-address-processes": {
+      "post": {
+        "operationId": "address_match",
+        "summary": "Address Match",
+        "tags": [
+          "Address Match"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#address-match"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/match-address-processes",
+        "description": "- Partial Address Matching"
+      }
+    },
+    "/nearby-places/schools": {
+      "get": {
+        "operationId": "schools",
+        "summary": "Schools",
+        "tags": [
+          "Schools"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#schools"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/nearby-places/schools",
+        "description": "- Nearby Schools by Postcode"
+      }
+    },
+    "/market/initial-metrics": {
+      "get": {
+        "operationId": "uk_housing_market_metrics",
+        "summary": "UK Housing Market Metrics",
+        "tags": [
+          "UK Housing Market Metrics"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#uk-housing-market-metrics"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/market/initial-metrics",
+        "description": "- New Instructions, SSTC's and PCD's for a Specific Timeframe"
+      }
+    },
+    "/this-is-now/search": {
+      "get": {
+        "operationId": "local_search",
+        "summary": "Local Search",
+        "tags": [
+          "This is Now | Retail Propensity To Buy Goods"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#local-search"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/api/v2/this-is-now/search",
+        "description": "The /this-is-now/search endpoint in TwentyAPI is designed to retrieve the likelihood of a household within a specified area purchasing specific goods, based on their position in the timeline of their homemover journey. Purpose Targetted Marketing: To enable retailers to target marketing efforts effectively by understanding the likelihood of households purchasing specific goods. Performance Management: To provide insights for inventory management, customer retention, personalized customer experience, resource allocation, competitive advantage, sales forecasting, product development, and customer segmentation. Use Case Scenario: Targeted Direct Mail Campaigns Retailers can use this endpoint to target marketing campaigns specifically to households with a high likelihood of making purchases, thus maximizing ROI and improving customer engagement. Scenario: Inventory Management Inventory managers can leverage the data from this endpoint to forecast demand accurately, ensuring optimal inventory levels and minimising product unavailablity. Conclusion In summary, the /this-is-now/search endpoint is a crucial tool for developers, providing valuable insights into household purchasing behaviour. Whether you're a beginner or an experienced developer, leveraging this endpoint enhances the development experience by offering straightforward solutions to common challenges.",
+        "parameters": [
+          {
+            "name": "postcode",
+            "in": "query",
+            "required": true,
+            "description": "This will be in the standard UK Postcode format. For further information, click here",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "product_type",
+            "in": "query",
+            "required": true,
+            "description": "Valid values include the following: - electricals, - departmentstores, - furniture, - bedretailers, - homefurnishings, - kitchen, - diy, - garden",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "description": "Valid values include the following: - 10, - 15, - 20, - 25",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/properties": {
+      "get": {
+        "operationId": "get_properties",
+        "summary": "/properties",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#properties"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties",
+        "description": "Listed as an available route on the TwentyAPI \"Properties\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/properties/{property}/category/{category}": {
+      "get": {
+        "operationId": "get_properties_property_category_category",
+        "summary": "/properties/{property}/category/{category}",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#properties"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{property}/category/{category}",
+        "description": "Listed as an available route on the TwentyAPI \"Properties\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.",
+        "parameters": [
+          {
+            "name": "property",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          },
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/properties/{uprn}/floor-plans": {
+      "get": {
+        "operationId": "get_properties_uprn_floor_plans",
+        "summary": "/properties/{uprn}/floor-plans",
+        "tags": [
+          "Properties"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#properties"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/properties/{uprn}/floor-plans",
+        "description": "Listed as an available route on the TwentyAPI \"Properties\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.",
+        "parameters": [
+          {
+            "name": "uprn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/trigger/{trigger}": {
+      "get": {
+        "operationId": "get_trigger_trigger",
+        "summary": "/trigger/{trigger}",
+        "tags": [
+          "Trigger Information"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#trigger-information"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/trigger/{trigger}",
+        "description": "Listed as an available route on the TwentyAPI \"Trigger Information\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.",
+        "parameters": [
+          {
+            "name": "trigger",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Path parameter as documented by TwentyCi."
+          }
+        ]
+      }
+    },
+    "/agent-performance/rankings/exchange": {
+      "get": {
+        "operationId": "get_agent_performance_rankings_exchange",
+        "summary": "/agent-performance/rankings/exchange",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/rankings/exchange",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/agent-performance/brand/exchange": {
+      "get": {
+        "operationId": "get_agent_performance_brand_exchange",
+        "summary": "/agent-performance/brand/exchange",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/exchange",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/agent-performance/brand/property-sale-value-all-brands": {
+      "get": {
+        "operationId": "get_agent_performance_brand_property_sale_value_all_brands",
+        "summary": "/agent-performance/brand/property-sale-value-all-brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/property-sale-value-all-brands",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/agent-performance/brand/initial-price-achieve": {
+      "get": {
+        "operationId": "get_agent_performance_brand_initial_price_achieve",
+        "summary": "/agent-performance/brand/initial-price-achieve",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/initial-price-achieve",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/agent-performance/brand/property-listing-value": {
+      "get": {
+        "operationId": "get_agent_performance_brand_property_listing_value",
+        "summary": "/agent-performance/brand/property-listing-value",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/agent-performance/brand/property-listing-value",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/rentals/agent-performance/brand/time-to-let": {
+      "get": {
+        "operationId": "get_rentals_agent_performance_brand_time_to_let",
+        "summary": "/rentals/agent-performance/brand/time-to-let",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-rental-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/brand/time-to-let",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Rental Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/rentals/agent-performance/brand/time-to-let-all-brands": {
+      "get": {
+        "operationId": "get_rentals_agent_performance_brand_time_to_let_all_brands",
+        "summary": "/rentals/agent-performance/brand/time-to-let-all-brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-rental-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/brand/time-to-let-all-brands",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Rental Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/rentals/agent-performance/brand/let-percentage-all-brands": {
+      "get": {
+        "operationId": "get_rentals_agent_performance_brand_let_percentage_all_brands",
+        "summary": "/rentals/agent-performance/brand/let-percentage-all-brands",
+        "tags": [
+          "Agent Performance"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#agent-performance-based-on-rental-data"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/rentals/agent-performance/brand/let-percentage-all-brands",
+        "description": "Listed as an available route on the TwentyAPI \"Agent Performance based on Rental Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    },
+    "/this-is-now/search-national": {
+      "get": {
+        "operationId": "get_this_is_now_search_national",
+        "summary": "/this-is-now/search-national",
+        "tags": [
+          "This is Now | Retail Propensity To Buy Goods"
+        ],
+        "externalDocs": {
+          "description": "TwentyAPI documentation",
+          "url": "https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication credentials were missing or incorrect."
+          },
+          "404": {
+            "description": "Not Found - the URI requested is invalid or the resource does not exist."
+          },
+          "422": {
+            "description": "Unprocessable Entity - request is invalid or unable to be validated."
+          }
+        },
+        "x-documented-route": "/this-is-now/search-national",
+        "description": "Listed as an available route on the TwentyAPI \"This is Now | Retail Propensity To Buy Goods\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+      }
+    }
+  }
+}
