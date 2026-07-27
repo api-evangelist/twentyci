@@ -1,0 +1,52 @@
+generated: '2026-07-26'
+method: searched
+source: public package-registry search, 2026-07-26
+note: >-
+  TwentyCi publishes no first-party client library for TwentyAPI in any language. Every
+  registry below was searched on 2026-07-26 and returned either zero results or third-party
+  work unrelated to TwentyAPI. This is consistent with TwentyCi's own documentation, which
+  offers no SDK, no code samples in any language, and instead advises callers to "use a
+  third-party software to test this. We use a program called Postman." Because no official
+  package exists, NO `SDKs` pointer is wired in apis.yml.
+packages: []
+registries_searched:
+- registry: npm
+  query: twentyci
+  results: 0
+- registry: pypi
+  queries: [twentyci, twentyapi, twenty-ci]
+  results: 0
+  note: All three project lookups returned HTTP 404.
+- registry: rubygems
+  query: twentyci
+  results: 0
+- registry: nuget
+  query: twentyci
+  results: 0
+- registry: packagist
+  query: twentyci
+  results: 2
+  official: false
+  note: >-
+    Two vendor-namespaced Magento/PHP modules surfaced - twentyci/user-authen and
+    twentycitest/module-websiterestriction - both authored under personal GitHub accounts
+    (github.com/hungnk1) and both concerned with restricting front-end access to a website.
+    Neither is a TwentyAPI client, neither is published from github.com/twentyci, and neither
+    is recorded as an official package.
+- registry: maven-central
+  query: twentyci
+  results: 0
+- registry: crates.io
+  query: twentyci
+  results: 0
+- registry: pkg.go.dev
+  query: twentyci
+  results: 0
+source_code:
+- url: https://github.com/twentyci
+  status: 200
+  public_repositories: 0
+  note: >-
+    github.com/twentyci is a genuine GitHub Organization (display name "TwentyCI", website
+    https://www.twentyci.co.uk) with zero public repositories. GET /orgs/twentyci/repos
+    returns an empty array. There is no public source for any client library.

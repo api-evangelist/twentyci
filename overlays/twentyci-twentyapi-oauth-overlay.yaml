@@ -1,0 +1,65 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the TwentyAPI (TwentyCi) OAuth 2.0 Token API
+  version: 1.0.0
+x-provenance:
+  generated: '2026-07-26'
+  method: generated
+  source: openapi/twentyci-twentyapi-oauth-openapi.json
+  note: >-
+    Captures API Evangelist's enrichment of the harvested token-issuance contract without mutating it.
+    Every assertion is sourced from TwentyCi's own Authorisation page or from a live probe.
+extends: openapi/twentyci-twentyapi-oauth-openapi.json
+actions:
+- target: $.info
+  description: Record provenance and cross-links.
+  update:
+    x-apievangelist-provider: twentyci
+    x-apievangelist-provider-published-spec: false
+    x-apievangelist-harvest-source: https://api.twentyci.co.uk/api/documentation/markdocs
+    x-apievangelist-artifacts:
+      authentication: authentication/twentyci-authentication.yml
+      scopes: scopes/twentyci-scopes.yml
+      conventions: conventions/twentyci-conventions.yml
+      examples: examples/twentyci-examples.yml
+- target: $.info
+  description: >-
+    Record the contradiction TwentyCi publishes about its own flow, and the standards posture that
+    follows from it.
+  update:
+    x-flow-contradiction:
+      provider_label: OAuth2, flow Implicit
+      documented_request: >-
+        client_id, client_secret, username, password, grant_type=password, scope=* - a resource-owner
+        password-credentials grant (RFC 6749 §4.3).
+      modelled_as: password
+      modelled_because: The documented request body performs a password grant regardless of the label.
+      standards_note: >-
+        Both labels are problematic under current guidance: the implicit grant is removed from
+        OAuth 2.1, and the password grant is disallowed by the OAuth 2.0 Security Best Current Practice
+        (RFC 9700) and also removed from OAuth 2.1.
+- target: $.info
+  description: Record the discovery surface that does not exist.
+  update:
+    x-discovery:
+      openid_configuration: {url: 'https://api.twentyci.co.uk/.well-known/openid-configuration', status: 404}
+      oauth_authorization_server: {url: 'https://api.twentyci.co.uk/.well-known/oauth-authorization-server', status: 404}
+      oauth_protected_resource: {url: 'https://api.twentyci.co.uk/.well-known/oauth-protected-resource', status: 404}
+      detail: well-known/twentyci-well-known.yml
+- target: $.paths['/oauth/token'].post
+  description: Record live probe behaviour and token handling guidance for agents.
+  update:
+    x-probe:
+      method: GET
+      status: 405
+      body: 'The GET method is not supported for route oauth/token. Supported methods: POST.'
+      note: Independent confirmation the route exists and is POST-only. Probed anonymously 2026-07-26.
+    x-token-handling:
+      lifetime_seconds: 1296000
+      lifetime_human: 15 days
+      refresh_token_returned: true
+      guidance: >-
+        Cache the access token for its full lifetime and refresh rather than re-minting per request.
+        TwentyCi publishes no rate-limit contract, so unnecessary token traffic carries unknown risk.
+      scope: '*'
+      scope_note: A single wildcard scope. There is no way to request least privilege.

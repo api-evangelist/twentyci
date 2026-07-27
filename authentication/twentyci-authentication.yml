@@ -1,0 +1,22 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/twentyci-twentyapi-openapi.json
+summary:
+  types:
+  - oauth2
+  oauth2_flows:
+  - password
+schemes:
+- name: twentyapiOAuth
+  type: oauth2
+  flows:
+  - flow: password
+    tokenUrl: https://api.twentyci.co.uk/oauth/token
+    scopes: 1
+  description: 'OAuth 2.0 bearer token. TwentyCi''s documentation labels the scheme "OAuth2"
+    with flow "Implicit" but describes a resource-owner password-credentials exchange: POST
+    /oauth/token with client_id, client_secret, username, password, grant_type=password and
+    scope=* returns {token_type: Bearer, expires_in, access_token, refresh_token}. The token
+    is then sent as "Authorization: Bearer <token-key>". Modell'
+  sources:
+  - openapi/twentyci-twentyapi-openapi.json

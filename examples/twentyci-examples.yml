@@ -1,0 +1,2956 @@
+generated: '2026-07-26'
+method: searched
+source: https://api.twentyci.co.uk/api/documentation/markdocs
+source_status: 200
+note: Request and response examples transcribed verbatim from TwentyCi's own public documentation corpus
+  (the JSON tree that backs https://api.twentyci.co.uk/documentation). TwentyCi publishes these as fenced
+  ```js blocks inside {% box %} nodes; several are JavaScript-literal rather than strict JSON (trailing
+  commas, comment-free but unquoted-safe), so each body is stored verbatim as a string rather than reparsed.
+  Nothing was invented, reformatted or completed. Placeholder values such as "your_access_token" are TwentyCi's
+  own.
+envelope:
+  success: '{ message, data, meta.pagination? }'
+  error: '{ message, error: { status, messages? } }'
+examples:
+- doc_page: authorisation-for-api-requests
+  doc_url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  title: Response
+  kind: response
+  operations:
+  - operationId: issueTwentyApiToken
+    spec: openapi/twentyci-twentyapi-oauth-openapi.json
+    method: POST
+    path: /oauth/token
+  binding_confidence: high
+  binding_note: Page declares POST /oauth/token verbatim.
+  body: |
+    {
+        "token_type": "Bearer",
+        "expires_in": 1296000,
+        "access_token": "your_access_token",
+        "refresh_token": "your_refresh_token"
+    }
+- doc_page: http-status-response-codes
+  doc_url: https://api.twentyci.co.uk/documentation#http-status-response-codes
+  title: Success with Data & Meta like Pagination
+  kind: response
+  scope: api-wide
+  binding_note: API-wide response and error envelope reference; not bound to a single operation.
+  body: |
+    {
+        "message": "Your request has been proceed successfully!",
+        "data": [
+            {
+                "id": 1,
+                "object": "Entity name"
+            },
+        ],
+    }
+- doc_page: http-status-response-codes
+  doc_url: https://api.twentyci.co.uk/documentation#http-status-response-codes
+  title: Success with Data & Meta like Pagination
+  kind: response
+  scope: api-wide
+  binding_note: API-wide response and error envelope reference; not bound to a single operation.
+  body: |
+    {
+        "message": "Message that telling you about your data",
+        "data": [
+            {
+                "id": 1,
+                "object": "Entity name"
+            },
+            {
+                "id": 2,
+                "object": "Entity name"
+            },
+        ],
+        "meta" : {
+            "pagination": {
+                "total": 1000,
+                "last_page": 20,
+                "per_page": 50,
+                "current_page": 1
+            }
+        }
+    }
+- doc_page: http-status-response-codes
+  doc_url: https://api.twentyci.co.uk/documentation#http-status-response-codes
+  title: Error
+  kind: error
+  scope: api-wide
+  binding_note: API-wide response and error envelope reference; not bound to a single operation.
+  body: |
+    {
+        "message": "A message about this error",
+        "error": {
+            "status": true,
+        }
+    }
+- doc_page: obtain-a-list-of-categories-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-list-of-categories-for-a-property
+  title: Response - 200 A paginated list of categories
+  kind: response
+  status: 200
+  operations:
+  - operationId: obtain_a_list_of_categories_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /categories
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "category",
+          "attributes": {
+            "name": "Foo"
+          }
+        },
+        {
+          "id": 2,
+          "type": "category",
+          "attributes": {
+            "name": "Bar"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.twentyci.co.uk/api/v2/categories?page=1",
+        "next": "https://api.twentyci.co.uk/api/v2/categories?page=2",
+        "last": "https://api.twentyci.co.uk/api/v2/categories?page=5",
+        "first": "https://api.twentyci.co.uk/api/v2/categories?page=1"
+      },
+      "meta": {
+        "pagination": {
+          "total": 75,
+          "count": 15,
+          "per_page": 15,
+          "current_page": 1,
+          "total_pages": 5
+        }
+      }
+    }
+- doc_page: obtain-a-list-of-categories-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-list-of-categories-for-a-property
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: obtain_a_list_of_categories_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /categories
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-a-specific-category-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-specific-category-for-a-property
+  title: Response - 200 The category
+  kind: response
+  status: 200
+  operations:
+  - operationId: obtain_a_specific_category_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /categories/{category}
+  binding_confidence: high
+  body: |
+    {
+      "data": {
+        "id": 1,
+        "type": "category",
+        "
+        attributes": {
+          "name": "Foo"
+        }
+      }
+    }
+- doc_page: obtain-a-specific-category-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-specific-category-for-a-property
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: obtain_a_specific_category_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /categories/{category}
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-a-specific-category-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-specific-category-for-a-property
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: obtain_a_specific_category_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /categories/{category}
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-information-by-pagination
+  doc_url: https://api.twentyci.co.uk/documentation#property-information-by-pagination
+  title: Response - 200 The category
+  kind: response
+  status: 200
+  operations:
+  - operationId: get_properties
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties
+  binding_confidence: medium
+  binding_note: Bound by the page body, which describes the paginated /properties endpoint. The page declares
+    GET /categories/{category} - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "data": {
+        "id": 1,
+        "type": "category",
+        "attributes": {
+          "name": "Foo"
+        }
+      }
+    }
+- doc_page: property-information-by-pagination
+  doc_url: https://api.twentyci.co.uk/documentation#property-information-by-pagination
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: get_properties
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties
+  binding_confidence: medium
+  binding_note: Bound by the page body, which describes the paginated /properties endpoint. The page declares
+    GET /categories/{category} - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-information-by-pagination
+  doc_url: https://api.twentyci.co.uk/documentation#property-information-by-pagination
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_properties
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties
+  binding_confidence: medium
+  binding_note: Bound by the page body, which describes the paginated /properties endpoint. The page declares
+    GET /categories/{category} - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-information-by-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#property-information-by-uprn
+  title: Response - 200 The property
+  kind: response
+  status: 200
+  operations:
+  - operationId: property_information_by_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{uprn}
+  binding_confidence: high
+  body: "{\n  \"data\": {\n    \"id\": 1,\n    \"type\": \"property\",\n    \"attributes\": {\n      \"\
+    address\": \"1 Sample Street, Sample Town, AB12 3CD\",\n      \"value_min\": 203422,\n      \"value_max\"\
+    : 218178,\n      \"avm_value\": 210800,\n      \"avm_confidence\": 7,\n      \"address1\": \"1 Sample\
+    \ Street\",\n      \"address2\": \"\",\n      \"address3\": \"\",\n      \"address4\": \"\",\n   \
+    \   \"town\": \"Sample Town\",\n      \"postcode\": \"AB12 3CD\",\n      \"longitude\": 128248355.09,\n\
+    \      \"latitude\": 5573753.74\n    }\n  },\n  \"links\": {\n    \"self\": \"https://api.twentyci.co.uk/api/v2/property/133694\"\
+    ,\n    \"image\": \"https://api.twentyci.co.uk/api/v2/properties/133694/image\",\n    \"attributes\"\
+    : \"https://api.twentyci.co.uk/api/v2/properties/133694/category/_all\",\n    \"Foo\": \"https://api.twentyci.co.uk/api/v2/properties/1/category/1\"\
+    ,\n\t\"Bar\": \"https://api.twentyci.co.uk/api/v2/properties/1/category/2\"\n  }\n}\n"
+- doc_page: property-information-by-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#property-information-by-uprn
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: property_information_by_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{uprn}
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-information-by-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#property-information-by-uprn
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: property_information_by_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{uprn}
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-details-by-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#property-details-by-uprn
+  title: Response - 200 The property details
+  kind: response
+  status: 200
+  operations:
+  - operationId: property_details_by_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/details
+  binding_confidence: high
+  body: |
+    {
+      "data": {
+        "type": null,
+        "id": "667232",
+        "attributes": {
+          "address1": "18 OXLEIGH WAY",
+          "address2": "",
+          "address3": "",
+          "address4": "",
+          "town": "STOKE GIFFORD",
+          "postcode": "BS34 8AL",
+          "longitude": -2.5399082,
+          "latitude": 51.508923,
+          "number_of_bed_rooms": null,
+          "number_of_bath_rooms": null,
+          "garden": true,
+          "parking": true,
+          "standard_download": "13",
+          "superfast_download": "80",
+          "ultrafast_download": null,
+          "estimated_value": 410600,
+          "weekly_running_cost": 20,
+          "monthly_running_cost": 80,
+          "yearly_running_cost": 960,
+          "council_tax_cost": 45,
+          "energy_cost": 60,
+          "broadband_cost": 80,
+          "average_postcodehouse_price": 0,
+          "crime_asb": "86",
+          "crime_bike_theft": "0",
+          "crime_burglary": "23",
+          "crime_cd_and_a": "0",
+          "crime_drugs": "0",
+          "crime_other": "100",
+          "crime_other_theft": "0",
+          "crime_public_order": "0",
+          "crime_robbery": "3",
+          "crime_shoplifting": "0",
+          "crime_theft_from_the_Person": "0",
+          "crime_vehicle": "14",
+          "crime_violent": "24",
+          "crime_weapons": "0",
+          "crime_total": "250",
+          "male_percentage": "50.88%",
+          "female_percentage": "49.12%"
+        },
+        "links": {
+          "self": "https://api.twentyci.co.uk/api/v2/properties/667232/details"
+        }
+      }
+    }
+- doc_page: property-details-by-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#property-details-by-uprn
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: property_details_by_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/details
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-details-by-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#property-details-by-uprn
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: property_details_by_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/details
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: recent-property-sales-in-the-area
+  doc_url: https://api.twentyci.co.uk/documentation#recent-property-sales-in-the-area
+  title: Response - 200 Similar properties for sale in the area
+  kind: response
+  status: 200
+  operations:
+  - operationId: recent_property_sales_in_the_area
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/recent-sale-in-the-area
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "type": null,
+          "id": "680 SOUTHMEAD ROAD",
+          "attributes": {
+            "address1": "680 SOUTHMEAD ROAD",
+            "address2": "",
+            "town": "FILTON",
+            "postcode": "BS34 7QT",
+            "property_type": "House - Detached",
+            "sold_date": "2020-12-22",
+            "price": 220000
+          },
+          "links": {
+            "self": "https://api.twentyci.co.uk/api/v2//680 SOUTHMEAD ROAD"
+          }
+        },
+        {
+          "type": null,
+          "id": "702 SOUTHMEAD ROAD",
+          "attributes": {
+            "address1": "702 SOUTHMEAD ROAD",
+            "address2": "",
+            "town": "FILTON",
+            "postcode": "BS34 7QT",
+            "sold_date": "2021-09-22",
+            "price": 187000
+          },
+          "links": {
+            "self": "https://api.twentyci.co.uk/api/v2//702 SOUTHMEAD ROAD"
+          }
+        }
+      ],
+      "meta": {
+        "pagination": {
+          "total": 15147,
+          "count": 15,
+          "per_page": 15,
+          "current_page": 1,
+          "total_pages": 1010
+        }
+      },
+      "links": {
+        "self": "/?page=1",
+        "first": "/?page=1",
+        "next": "/?page=2",
+        "last": "/?page=1010"
+      }
+    }
+- doc_page: recent-property-sales-in-the-area
+  doc_url: https://api.twentyci.co.uk/documentation#recent-property-sales-in-the-area
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: recent_property_sales_in_the_area
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/recent-sale-in-the-area
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: recent-property-sales-in-the-area
+  doc_url: https://api.twentyci.co.uk/documentation#recent-property-sales-in-the-area
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: recent_property_sales_in_the_area
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/recent-sale-in-the-area
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: similar-properties-for-sale-in-area
+  doc_url: https://api.twentyci.co.uk/documentation#similar-properties-for-sale-in-area
+  title: Response - 200 Similar properties for sale in the area
+  kind: response
+  status: 200
+  operations:
+  - operationId: similar_properties_for_sale_in_area
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/for-sale-in-the-area
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "type": null,
+          "id": "680 SOUTHMEAD ROAD",
+          "attributes": {
+            "address1": "680 SOUTHMEAD ROAD",
+            "address2": "",
+            "town": "FILTON",
+            "postcode": "BS34 7QT",
+            "property_type": "House - Detached",
+            "sold_date": "2020-12-22",
+            "price": 220000
+          },
+          "links": {
+            "self": "https://api.twentyci.co.uk/api/v2//680 SOUTHMEAD ROAD"
+          }
+        },
+        {
+          "type": null,
+          "id": "702 SOUTHMEAD ROAD",
+          "attributes": {
+            "address1": "702 SOUTHMEAD ROAD",
+            "address2": "",
+            "town": "FILTON",
+            "postcode": "BS34 7QT",
+            "sold_date": "2021-09-22",
+            "price": 187000
+          },
+          "links": {
+            "self": "https://api.twentyci.co.uk/api/v2//702 SOUTHMEAD ROAD"
+          }
+        }
+      ],
+      "meta": {
+        "pagination": {
+          "total": 15147,
+          "count": 15,
+          "per_page": 15,
+          "current_page": 1,
+          "total_pages": 1010
+        }
+      },
+      "links": {
+        "self": "/?page=1",
+        "first": "/?page=1",
+        "next": "/?page=2",
+        "last": "/?page=1010"
+      }
+    }
+- doc_page: similar-properties-for-sale-in-area
+  doc_url: https://api.twentyci.co.uk/documentation#similar-properties-for-sale-in-area
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: similar_properties_for_sale_in_area
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/for-sale-in-the-area
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: similar-properties-for-sale-in-area
+  doc_url: https://api.twentyci.co.uk/documentation#similar-properties-for-sale-in-area
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: similar_properties_for_sale_in_area
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/for-sale-in-the-area
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: average-property-values-by-postcode
+  doc_url: https://api.twentyci.co.uk/documentation#average-property-values-by-postcode
+  title: REQUEST SAMPLES
+  kind: request
+  operations:
+  - operationId: average_property_values_by_postcode
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-value-price
+  binding_confidence: high
+  body: |
+    {
+      "postcode": "MK5 8FT"
+    }
+- doc_page: average-property-values-by-postcode
+  doc_url: https://api.twentyci.co.uk/documentation#average-property-values-by-postcode
+  title: Response - 200  Property price changes overtime in the area
+  kind: response
+  status: 200
+  operations:
+  - operationId: average_property_values_by_postcode
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-value-price
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "type": null,
+          "id": "2015-03-01",
+          "attributes": {
+            "date": "2015-03-01",
+            "average_price": "212419.3365",
+            "detached_price": "349641.5618",
+            "semi_detached_price": "209400.6774",
+            "terraced_price": "177273.6347",
+            "flat_price": "125640.8824"
+          },
+          "links": {
+            "self": "http://api.twentyci.co.uk/api/v2//2015-03-01"
+          }
+        },
+        {
+          "type": null,
+          "id": "2015-04-01",
+          "attributes": {
+            "date": "2015-04-01",
+            "average_price": "213370.52",
+            "detached_price": "351345.2273",
+            "semi_detached_price": "210219.4924",
+            "terraced_price": "178196.4097",
+            "flat_price": "126026.1321"
+          },
+          "links": {
+            "self": "http://api.twentyci.co.uk/api/v2//2015-04-01"
+          }
+        }
+      ]
+    }
+- doc_page: average-property-values-by-postcode
+  doc_url: https://api.twentyci.co.uk/documentation#average-property-values-by-postcode
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: average_property_values_by_postcode
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-value-price
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: average-property-values-by-postcode
+  doc_url: https://api.twentyci.co.uk/documentation#average-property-values-by-postcode
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: average_property_values_by_postcode
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-value-price
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: valuation-of-property-by-uprn-avm
+  doc_url: https://api.twentyci.co.uk/documentation#valuation-of-property-by-uprn-avm
+  title: REQUEST SAMPLES
+  kind: request
+  operations:
+  - operationId: valuation_of_property_by_uprn_avm
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /propertiesavm2/{property}
+  binding_confidence: high
+  body: |
+    {
+      "property": "25059267"
+    }
+- doc_page: valuation-of-property-by-uprn-avm
+  doc_url: https://api.twentyci.co.uk/documentation#valuation-of-property-by-uprn-avm
+  title: Response - 200  Property price changes overtime in the area
+  kind: response
+  status: 200
+  operations:
+  - operationId: valuation_of_property_by_uprn_avm
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /propertiesavm2/{property}
+  binding_confidence: high
+  body: |
+    {
+        "data": {
+            "type": "property",
+            "id": "25059267",
+            "attributes": {
+                "address": "14 SKEATS WHARF, PENNYLAND, MILTON KEYNES, MK15 8AY",
+                "avm_value": 421100,
+                "avm_confidence": 3,
+                "address1": "14 SKEATS WHARF",
+                "address2": "PENNYLAND",
+                "address3": "",
+                "address4": "",
+                "town": "MILTON KEYNES",
+                "postcode": "MK15 8AY",
+                "longitude": -0.7407960295677185,
+                "latitude": 52.061405181884766
+            },
+            "links": {
+                "self": "https://api.twentyci.co.uk/api/v2/property/25059267",
+                "image": "https://api.twentyci.co.uk/api/v2/properties/25059267/image",
+                "attributes": "https://api.twentyci.co.uk/api/v2/properties/25059267/category/_all"
+            }
+        }
+    }
+- doc_page: valuation-of-property-by-uprn-avm
+  doc_url: https://api.twentyci.co.uk/documentation#valuation-of-property-by-uprn-avm
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: valuation_of_property_by_uprn_avm
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /propertiesavm2/{property}
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: valuation-of-property-by-uprn-avm
+  doc_url: https://api.twentyci.co.uk/documentation#valuation-of-property-by-uprn-avm
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: valuation_of_property_by_uprn_avm
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /propertiesavm2/{property}
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: searching-properties-by-postcode-and-radius
+  doc_url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-radius
+  title: REQUEST SAMPLES
+  kind: request
+  operations:
+  - operationId: searching_properties_by_postcode_and_radius
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-search
+  binding_confidence: high
+  body: |
+    {
+      "postcode": "MK5 8FT",
+      "radius": 5
+    }
+- doc_page: searching-properties-by-postcode-and-radius
+  doc_url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-radius
+  title: Response -A paginated list of properties
+  kind: response
+  operations:
+  - operationId: searching_properties_by_postcode_and_radius
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-search
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "property",
+          "attributes": {
+            "address": "1 Sample Street, Sample Town, AB12 3CD",
+            "value_min": 203422,
+            "value_max": 218178,
+            "avm_value": 210800,
+            "avm_confidence": 7,
+            "address1": "1 Sample Street",
+            "address2": "",
+            "address3": "",
+            "address4": "",
+            "town": "Sample Town",
+            "postcode": "AB12 3CD",
+            "longitude": 128248355.09,
+            "latitude": 5573753.74
+          },
+          "links": {
+            "image": "https://api.twentyci.co.uk/api/v2/properties/1/image",
+            "attributes": "https://api.twentyci.co.uk/api/v2/properties/1/category/_all",
+            "Foo": "https://api.twentyci.co.uk/api/v2/properties/1/category/1",
+            "Bar": "https://api.twentyci.co.uk/api/v2/properties/1/category/2"
+          }
+        },
+        {
+          "id": 2,
+          "type": "property",
+          "attributes": {
+            "address": "2 Sample Street, Sample Town, AB12 3CD",
+            "value_min": 199659,
+            "value_max": 214142,
+            "avm_value": 206900,
+            "avm_confidence": 7,
+            "address1": "2 Sample Street",
+            "address2": "",
+            "address3": "",
+            "address4": "",
+            "town": "Sample Town",
+            "postcode": "AB12 3CD",
+            "longitude": 12825433.67,
+            "latitude": 5573553.44
+          },
+          "links": {
+            "image": "https://api.twentyci.co.uk/api/v2/properties/1/image",
+            "attributes": "https://api.twentyci.co.uk/api/v2/properties/1/category/_all",
+            "Foo": "https://api.twentyci.co.uk/api/v2/properties/1/category/1",
+            "Bar": "https://api.twentyci.co.uk/api/v2/properties/1/category/2"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.twentyci.co.uk/api/v2/properties?page=1",
+        "next": "https://api.twentyci.co.uk/api/v2/properties?page=2",
+        "last": "https://api.twentyci.co.uk/api/v2/properties?page=5",
+        "first": "https://api.twentyci.co.uk/api/v2/properties?page=1"
+      },
+      "meta": {
+        "pagination": {
+          "total": 75,
+          "count": 15,
+          "per_page": 15,
+          "current_page": 1,
+          "total_pages": 5
+        }
+      }
+    }
+- doc_page: searching-properties-by-postcode-and-radius
+  doc_url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-radius
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: searching_properties_by_postcode_and_radius
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/area-search
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: searching-properties-by-postcode-and-address
+  doc_url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-address
+  title: REQUEST SAMPLES
+  kind: request
+  operations:
+  - operationId: searching_properties_by_postcode_and_address
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/postcode-search
+  binding_confidence: high
+  body: |
+    {
+      "postcode": "MK5 8FT",
+      "address": "Unit 8"
+    }
+- doc_page: searching-properties-by-postcode-and-address
+  doc_url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-address
+  title: Response -A paginated list of properties
+  kind: response
+  operations:
+  - operationId: searching_properties_by_postcode_and_address
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/postcode-search
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "property",
+          "attributes": {
+            "address": "1 Sample Street, Sample Town, AB12 3CD",
+            "value_min": 203422,
+            "value_max": 218178,
+            "avm_value": 210800,
+            "avm_confidence": 7,
+            "address1": "1 Sample Street",
+            "address2": "",
+            "address3": "",
+            "address4": "",
+            "town": "Sample Town",
+            "postcode": "AB12 3CD",
+            "longitude": 128248355.09,
+            "latitude": 5573753.74
+          },
+          "links": {
+            "image": "https://api.twentyci.co.uk/api/v2/properties/1/image",
+            "attributes": "https://api.twentyci.co.uk/api/v2/properties/1/category/_all",
+            "Foo": "https://api.twentyci.co.uk/api/v2/properties/1/category/1",
+            "Bar": "https://api.twentyci.co.uk/api/v2/properties/1/category/2"
+          }
+        },
+        {
+          "id": 2,
+          "type": "property",
+          "attributes": {
+            "address": "2 Sample Street, Sample Town, AB12 3CD",
+            "value_min": 199659,
+            "value_max": 214142,
+            "avm_value": 206900,
+            "avm_confidence": 7,
+            "address1": "2 Sample Street",
+            "address2": "",
+            "address3": "",
+            "address4": "",
+            "town": "Sample Town",
+            "postcode": "AB12 3CD",
+            "longitude": 12825433.67,
+            "latitude": 5573553.44
+          },
+          "links": {
+            "image": "https://api.twentyci.co.uk/api/v2/properties/1/image",
+            "attributes": "https://api.twentyci.co.uk/api/v2/properties/1/category/_all",
+            "Foo": "https://api.twentyci.co.uk/api/v2/properties/1/category/1",
+            "Bar": "https://api.twentyci.co.uk/api/v2/properties/1/category/2"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.twentyci.co.uk/api/v2/properties?page=1",
+        "next": "https://api.twentyci.co.uk/api/v2/properties?page=2",
+        "last": "https://api.twentyci.co.uk/api/v2/properties?page=5",
+        "first": "https://api.twentyci.co.uk/api/v2/properties?page=1"
+      },
+      "meta": {
+        "pagination": {
+          "total": 75,
+          "count": 15,
+          "per_page": 15,
+          "current_page": 1,
+          "total_pages": 5
+        }
+      }
+    }
+- doc_page: searching-properties-by-postcode-and-address
+  doc_url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-address
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: searching_properties_by_postcode_and_address
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /properties/postcode-search
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-attributes
+  doc_url: https://api.twentyci.co.uk/documentation#property-attributes
+  title: Response - 200 Collection of attribute objects
+  kind: response
+  status: 200
+  operations:
+  - operationId: property_attributes
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/category/_all
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "attribute",
+          "attributes": {
+            "property_id": 103894874,
+            "question": "Number of Bedrooms",
+            "answer": 1,
+            "answer_type": "integer"
+          }
+        },
+        {
+          "id": 3,
+          "type": "attribute",
+          "attributes": {
+            "property_id": 103894874,
+            "question": "Legal Tenure",
+            "answer": "Freehold",
+            "answer_type": "varchar"
+          }
+        }
+      ]
+    }
+- doc_page: property-attributes
+  doc_url: https://api.twentyci.co.uk/documentation#property-attributes
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: property_attributes
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/category/_all
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: property-attributes
+  doc_url: https://api.twentyci.co.uk/documentation#property-attributes
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: property_attributes
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/category/_all
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtaining-a-google-maps-url-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtaining-a-google-maps-url-for-a-property
+  title: Response - 200 A generated Google Maps static street view API URL
+  kind: response
+  status: 200
+  operations:
+  - operationId: obtaining_a_google_maps_url_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/image
+  binding_confidence: high
+  body: |
+    {
+      "data": {
+        "id": 1,
+        "type": "google_image",
+        "attributes": {
+          "url": "https://maps.googleapis.com/maps/api/streetview?size=600x400&key=<MY_GOOGLE_API_KEY>&location=5573753.74,128248355.09&signature=<GENERATED_SIGNATURE>"
+        }
+      }
+    }
+- doc_page: obtaining-a-google-maps-url-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtaining-a-google-maps-url-for-a-property
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: obtaining_a_google_maps_url_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/image
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtaining-a-google-maps-url-for-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtaining-a-google-maps-url-for-a-property
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: obtaining_a_google_maps_url_for_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/image
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-all-transactions-for-property-via-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-all-transactions-for-property-via-uprn
+  title: Response - 200 A list of transactions
+  kind: response
+  status: 200
+  operations:
+  - operationId: obtain_all_transactions_for_property_via_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/transactions
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "transaction",
+          "attributes": {
+            "property_id": 1003546568,
+            "date": 1560440415,
+            "price": 88000
+          }
+        },
+        {
+          "id": 2,
+          "type": "transaction",
+          "attributes": {
+            "property_id": 1003546568,
+            "date": 1402674046,
+            "price": 45000
+          }
+        }
+      ]
+    }
+- doc_page: obtain-all-transactions-for-property-via-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-all-transactions-for-property-via-uprn
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: obtain_all_transactions_for_property_via_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/transactions
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-all-transactions-for-property-via-uprn
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-all-transactions-for-property-via-uprn
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: obtain_all_transactions_for_property_via_uprn
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/transactions
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-transport-links-near-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-transport-links-near-a-property
+  title: Response - 200 Transport links
+  kind: response
+  status: 200
+  operations:
+  - operationId: obtain_transport_links_near_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/transport-links
+  binding_confidence: high
+  body: |
+    {
+        "data": [
+            {
+                "common_name": "Bletchley Rail Station",
+                "distance": 0.92,
+                "stop": "Rail",
+                "longitude": -0.7366706,
+                "latitude": 51.9953112
+            },
+            {
+                "common_name": "Fenny Stratford Rail Station",
+                "distance": 1.84,
+                "stop": "Rail",
+                "longitude": -0.7157091,
+                "latitude": 51.9999578
+            },
+            {
+                "common_name": "Bow Brickhill Rail Station",
+                "distance": 2.73,
+                "stop": "Rail",
+                "longitude": -0.6957948,
+                "latitude": 52.0045134
+            },
+            {
+                "common_name": "Milton Keynes Central Rail Station",
+                "distance": 2.78,
+                "stop": "Rail",
+                "longitude": -0.7735547,
+                "latitude": 52.0345878
+            },
+            {
+                "common_name": "Woburn Sands Rail Station",
+                "distance": 4.74,
+                "stop": "Rail",
+                "longitude": -0.6532137,
+                "latitude": 52.0180157
+            },
+            {
+                "common_name": "London Luton Airport",
+                "distance": 18.18,
+                "stop": "Airport",
+                "longitude": -0.37599,
+                "latitude": 51.87988
+            },
+            {
+                "common_name": "London Oxford Airport",
+                "distance": 26.16,
+                "stop": "Airport",
+                "longitude": -1.31004,
+                "latitude": 51.83193
+            },
+            {
+                "common_name": "London Heathrow Airport",
+                "distance": 38.32,
+                "stop": "Airport",
+                "longitude": -0.45289080012,
+                "latitude": 51.47444402838
+            }
+        ]
+    }
+- doc_page: obtain-transport-links-near-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-transport-links-near-a-property
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: obtain_transport_links_near_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/transport-links
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-planning-permission-data-near-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-planning-permission-data-near-a-property
+  title: Response - 200 A paginated list of categories
+  kind: response
+  status: 200
+  operations:
+  - operationId: obtain_planning_permission_data_near_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{uprn}/plannings
+  binding_confidence: high
+  body: |
+    {
+        "data": [
+            {
+                "planning_id": 123456,
+                "address": "30 FAKE STREET",
+                "received_date": "2021-03-10 00:00:00",
+                "decision": "Awaiting decision"
+            }
+        ]
+    }
+- doc_page: obtain-planning-permission-data-near-a-property
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-planning-permission-data-near-a-property
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: obtain_planning_permission_data_near_a_property
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{uprn}/plannings
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: likely-to-sell
+  doc_url: https://api.twentyci.co.uk/documentation#likely-to-sell
+  title: Response
+  kind: response
+  operations:
+  - operationId: likely_to_sell
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /{uprn}/likely-to-sell
+  binding_confidence: high
+  body: |
+    {
+        "data": [
+            {
+                "uprn": 1106,
+                "lts_percentile": 10
+            }
+        ]
+    }
+- doc_page: likely-to-sell
+  doc_url: https://api.twentyci.co.uk/documentation#likely-to-sell
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: likely_to_sell
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /{uprn}/likely-to-sell
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: comparables
+  doc_url: https://api.twentyci.co.uk/documentation#comparables
+  title: Sample Request
+  kind: request
+  operations:
+  - operationId: comparables
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /price-per-square/comparables
+  binding_confidence: high
+  body: |
+    {
+      "postcode": "AB12 3CD",
+      "property_type": "Terraced",
+      "garage": 1,
+      "driveway": 1,
+      "ensuite": 0,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "energy_rating": "C|A",
+      "floor_area_band": 4,
+      "eaa_or_rics": "EAA"
+    }
+- doc_page: comparables
+  doc_url: https://api.twentyci.co.uk/documentation#comparables
+  title: Response - 200
+  kind: response
+  status: 200
+  operations:
+  - operationId: comparables
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /price-per-square/comparables
+  binding_confidence: high
+  body: |
+    {
+      "data": {
+        "details": {
+          "ppsf": 175.91,
+          "ir_lower_ppsf": 235.89,
+          "ir_upper_ppsf": null,
+          "max_distance": 0.36
+        },
+        "comparables": [
+          {
+            "address1": "1 Sample Street",
+            "address2": null,
+            "address3": null,
+            "address4": null,
+            "address5": null,
+            "address6": null,
+            "postcode": "AB12 3CD",
+            "last_transaction_date": "2025-10-31",
+            "last_transaction_price": 420000,
+            "floor_area": 100,
+            "distance": 0.36,
+            "property_type2": "Detached",
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "image_blob_path": "/001/image/1234567",
+            "method": "Dist/Date"
+          }
+        ]
+      }
+    }
+- doc_page: comparables
+  doc_url: https://api.twentyci.co.uk/documentation#comparables
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: comparables
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /price-per-square/comparables
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: obtain-a-specific-trigger
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-specific-trigger
+  title: Response - 200 A paginated list of categories
+  kind: response
+  status: 200
+  operations:
+  - operationId: get_trigger_trigger
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /trigger/{trigger}
+  binding_confidence: medium
+  binding_note: Bound by the Trigger Information section index route. The page itself declares GET /categories
+    - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "category",
+          "attributes": {
+            "name": "Foo"
+          }
+        },
+        {
+          "id": 2,
+          "type": "category",
+          "attributes": {
+            "name": "Bar"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://api.twentyci.co.uk/api/v2/categories?page=1",
+        "next": "https://api.twentyci.co.uk/api/v2/categories?page=2",
+        "last": "https://api.twentyci.co.uk/api/v2/categories?page=5",
+        "first": "https://api.twentyci.co.uk/api/v2/categories?page=1"
+      },
+      "meta": {
+        "pagination": {
+          "total": 75,
+          "count": 15,
+          "per_page": 15,
+          "current_page": 1,
+          "total_pages": 5
+        }
+      }
+    }
+- doc_page: obtain-a-specific-trigger
+  doc_url: https://api.twentyci.co.uk/documentation#obtain-a-specific-trigger
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_trigger_trigger
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /trigger/{trigger}
+  binding_confidence: medium
+  binding_note: Bound by the Trigger Information section index route. The page itself declares GET /categories
+    - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: get-properties-by-trigger-type
+  doc_url: https://api.twentyci.co.uk/documentation#get-properties-by-trigger-type
+  title: Response - The Properties by Trigger Type
+  kind: response
+  operations:
+  - operationId: get_properties_by_trigger_type
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /trigger-type/{typeId}/properties
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": "11",
+          "address1": "FLAT 5",
+          "address2": "35 UNION GROVE",
+          "address3": "",
+          "address4": "",
+          "town": "ABERDEEN",
+          "postcode": "AB10 6SD",
+          "trigger_date": "2022-03-03",
+          "trigger": "SSTC",
+          "company_branch_name": "Northwood - Aberdeen",
+          "company_branch_postcode": "AB25 2XS",
+          "company_brand_key": "16458",
+          "company_brand": "Northwood"
+        }
+      ],
+      "links": {
+        "self": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=1",
+        "first": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=1",
+        "last": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=5",
+        "next": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=2"
+      },
+      "meta": {
+        "pagination": {
+          "total": 500,
+          "count": 100,
+          "per_page": 100,
+          "current_page": 1,
+          "total_pages": 5
+        }
+      }
+    }
+- doc_page: get-properties-by-trigger-type
+  doc_url: https://api.twentyci.co.uk/documentation#get-properties-by-trigger-type
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_properties_by_trigger_type
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /trigger-type/{typeId}/properties
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: get-no-uprn-properties-by-trigger-type
+  doc_url: https://api.twentyci.co.uk/documentation#get-no-uprn-properties-by-trigger-type
+  title: Response - The Properties by Trigger Type
+  kind: response
+  operations:
+  - operationId: get_no_uprn_properties_by_trigger_type
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /trigger-type/{typeId}/no-uprn-properties
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": "11",
+          "address1": "FLAT 5",
+          "address2": "35 UNION GROVE",
+          "address3": "",
+          "address4": "",
+          "town": "ABERDEEN",
+          "postcode": "AB10 6SD",
+          "trigger_date": "2022-03-03",
+          "trigger": "SSTC",
+          "company_branch_name": "Northwood - Aberdeen",
+          "company_branch_postcode": "AB25 2XS",
+          "company_brand_key": "16458",
+          "company_brand": "Northwood"
+        }
+      ],
+      "links": {
+        "self": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=1",
+        "first": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=1",
+        "last": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=5",
+        "next": "https://api.twentyci.co.uk/api/v2/trigger-type/2/properties?page=2"
+      },
+      "meta": {
+        "pagination": {
+          "total": 500,
+          "count": 100,
+          "per_page": 100,
+          "current_page": 1,
+          "total_pages": 5
+        }
+      }
+    }
+- doc_page: get-no-uprn-properties-by-trigger-type
+  doc_url: https://api.twentyci.co.uk/documentation#get-no-uprn-properties-by-trigger-type
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_no_uprn_properties_by_trigger_type
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /trigger-type/{typeId}/no-uprn-properties
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: trigger-history
+  doc_url: https://api.twentyci.co.uk/documentation#trigger-history
+  title: Response - 200 The trigger
+  kind: response
+  status: 200
+  operations:
+  - operationId: trigger_history
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/triggers
+  binding_confidence: high
+  body: |
+    {
+      "data": {
+        "id": 22,
+        "type": "trigger",
+        "attributes": {
+          "uprn": 100040716781,
+          "date": 1446076800,
+          "date_id": 20151029,
+          "agent": "Austin & Wyatt - Charminster - Bournemouth",
+          "agent_id": 100,
+          "brand": "Austin & Wyatt",
+          "brand_id": 1951,
+          "price": 270000,
+          "tenure": "Sale",
+          "tenure_id": 1,
+          "trigger_type": "Exchanged",
+          "trigger_type_id": 8
+        }
+      }
+    }
+- doc_page: trigger-history
+  doc_url: https://api.twentyci.co.uk/documentation#trigger-history
+  title: Response - 404 Not found error
+  kind: error
+  status: 404
+  operations:
+  - operationId: trigger_history
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/triggers
+  binding_confidence: high
+  body: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+- doc_page: trigger-history
+  doc_url: https://api.twentyci.co.uk/documentation#trigger-history
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: trigger_history
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /properties/{property}/triggers
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: list-of-best-agents
+  doc_url: https://api.twentyci.co.uk/documentation#list-of-best-agents
+  title: Response - 200 A list of best agents
+  kind: response
+  status: 200
+  operations:
+  - operationId: list_of_best_agents
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent/best
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "id": 1,
+          "type": "best_agent",
+          "attributes": {
+            "company_name": "Foo",
+            "sum_ni_in_last_12_months": 187598,
+            "average_price_change_perc": 34.33,
+            "average_sold_days": 56,
+            "sum_sstc_in_Last_12_months": 23088877,
+            "sold_ratio_in_last_12_months": 233.1,
+            "score": 124.37,
+            "branch_id": null,
+            "branch_address_1": "KNIGHT FRANK",
+            "branch_address_2": "BROOKLYN HOUSE",
+            "branch_address_3": "7 RILLATON WALK",
+            "branch_address_4": "CENTRAL MILTON KEYNES",
+            "branch_address_5": "",
+            "branch_address_6": "MILTON KEYNES",
+            "branch_postcode": "MK9 2FZ",
+            "online_agent_flag": null
+          }
+        },
+        {
+          "id": 2,
+          "type": "best_agent",
+          "attributes": {
+            "company_name": "Bar",
+            "sum_ni_in_last_12_months": 747546,
+            "average_price_change_perc": 11.43,
+            "average_sold_days": 78.98,
+            "sum_sstc_in_Last_12_months": 10947573,
+            "sold_ratio_in_last_12_months": 436,
+            "score": 45.98,
+            "branch_id": null,
+            "branch_address_1": "59 High Street",
+            "branch_address_2": "",
+            "branch_address_3": "",
+            "branch_address_4": "",
+            "branch_address_5": "Stony Stratford",
+            "branch_address_6": "Milton Keynes",
+            "branch_postcode": "MK11 1AY",
+            "online_agent_flag": null
+          }
+        }
+      ],
+      "meta": {
+        "average_sold_days": 97,
+        "sold_ratio_in_last_12_months": 45.87,
+        "average_price_change_perc": 12.45,
+        "sum_ni_in_last_12_months": 8734587,
+        "sum_sstc_in_last_12_months": 2387623895
+      }
+    }
+- doc_page: list-of-best-agents
+  doc_url: https://api.twentyci.co.uk/documentation#list-of-best-agents
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: list_of_best_agents
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent/best
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: brands-ranked-by-sstc-s
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-sstc-s
+  title: Response - 200 A ranked list of brands
+  kind: response
+  status: 200
+  operations:
+  - operationId: brands_ranked_by_sstc_s
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/sstc
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_id": 51264,
+          "brand_name": "Simpson & Weekly",
+          "rank": 1,
+          "volume": 10
+        },
+        {
+          "brand_id": 44609,
+          "brand_name": "Mike Neville Estate Agents",
+          "rank": 2,
+          "volume": 8
+        },
+        {
+          "brand_id": 31108,
+          "brand_name": "Charles Orlebar Estate Agents",
+          "rank": 3,
+          "volume": 7
+        },
+        {
+          "brand_id": 19418,
+          "brand_name": "Richard James Northampton",
+          "rank": 4,
+          "volume": 6
+        },
+        {
+          "brand_id": 31933,
+          "brand_name": "Coley Thomson",
+          "rank": 5,
+          "volume": 2
+        },
+        {
+          "brand_id": 5399,
+          "brand_name": "Connells",
+          "rank": 5,
+          "volume": 2
+        }
+      ]
+    }
+- doc_page: brands-ranked-by-sstc-s
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-sstc-s
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: brands_ranked_by_sstc_s
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/sstc
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: brands-ranked-by-new-instructions
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions
+  title: Response - 200 A ranked list of brands
+  kind: response
+  status: 200
+  operations:
+  - operationId: brands_ranked_by_new_instructions
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_id": 51264,
+          "brand_name": "Simpson & Weekly",
+          "rank": 1,
+          "volume": 10
+        },
+        {
+          "brand_id": 44609,
+          "brand_name": "Mike Neville Estate Agents",
+          "rank": 2,
+          "volume": 8
+        },
+        {
+          "brand_id": 31108,
+          "brand_name": "Charles Orlebar Estate Agents",
+          "rank": 3,
+          "volume": 7
+        },
+        {
+          "brand_id": 19418,
+          "brand_name": "Richard James Northampton",
+          "rank": 4,
+          "volume": 6
+        },
+        {
+          "brand_id": 31933,
+          "brand_name": "Coley Thomson",
+          "rank": 5,
+          "volume": 2
+        },
+        {
+          "brand_id": 5399,
+          "brand_name": "Connells",
+          "rank": 5,
+          "volume": 2
+        }
+      ]
+    }
+- doc_page: brands-ranked-by-new-instructions
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: brands_ranked_by_new_instructions
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: brands-ranked-by-pipa
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-pipa
+  title: Response - 200 A ranked list of brands
+  kind: response
+  status: 200
+  operations:
+  - operationId: brands_ranked_by_pipa
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/percentage-of-initial-price-achieved
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_id": 51264,
+          "brand_name": "Simpson & Weekly",
+          "rank": 1,
+          "volume": 10
+        },
+        {
+          "brand_id": 44609,
+          "brand_name": "Mike Neville Estate Agents",
+          "rank": 2,
+          "volume": 8
+        },
+        {
+          "brand_id": 31108,
+          "brand_name": "Charles Orlebar Estate Agents",
+          "rank": 3,
+          "volume": 7
+        },
+        {
+          "brand_id": 19418,
+          "brand_name": "Richard James Northampton",
+          "rank": 4,
+          "volume": 6
+        },
+        {
+          "brand_id": 31933,
+          "brand_name": "Coley Thomson",
+          "rank": 5,
+          "volume": 2
+        },
+        {
+          "brand_id": 5399,
+          "brand_name": "Connells",
+          "rank": 5,
+          "volume": 2
+        }
+      ]
+    }
+- doc_page: brands-ranked-by-pipa
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-pipa
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: brands_ranked_by_pipa
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/percentage-of-initial-price-achieved
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: brands-ranked-by-days-from-new-instruction-to-sstc
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-days-from-new-instruction-to-sstc
+  title: Response - 200 A ranked list of brands
+  kind: response
+  status: 200
+  operations:
+  - operationId: brands_ranked_by_days_from_new_instruction_to_sstc
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/days-to-sstc
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_id": 51264,
+          "brand_name": "Simpson & Weekly",
+          "rank": 1,
+          "volume": 10
+        },
+        {
+          "brand_id": 44609,
+          "brand_name": "Mike Neville Estate Agents",
+          "rank": 2,
+          "volume": 8
+        },
+        {
+          "brand_id": 31108,
+          "brand_name": "Charles Orlebar Estate Agents",
+          "rank": 3,
+          "volume": 7
+        },
+        {
+          "brand_id": 19418,
+          "brand_name": "Richard James Northampton",
+          "rank": 4,
+          "volume": 6
+        },
+        {
+          "brand_id": 31933,
+          "brand_name": "Coley Thomson",
+          "rank": 5,
+          "volume": 2
+        },
+        {
+          "brand_id": 5399,
+          "brand_name": "Connells",
+          "rank": 5,
+          "volume": 2
+        }
+      ]
+    }
+- doc_page: brands-ranked-by-days-from-new-instruction-to-sstc
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-days-from-new-instruction-to-sstc
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: brands_ranked_by_days_from_new_instruction_to_sstc
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/rankings/days-to-sstc
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: new-instructions-statistics-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: new_instructions_statistics_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "rank": 4,
+          "volume": 10
+        }
+      ]
+    }
+- doc_page: new-instructions-statistics-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: new_instructions_statistics_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: sstc-statistics-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#sstc-statistics-for-a-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: sstc_statistics_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/sstc
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "rank": 4,
+          "volume": 10
+        }
+      ]
+    }
+- doc_page: sstc-statistics-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#sstc-statistics-for-a-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: sstc_statistics_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/sstc
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: days-to-sstc-for-a-specific-brand
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-specific-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: days_to_sstc_for_a_specific_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/time-to-sell
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: days-to-sstc-for-a-specific-brand
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-specific-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: days_to_sstc_for_a_specific_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/time-to-sell
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: days-to-sstc-for-all-brands
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-all-brands
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: days_to_sstc_for_all_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/time-to-sell-all-brands
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: days-to-sstc-for-all-brands
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-all-brands
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: days_to_sstc_for_all_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/time-to-sell-all-brands
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: difference-in-sold-price-for-a-property-for-a-specific-brand-and-all-other-brands
+  doc_url: https://api.twentyci.co.uk/documentation#difference-in-sold-price-for-a-property-for-a-specific-brand-and-all-other-brands
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/property-sale-difference
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: difference-in-sold-price-for-a-property-for-a-specific-brand-and-all-other-brands
+  doc_url: https://api.twentyci.co.uk/documentation#difference-in-sold-price-for-a-property-for-a-specific-brand-and-all-other-brands
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/property-sale-difference
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: difference-in-pipa-for-a-property-for-a-specific-brand-and-all-other-brands
+  doc_url: https://api.twentyci.co.uk/documentation#difference-in-pipa-for-a-property-for-a-specific-brand-and-all-other-brands
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/percentage-of-initial-price-achieved
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: difference-in-pipa-for-a-property-for-a-specific-brand-and-all-other-brands
+  doc_url: https://api.twentyci.co.uk/documentation#difference-in-pipa-for-a-property-for-a-specific-brand-and-all-other-brands
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/percentage-of-initial-price-achieved
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: average-listing-price-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#average-listing-price-for-a-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: average_listing_price_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/property-sale-value
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: average-listing-price-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#average-listing-price-for-a-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: average_listing_price_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/property-sale-value
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: properties-sales-ratio-for-a-given-brand
+  doc_url: https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-a-given-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: properties_sales_ratio_for_a_given_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/sold-percentage
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: properties-sales-ratio-for-a-given-brand
+  doc_url: https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-a-given-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: properties_sales_ratio_for_a_given_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/sold-percentage
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: properties-sales-ratio-for-all-brands
+  doc_url: https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-all-brands
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: properties_sales_ratio_for_all_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/sold-percentage-all-brands
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: properties-sales-ratio-for-all-brands
+  doc_url: https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-all-brands
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: properties_sales_ratio_for_all_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/sold-percentage-all-brands
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: pipa-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#pipa-for-a-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/percentage-of-initial-price-achieved
+  binding_confidence: high
+  binding_note: Page declares GET /agent-performance/brand/percentage-of-initial-price-achieved verbatim.
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "rank": 21,
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: pipa-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#pipa-for-a-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/percentage-of-initial-price-achieved
+  binding_confidence: high
+  binding_note: Page declares GET /agent-performance/brand/percentage-of-initial-price-achieved verbatim.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: days-to-sstc-for-a-given-brand
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-given-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: days_to_sstc_for_a_given_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/days-to-sstc
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "rank": 21,
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: days-to-sstc-for-a-given-brand
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-given-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: days_to_sstc_for_a_given_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /agent-performance/brand/days-to-sstc
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: brands-ranked-by-let-agreed
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-let-agreed
+  title: Response - 200 A ranked list of brands
+  kind: response
+  status: 200
+  operations:
+  - operationId: brands_ranked_by_let_agreed
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/rankings/let-agreed
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_id": 51264,
+          "brand_name": "Simpson & Weekly",
+          "rank": 1,
+          "volume": 10
+        },
+        {
+          "brand_id": 44609,
+          "brand_name": "Mike Neville Estate Agents",
+          "rank": 2,
+          "volume": 8
+        },
+        {
+          "brand_id": 31108,
+          "brand_name": "Charles Orlebar Estate Agents",
+          "rank": 3,
+          "volume": 7
+        },
+        {
+          "brand_id": 19418,
+          "brand_name": "Richard James Northampton",
+          "rank": 4,
+          "volume": 6
+        },
+        {
+          "brand_id": 31933,
+          "brand_name": "Coley Thomson",
+          "rank": 5,
+          "volume": 2
+        },
+        {
+          "brand_id": 5399,
+          "brand_name": "Connells",
+          "rank": 5,
+          "volume": 2
+        }
+      ]
+    }
+- doc_page: brands-ranked-by-let-agreed
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-let-agreed
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: brands_ranked_by_let_agreed
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/rankings/let-agreed
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: brands-ranked-by-new-instructions-2
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions-2
+  title: Response - 200 A ranked list of brands
+  kind: response
+  status: 200
+  operations:
+  - operationId: brands_ranked_by_new_instructions_2
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/rankings/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_id": 51264,
+          "brand_name": "Simpson & Weekly",
+          "rank": 1,
+          "volume": 10
+        },
+        {
+          "brand_id": 44609,
+          "brand_name": "Mike Neville Estate Agents",
+          "rank": 2,
+          "volume": 8
+        },
+        {
+          "brand_id": 31108,
+          "brand_name": "Charles Orlebar Estate Agents",
+          "rank": 3,
+          "volume": 7
+        },
+        {
+          "brand_id": 19418,
+          "brand_name": "Richard James Northampton",
+          "rank": 4,
+          "volume": 6
+        },
+        {
+          "brand_id": 31933,
+          "brand_name": "Coley Thomson",
+          "rank": 5,
+          "volume": 2
+        },
+        {
+          "brand_id": 5399,
+          "brand_name": "Connells",
+          "rank": 5,
+          "volume": 2
+        }
+      ]
+    }
+- doc_page: brands-ranked-by-new-instructions-2
+  doc_url: https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions-2
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: brands_ranked_by_new_instructions_2
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/rankings/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: let-agreed-statistics-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#let-agreed-statistics-for-a-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: let_agreed_statistics_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/let-agreed
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "rank": 4,
+          "volume": 10
+        }
+      ]
+    }
+- doc_page: let-agreed-statistics-for-a-brand
+  doc_url: https://api.twentyci.co.uk/documentation#let-agreed-statistics-for-a-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: let_agreed_statistics_for_a_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/let-agreed
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: new-instructions-statistics-for-a-brand-2
+  doc_url: https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand-2
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: new_instructions_statistics_for_a_brand_2
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "rank": 4,
+          "volume": 10
+        }
+      ]
+    }
+- doc_page: new-instructions-statistics-for-a-brand-2
+  doc_url: https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand-2
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: new_instructions_statistics_for_a_brand_2
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/new-instructions
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: days-to-let-agreed-for-a-specific-brand
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-let-agreed-for-a-specific-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_rentals_agent_performance_brand_time_to_let
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/time-to-let
+  binding_confidence: medium
+  binding_note: Page declares no route; bound by title to the section-index route.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: days-to-let-agreed-for-all-brands
+  doc_url: https://api.twentyci.co.uk/documentation#days-to-let-agreed-for-all-brands
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_rentals_agent_performance_brand_time_to_let_all_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/time-to-let-all-brands
+  binding_confidence: medium
+  binding_note: Page declares no route; bound by title to the section-index route.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: properties-let-ratio-for-a-given-brand
+  doc_url: https://api.twentyci.co.uk/documentation#properties-let-ratio-for-a-given-brand
+  title: Response - 200 A list of brands with your requested stats
+  kind: request
+  status: 200
+  operations:
+  - operationId: properties_let_ratio_for_a_given_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/let-percentage
+  binding_confidence: high
+  body: |
+    {
+      "data": [
+        {
+          "brand_name": "Simpson & Weekly",
+          "volume": 1309
+        }
+      ]
+    }
+- doc_page: properties-let-ratio-for-a-given-brand
+  doc_url: https://api.twentyci.co.uk/documentation#properties-let-ratio-for-a-given-brand
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: properties_let_ratio_for_a_given_brand
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/let-percentage
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: properties-let-ratio-for-all-brands
+  doc_url: https://api.twentyci.co.uk/documentation#properties-let-ratio-for-all-brands
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_rentals_agent_performance_brand_let_percentage_all_brands
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /rentals/agent-performance/brand/let-percentage-all-brands
+  binding_confidence: medium
+  binding_note: Page declares no route; bound by title to the section-index route.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: partial-address-matching
+  doc_url: https://api.twentyci.co.uk/documentation#partial-address-matching
+  title: Response - 200 The match address process and a list of matched addresses
+  kind: response
+  status: 200
+  operations:
+  - operationId: address_match
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /match-address-processes
+  binding_confidence: high
+  binding_note: Page declares POST /match-address-processes verbatim.
+  body: |
+    {
+      "id": 0,
+      "status": "pending",
+      "data": [
+        {
+          "property_id": "RPT210995",
+          "uprn": "12345678"
+        }
+      ]
+    }
+- doc_page: partial-address-matching
+  doc_url: https://api.twentyci.co.uk/documentation#partial-address-matching
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: address_match
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: POST
+    path: /match-address-processes
+  binding_confidence: high
+  binding_note: Page declares POST /match-address-processes verbatim.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: nearby-schools-by-postcode
+  doc_url: https://api.twentyci.co.uk/documentation#nearby-schools-by-postcode
+  title: Response - 200 List of schools
+  kind: response
+  status: 200
+  operations:
+  - operationId: schools
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /nearby-places/schools
+  binding_confidence: high
+  binding_note: Page declares GET /nearby-places/schools verbatim.
+  body: |
+    {
+      "data": [
+        {
+          "id": "11",
+          "name": "Winterslow Church of England Primary School",
+          "education_phase": "Primary",
+          "ofsted_rating": "Good",
+          "latitude": "51.09368",
+          "longitude": "-1.6619558",
+          "distance": 1.2
+        }
+      ]
+    }
+- doc_page: nearby-schools-by-postcode
+  doc_url: https://api.twentyci.co.uk/documentation#nearby-schools-by-postcode
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: schools
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /nearby-places/schools
+  binding_confidence: high
+  binding_note: Page declares GET /nearby-places/schools verbatim.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: new-instructions-sstc-s-and-pcd-s-for-a-specific-timeframe
+  doc_url: https://api.twentyci.co.uk/documentation#new-instructions-sstc-s-and-pcd-s-for-a-specific-timeframe
+  title: Response - 200 Metrics
+  kind: response
+  status: 200
+  operations:
+  - operationId: uk_housing_market_metrics
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /market/initial-metrics
+  binding_confidence: high
+  binding_note: Page declares GET /market/initial-metrics verbatim.
+  body: |
+    {
+      "data": {
+        "id": "69efaf75-b16b-4083-84f0-8cb755a46e31",
+        "attributes": {
+          "new_instruction": 131896,
+          "sstc": 99598,
+          "predicted_to_complete": 114606
+        }
+      }
+    }
+- doc_page: new-instructions-sstc-s-and-pcd-s-for-a-specific-timeframe
+  doc_url: https://api.twentyci.co.uk/documentation#new-instructions-sstc-s-and-pcd-s-for-a-specific-timeframe
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: uk_housing_market_metrics
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /market/initial-metrics
+  binding_confidence: high
+  binding_note: Page declares GET /market/initial-metrics verbatim.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: local-search
+  doc_url: https://api.twentyci.co.uk/documentation#local-search
+  title: Response - 200 This is now
+  kind: response
+  status: 200
+  operations:
+  - operationId: local_search
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /this-is-now/search
+  binding_confidence: high
+  body: |
+    {
+      "data": {
+        "id": "0",
+        "attributes": {
+          "product_type": "Electricals - Major domestic appliances",
+          "radius": 10,
+          "postcode": "MK19",
+          "count_this_week": 147,
+          "count_this_week_ptb": 44.1,
+          "count_last_month": 594.2,
+          "count_last_month_ptb": 178.2
+        }
+      }
+    }
+- doc_page: local-search
+  doc_url: https://api.twentyci.co.uk/documentation#local-search
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: local_search
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /this-is-now/search
+  binding_confidence: high
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+- doc_page: national-search
+  doc_url: https://api.twentyci.co.uk/documentation#national-search
+  title: Response - 200 This is now national
+  kind: response
+  status: 200
+  operations:
+  - operationId: get_this_is_now_search_national
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /this-is-now/search-national
+  binding_confidence: medium
+  binding_note: Bound by page title and section position. TwentyCi's National Search page declares the
+    Local Search route (/api/v2/this-is-now/search) - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "data": {
+        "id": "0",
+        "attributes": {
+          "product_type": "Electricals - Major domestic appliances",
+          "radius": 10,
+          "postcode": "MK19",
+          "count_this_week": 147,
+          "count_this_week_ptb": 44.1,
+          "count_last_month": 594.2,
+          "count_last_month_ptb": 178.2
+        }
+      }
+    }
+- doc_page: national-search
+  doc_url: https://api.twentyci.co.uk/documentation#national-search
+  title: Response - default Unexpected error
+  kind: error
+  operations:
+  - operationId: get_this_is_now_search_national
+    spec: openapi/twentyci-twentyapi-openapi.json
+    method: GET
+    path: /this-is-now/search-national
+  binding_confidence: medium
+  binding_note: Bound by page title and section position. TwentyCi's National Search page declares the
+    Local Search route (/api/v2/this-is-now/search) - a documented copy-paste defect in the corpus.
+  body: |
+    {
+      "message": "Encountered an unexpected error",
+      "success": false,
+      "errors": []
+    }
+coverage:
+  doc_pages_with_examples: 53
+  example_blocks: 120
+  operations_with_examples: 51
+  pages_not_bound_to_an_operation: []

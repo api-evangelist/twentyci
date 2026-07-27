@@ -1,0 +1,152 @@
+generated: '2026-07-26'
+method: derived
+source: openapi/twentyci-twentyapi-openapi.json
+docs: https://api.twentyci.co.uk/documentation
+note: >-
+  The TwentyAPI entity graph, derived from path structure, path/query parameter vocabulary and the
+  published response examples. TwentyCi declares NO components.schemas in anything it publishes - the
+  harvested OpenAPI models response bodies as bare objects because TwentyCi documents them only as
+  illustrative JSON. So the entities and relationships below are derived from identifiers and routes,
+  not from named schemas, and no field-level type contract is asserted where TwentyCi publishes none.
+  Nothing here is invented: every entity is reachable through a real documented operation, and every
+  relationship is carried by a real documented parameter.
+
+root_entity: Property
+primary_key:
+  field: uprn
+  name: Unique Property Reference Number
+  issuer: Ordnance Survey / GeoPlace
+  type: integer/string (documented inconsistently as both across the corpus)
+  note: >-
+    UPRN is a UK national addressing key, not a vendor identifier and not a RESO Universal Property
+    Identifier. It is the join key for the entire model.
+id_prefixes: none
+id_prefix_note: TwentyCi mints no prefixed object ids. Identifiers are external (UPRN, postcode) or opaque integers.
+
+entities:
+- name: Property
+  description: A UK residential address in the DOMUS database, keyed by UPRN.
+  identified_by: uprn
+  operations: [property_information_by_uprn, property_details_by_uprn, get_properties]
+  attributes_documented: [full address, postcode, coordinates, AVM price, AVM minimum, AVM maximum, confidence interval]
+  filters: [bedrooms, bathrooms, property_type, energy_rating, floor_area_band, garage, driveway, ensuite, postcode]
+- name: Category
+  description: An attribute category - the vocabulary the Properties attribute endpoints are organised around.
+  identified_by: category
+  operations: [obtain_a_list_of_categories_for_a_property, obtain_a_specific_category_for_a_property]
+  example_shape: '{"id":1,"type":"category","attributes":{"name":"Foo"}}'
+- name: PropertyAttribute
+  description: A property's values within a category (or across all categories).
+  operations: [property_attributes, get_properties_property_category_category]
+- name: Valuation
+  description: Automated Valuation Model output for one property or one area - price plus min/max and confidence interval.
+  operations: [valuation_of_property_by_uprn_avm, average_property_values_by_postcode]
+  note: The AVM route is published by TwentyCi as /propertiesavm2/{property} - a missing slash in their own documentation, transcribed verbatim.
+- name: Transaction
+  description: A historical sale/transaction event on a property.
+  operations: [obtain_all_transactions_for_property_via_uprn]
+- name: Trigger
+  description: A home-mover lifecycle event on a property - the transaction signal TwentyCi's business is built on.
+  identified_by: trigger
+  operations: [get_trigger_trigger, trigger_history, get_properties_by_trigger_type, get_no_uprn_properties_by_trigger_type]
+  delivery: poll
+  delivery_note: >-
+    Despite the event language, triggers are POLLED through REST. There is no webhook, callback or
+    subscription surface anywhere in TwentyAPI.
+- name: TriggerType
+  description: The classification of a trigger event.
+  identified_by: typeId
+  operations: [get_properties_by_trigger_type, get_no_uprn_properties_by_trigger_type]
+- name: Brand
+  description: An estate-agent or letting-agent brand, the unit of all Agent Performance analytics.
+  identified_by: brand_id
+  operations: [list_of_best_agents, brands_ranked_by_sstc_s, new_instructions_statistics_for_a_brand, sstc_statistics_for_a_brand]
+- name: AgentPerformanceMetric
+  description: >-
+    A computed sales or rental metric for a brand or ranking of brands - SSTC, new instructions,
+    exchange, PIPA, days-to-SSTC, listing value, sold percentage, let-agreed, time-to-let, let ratio.
+  operations_count: 24
+  dimensions: [postcode_areas, postcode_districts, postcode_sectors, regions, price_bands, property_types, bedroom, min_price, max_price]
+- name: Postcode
+  description: A UK postcode (outcode + incode) used as the geographic search key across the model.
+  identified_by: postcode
+  operations: [searching_properties_by_postcode_and_radius, searching_properties_by_postcode_and_address, average_property_values_by_postcode, schools, local_search]
+- name: AddressMatchProcess
+  description: A submitted partial/unstructured UK address resolved against TwentyCi's addressing layer.
+  operations: [address_match]
+  note: The capability marketed as Inscriptio / AddressMaster address enhancement.
+- name: School
+  description: A school near a given postcode - neighbourhood context layered onto a property record.
+  operations: [schools]
+- name: TransportLink
+  description: A transport link near a property.
+  operations: [obtain_transport_links_near_a_property]
+- name: PlanningApplication
+  description: Planning permission data near a property.
+  operations: [obtain_planning_permission_data_near_a_property]
+- name: FloorPlan
+  description: Floor plans for a property.
+  operations: [get_properties_uprn_floor_plans]
+  note: Listed on the Properties section index with no dedicated documentation page; zero asserted parameters.
+- name: StreetViewImage
+  description: A generated Google Maps / Street View URL for a property.
+  operations: [obtaining_a_google_maps_url_for_a_property]
+- name: Comparable
+  description: Price-per-square-foot comparable properties.
+  operations: [comparables]
+- name: MarketMetric
+  description: Aggregate UK housing-market metrics for a timeframe - new instructions, SSTCs and PCDs.
+  operations: [uk_housing_market_metrics]
+  granularity: national/market-level (not property-level)
+- name: RetailPropensity
+  description: '"This is Now" propensity-to-buy signal derived from home-mover events, local and national.'
+  operations: [local_search, get_this_is_now_search_national]
+  dimensions: [postcode, radius, product_type]
+- name: AccessToken
+  description: An OAuth 2.0 bearer token plus refresh token, minted from TwentyCi-issued credentials.
+  operations: [issueTwentyApiToken]
+  spec: openapi/twentyci-twentyapi-oauth-openapi.json
+  ttl_seconds: 1296000
+
+relationships:
+- {from: Property, to: PropertyAttribute, type: has_many, via: 'path /properties/{property}/category/*'}
+- {from: PropertyAttribute, to: Category, type: belongs_to, via: category}
+- {from: Property, to: Valuation, type: has_one, via: 'uprn (POST /propertiesavm2/{property})'}
+- {from: Property, to: Transaction, type: has_many, via: 'path /properties/{property}/transactions'}
+- {from: Property, to: Trigger, type: has_many, via: 'path /properties/{property}/triggers'}
+- {from: Trigger, to: TriggerType, type: belongs_to, via: typeId}
+- {from: Trigger, to: Property, type: belongs_to, via: 'uprn (nullable - get_no_uprn_properties_by_trigger_type exists precisely because some triggers have no UPRN)'}
+- {from: Property, to: TransportLink, type: has_many, via: 'path /properties/{property}/transport-links'}
+- {from: Property, to: PlanningApplication, type: has_many, via: 'path /properties/{uprn}/plannings'}
+- {from: Property, to: FloorPlan, type: has_many, via: 'path /properties/{uprn}/floor-plans'}
+- {from: Property, to: StreetViewImage, type: has_one, via: 'path /properties/{property}/image'}
+- {from: Property, to: Comparable, type: has_many, via: 'price-per-square comparables (postcode/uprn scoped)'}
+- {from: Property, to: Postcode, type: belongs_to, via: postcode}
+- {from: Postcode, to: School, type: has_many, via: 'query postcode on /nearby-places/schools'}
+- {from: Postcode, to: RetailPropensity, type: has_many, via: 'query postcode + radius'}
+- {from: Postcode, to: Property, type: has_many, via: 'POST /properties/area-search, POST /properties/postcode-search'}
+- {from: Brand, to: AgentPerformanceMetric, type: has_many, via: brand_id}
+- {from: AgentPerformanceMetric, to: Postcode, type: scoped_by, via: 'postcode_areas / postcode_districts / postcode_sectors / regions'}
+- {from: AddressMatchProcess, to: Property, type: resolves_to, via: 'UPRN returned by the match process'}
+- {from: MarketMetric, to: Trigger, type: aggregates, via: 'SSTC / new-instruction / PCD trigger events (implied by product definition, not by a declared field)', confidence: medium}
+
+joins:
+  note: The whole model joins on two external keys.
+  keys:
+  - {key: uprn, scope: property-level, issuer: Ordnance Survey / GeoPlace}
+  - {key: postcode, scope: geographic, issuer: Royal Mail}
+
+absent:
+  schemas_in_spec: true
+  schemas_note: >-
+    components.schemas is empty in the main harvested spec (the OAuth spec declares TokenRequest and
+    TokenResponse, which ARE documented as typed parameter tables). Response schemas are deliberately
+    not modelled because TwentyCi publishes none in machine-readable form; see examples/twentyci-examples.yml
+    for the 120 illustrative bodies it does publish.
+  write_surface: >-
+    There is no create/update/delete anywhere in the model. TwentyAPI is read-only reference data.
+  listing_entity: >-
+    No Listing, Offer, Contract, Tenancy, Escrow, Title or Payment entity exists. In the UK those live
+    with the portals (Rightmove, Zoopla), the agency CRMs, HM Land Registry and conveyancers - not with
+    the data aggregator.
+render: null

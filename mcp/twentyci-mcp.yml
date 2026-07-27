@@ -1,0 +1,1554 @@
+generated: '2026-07-26'
+method: derived
+status: candidate
+source: 'Derived one-to-one from the two OpenAPI 3.1 documents in openapi/, which were themselves harvested
+  from TwentyCi''s public documentation corpus. TwentyCi publishes NO MCP server: zero occurrences of
+  "MCP" or "Model Context Protocol" in the documentation corpus, nothing in the MCP registry, and github.com/twentyci
+  has zero public repositories. This is a candidate tool surface showing what an MCP projection of TwentyAPI
+  would look like - it is not a TwentyCi product and nothing here is callable without TwentyCi-issued
+  credentials.'
+server:
+  name: twentyci-twentyapi
+  transport: http
+  url: null
+  auth: OAuth 2.0 password grant, Bearer token - see authentication/twentyci-authentication.yml
+  published_by_provider: false
+access:
+  gated: true
+  note: Every tool below resolves to an operation under https://api.twentyci.co.uk/api/v2 that returns
+    HTTP 401 "Unauthenticated." to anonymous callers. Credentials are issued by TwentyCi commercially;
+    there is no self-serve signup, no free tier and no sandbox. An agent cannot exercise any of these
+    tools without a commercial data agreement.
+characteristics:
+  read_only_surface: true
+  note: TwentyAPI is a read-only data API. Five operations use POST to carry search criteria in a JSON
+    body (area value/price, AVM valuation, area search, postcode search, address matching) but none creates,
+    updates or deletes provider-side state. The only genuinely state-affecting operation is minting a
+    token. Agent risk here is data-egress and cost, not mutation.
+tool_count: 58
+categories:
+- Address Match
+- Agent Performance
+- Authorisation
+- Categories
+- Properties
+- Schools
+- This is Now | Retail Propensity To Buy Goods
+- Trigger Information
+- UK Housing Market Metrics
+tools:
+- name: obtain_a_list_of_categories_for_a_property
+  title: Obtain a List of Categories for a Property
+  description: 'The /categories endpoint in TwentyAPI allows developers to retrieve essential property
+    category data, emphasizing efficient organisation and seamless API integration. This endpoint''s output,
+    including Category ID and Category information, proves invaluable for streamlined communication and
+    improved '
+  category: Categories
+  source_operation: openapi/twentyci-twentyapi-openapi.json#obtain_a_list_of_categories_for_a_property
+  http: GET /categories
+  read_only: true
+  inputs:
+  - name: page
+    in: query
+    required: false
+    type: integer
+- name: obtain_a_specific_category_for_a_property
+  title: Obtain a Specific Category for a Property
+  description: The /categories/{category} in TwentyAPI is designed to return a specific category and its
+    relevant data using information from the output of /categories. This targeted data retrieval enhances
+    efficiency, optimizes performance, and supports modular development.
+  category: Categories
+  source_operation: openapi/twentyci-twentyapi-openapi.json#obtain_a_specific_category_for_a_property
+  http: GET /categories/{category}
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: category
+    in: path
+    required: true
+    type: string
+- name: property_information_by_uprn
+  title: Property Information by UPRN
+  description: 'The properties/{uprn} endpoint in TwentyAPI retrieves results by using a specific UPRN
+    (Unique Property Reference Number) provided in the URL. This endpoint offers detailed information,
+    including the full address, postcode, coordinates, AVM (Automated Valuation Model) price, AVM minimum
+    and maximum '
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#property_information_by_uprn
+  http: GET /properties/{uprn}
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: uprn
+    in: path
+    required: true
+    type: string
+- name: property_details_by_uprn
+  title: Property Details by UPRN
+  description: The /properties/{uprn}/details endpoint in TwentyAPI provides detailed property information
+    by utilising a specific UPRN - Unique Property Reference Number passed through the URL. This includes
+    the full address, postcode, coordinates, and a wealth of property details such as bedrooms, garden
+    presenc
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#property_details_by_uprn
+  http: GET /properties/{property}/details
+  read_only: true
+  inputs:
+  - name: uprn
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: recent_property_sales_in_the_area
+  title: Recent Property Sales in the Area
+  description: The /properties/{property}/recent-sale-in-the-area endpoint in TwentyAPI is designed to
+    retrieve information about similar properties that have been sold within the last 12 months in the
+    vicinity of a property by utilising a specific UPRN - Unique Property Reference Number. This information
+    is based
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#recent_property_sales_in_the_area
+  http: GET /properties/{property}/recent-sale-in-the-area
+  read_only: true
+  inputs:
+  - name: uprn
+    in: query
+    required: true
+    type: integer
+  - name: per_page
+    in: query
+    required: false
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: similar_properties_for_sale_in_area
+  title: Similar Properties For Sale in Area
+  description: The /properties/{uprn}/for-sale-in-the-area endpoint in TwentyAPI is designed to call similar
+    properties currently for sale in the local area of a specified property. This is based on Postcode
+    District, Property Type, and bedrooms.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#similar_properties_for_sale_in_area
+  http: GET /properties/{property}/for-sale-in-the-area
+  read_only: true
+  inputs:
+  - name: uprn
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: average_property_values_by_postcode
+  title: Average Property Values by Postcode
+  description: Description The /properties/area-value-price endpoint in TwentyAPI is designed to retrieve
+    prices generated by an AVM (Automated Valuation Model) for the postcode sector. The results include
+    the average price for all properties and individual averages for different property types within the
+    specifie
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#average_property_values_by_postcode
+  http: POST /properties/area-value-price
+  read_only: true
+  request_body: true
+- name: valuation_of_property_by_uprn_avm
+  title: Valuation of Property by UPRN | AVM
+  description: The TwentyCi Decision Automated Valuation Model (AVM) endpoint is a Data as a Service (DaaS)
+    API that provides an AVM value range and accuracy for a single property at a point of need. It can
+    be used to obtain the current AVM value and accuracy rating of a property, enabling users to perform
+    on-dema
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#valuation_of_property_by_uprn_avm
+  http: POST /propertiesavm2/{property}
+  read_only: true
+  inputs:
+  - name: property
+    in: path
+    required: true
+    type: string
+  request_body: true
+- name: searching_properties_by_postcode_and_radius
+  title: Searching Properties by Postcode and Radius
+  description: The /properties/area-search endpoint in TwentyAPI is designed to retrieve AVM (Automated
+    Valuation Model) prices for properties within a specified radius in miles from a given location. The
+    results include the average price for all properties and individual averages for different property
+    types.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#searching_properties_by_postcode_and_radius
+  http: POST /properties/area-search
+  read_only: true
+  request_body: true
+- name: searching_properties_by_postcode_and_address
+  title: Searching Properties by Postcode and Address
+  description: The /properties/postcode-search endpoint in TwentyAPI is designed to retrieve properties
+    matching a specific postcode and address. The results include the average price for all properties
+    and individual averages for different property types within the specified postcode.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#searching_properties_by_postcode_and_address
+  http: POST /properties/postcode-search
+  read_only: true
+  request_body: true
+- name: property_attributes
+  title: Property Attributes
+  description: The /properties/{uprn}/category/all endpoint in TwentyAPI is designed to retrieve various
+    property attributes for a given UPRN (Unique Property Reference Number). Leveraging this API for obtaining
+    property attributes can streamline processes, improve efficiency, and enhance the overall quality
+    of se
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#property_attributes
+  http: GET /properties/{property}/category/_all
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: obtaining_a_google_maps_url_for_a_property
+  title: Obtaining a Google Maps URL for a Property
+  description: The /properties/{property}/image endpoint in TwentyAPI is designed to retrieve the specific
+    Street View image from Google Maps for a property.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#obtaining_a_google_maps_url_for_a_property
+  http: GET /properties/{property}/image
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: obtain_all_transactions_for_property_via_uprn
+  title: Obtain all Transactions for Property via UPRN
+  description: The /properties/{property}/transactions endpoint in TwentyAPI is designed to retrieve all
+    transactions associated with a property, displaying its pricing history. This lightweight endpoint
+    provides information on transaction values and dates.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#obtain_all_transactions_for_property_via_uprn
+  http: GET /properties/{property}/transactions
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: obtain_transport_links_near_a_property
+  title: Obtain Transport Links near a Property
+  description: The /api/v2/properties/{property}/transport-links endpoint in TwentyAPI is designed to
+    retrieve information about the nearest rail stations and airports in proximity to a property based
+    on its UPRN (Unique Property Reference Number). This endpoint provides valuable insights into the
+    property's acces
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#obtain_transport_links_near_a_property
+  http: GET /properties/{property}/transport-links
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: obtain_planning_permission_data_near_a_property
+  title: Obtain Planning Permission Data near a Property
+  description: The /properties/{uprn}/plannings endpoint in TwentyAPI is designed to retrieve information
+    about planning permissions associated with a property based on its Unique Property Reference Number
+    (UPRN). This endpoint provides valuable insights into the property's planning history, which is essential
+    for
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#obtain_planning_permission_data_near_a_property
+  http: GET /properties/{uprn}/plannings
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: uprn
+    in: path
+    required: true
+    type: string
+- name: likely_to_sell
+  title: Likely To Sell
+  description: 'Likely To Sell (LTS) score for a property Returns the Likely To Sell percentile for a
+    given UPRN. The score shows how likely a property is to sell compared to all other UK residential
+    properties. Lower percentile = higher likelihood to sell. Example: 10 = top 10 percent most likely
+    to sell 30 = top '
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#likely_to_sell
+  http: GET /{uprn}/likely-to-sell
+  read_only: true
+  inputs:
+  - name: uprn
+    in: path
+    required: true
+    type: integer
+- name: comparables
+  title: Comparables
+  description: The /price-per-square/comparables endpoint in TwentyAPI is designed to return comparable
+    property transactions and calculated price-per-square-foot (PPSF) metrics based on postcode and property
+    characteristics.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#comparables
+  http: GET /price-per-square/comparables
+  read_only: true
+  inputs:
+  - name: postcode
+    in: query
+    required: true
+    type: string
+  - name: property_type
+    in: query
+    required: false
+    type: string
+  - name: bedrooms
+    in: query
+    required: false
+    type: integer
+  - name: bathrooms
+    in: query
+    required: false
+    type: integer
+  - name: garage
+    in: query
+    required: false
+    type: integer
+  - name: driveway
+    in: query
+    required: false
+    type: integer
+  - name: ensuite
+    in: query
+    required: false
+    type: integer
+  - name: energy_rating
+    in: query
+    required: false
+    type: string
+  - name: floor_area_band
+    in: query
+    required: false
+    type: integer
+  - name: eaa_or_rics
+    in: query
+    required: false
+    type: string
+- name: get_properties_by_trigger_type
+  title: Get Properties by Trigger Type
+  description: The /trigger-type/{typeId}/properties endpoint in TwentyAPI is designed to retrieve properties
+    with the same trigger type within a specific postcode over a defined day range between 7 and 30 days
+    in the past. This endpoint provides valuable insights into recent transactions in the real estate
+    indust
+  category: Trigger Information
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_properties_by_trigger_type
+  http: GET /trigger-type/{typeId}/properties
+  read_only: true
+  inputs:
+  - name: postcode_district
+    in: query
+    required: true
+    type: string
+  - name: max_days
+    in: query
+    required: true
+    type: integer
+  - name: postcode_sector
+    in: query
+    required: false
+    type: string
+  - name: typeId
+    in: path
+    required: true
+    type: string
+- name: get_no_uprn_properties_by_trigger_type
+  title: Get no UPRN Properties by Trigger Type
+  description: 'The /api/v2/trigger-type/{typeId}/no-uprn-properties endpoint in TwentyAPI is designed
+    to retrieve a count of properties with the same trigger type within a specific postcode over a defined
+    day range, ranging from 7 to 30 days in the past. Purpose Historical Data with Limited Information:
+    To assist '
+  category: Trigger Information
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_no_uprn_properties_by_trigger_type
+  http: GET /trigger-type/{typeId}/no-uprn-properties
+  read_only: true
+  inputs:
+  - name: postcode_district
+    in: query
+    required: true
+    type: string
+  - name: max_days
+    in: query
+    required: true
+    type: integer
+  - name: postcode_sector
+    in: query
+    required: false
+    type: string
+  - name: typeId
+    in: path
+    required: true
+    type: string
+- name: trigger_history
+  title: Trigger History
+  description: The /api/v2/properties/[uprn]/triggers endpoint in TwentyAPI retrieves the previous listing
+    history for a given UPRN (Unique Property Reference Number). This endpoint covers both sale and rental
+    tenures. Understanding a property's sales history is essential for estate agents, providing a dynamic
+    too
+  category: Trigger Information
+  source_operation: openapi/twentyci-twentyapi-openapi.json#trigger_history
+  http: GET /properties/{property}/triggers
+  read_only: true
+  inputs:
+  - name: id
+    in: query
+    required: true
+    type: integer
+  - name: property
+    in: path
+    required: true
+    type: string
+- name: list_of_best_agents
+  title: List of Best Agents
+  description: The /agent/best endpoint in TwentyAPI is designed to retrieve valuable data for identifying
+    the best estate agents within a specified area. Leveraging proprietary algorithms, this endpoint calculates
+    a score for each agent, offering a comprehensive ranking based on multiple data points. Users gain
+    a
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#list_of_best_agents
+  http: GET /agent/best
+  read_only: true
+  inputs:
+  - name: postcode
+    in: query
+    required: true
+    type: string
+  - name: bedroom
+    in: query
+    required: false
+    type: integer
+  - name: propsubtype
+    in: query
+    required: false
+    type: string
+  - name: achieve_asking_price
+    in: query
+    required: false
+    type: boolean
+  - name: fastest_sale
+    in: query
+    required: false
+    type: boolean
+  - name: experienced_agent
+    in: query
+    required: false
+    type: boolean
+- name: brands_ranked_by_sstc_s
+  title: Brands Ranked by SSTC's
+  description: The /agent-performance/rankings/sstc endpoint in TwentyAPI is designed to retrieve data
+    on the top five estate agencies ranked by agreed property sales. This API (Application Programming
+    Interface) endpoint assists estate agents in gaining valuable market intelligence, understanding their
+    competitiv
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#brands_ranked_by_sstc_s
+  http: GET /agent-performance/rankings/sstc
+  read_only: true
+  inputs:
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: brands_ranked_by_new_instructions
+  title: Brands Ranked by New Instructions
+  description: The /agent-performance/rankings/new-instructions endpoint in TwentyAPI is designed to retrieve
+    data on the top five estate agencies ranked by new instructions. This API call is crucial for estate
+    agents, providing insights into market trends, facilitating competitive analysis, and supporting strateg
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#brands_ranked_by_new_instructions
+  http: GET /agent-performance/rankings/new-instructions
+  read_only: true
+  inputs:
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: brands_ranked_by_pipa
+  title: Brands Ranked by PIPA
+  description: The /agent-performance/rankings/percentage-of-initial-price-achieved endpoint in TwentyAPI
+    is designed to retrieve data on the top five estate agencies ranked by the percentage change of the
+    initial listing price (PIPA). This API call is crucial for estate agents, providing insights into
+    market pric
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#brands_ranked_by_pipa
+  http: GET /agent-performance/rankings/percentage-of-initial-price-achieved
+  read_only: true
+  inputs:
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: brands_ranked_by_days_from_new_instruction_to_sstc
+  title: Brands Ranked by Days from New Instruction to SSTC
+  description: The /agent-performance/rankings/days-to-sstc endpoint in TwentyAPI is designed to retrieve
+    data on the top five estate agencies ranked by how quickly properties transition from for sale to
+    sold subject to contract (SSTC). This API call is essential for estate agents, providing insights
+    into market e
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#brands_ranked_by_days_from_new_instruction_to_sstc
+  http: GET /agent-performance/rankings/days-to-sstc
+  read_only: true
+  inputs:
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: new_instructions_statistics_for_a_brand
+  title: New Instructions Statistics for a Brand
+  description: The /agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve
+    the volume of new instructions for a specific estate agency within the last 12 months. Additionally,
+    it provides the agency's overall rank based on optional parameters. If no parameters are set, the
+    ranking i
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#new_instructions_statistics_for_a_brand
+  http: GET /agent-performance/brand/new-instructions
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: sstc_statistics_for_a_brand
+  title: SSTC statistics for a Brand
+  description: The /agent-performance/brand/sstc endpoint in TwentyAPI is designed to retrieve information
+    on properties sold subject to contract (SSTC) by a specific estate agency within the last 12 months.
+    Additionally, it provides the agency's overall rank based on optional parameters. If no parameters
+    are set,
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#sstc_statistics_for_a_brand
+  http: GET /agent-performance/brand/sstc
+  read_only: true
+- name: days_to_sstc_for_a_specific_brand
+  title: Days to SSTC for a Specific Brand
+  description: The /agent-performance/brand/time-to-sell endpoint in TwentyAPI is designed to retrieve
+    the average time it takes for a property to be sold after being instructed for a specific brand. This
+    data is based on optional parameters, allowing for a customised analysis. If no parameters are set,
+    the calcul
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#days_to_sstc_for_a_specific_brand
+  http: GET /agent-performance/brand/time-to-sell
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: days_to_sstc_for_all_brands
+  title: Days to SSTC for all Brands
+  description: 'The /agent-performance/brand/time-to-sell-all-brands endpoint in TwentyAPI is designed
+    to retrieve the average time it takes for a property to be sold after being instructed by all brands
+    within a specific area defined by additional parameters. If no parameters are set, the calculation
+    is done on a '
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#days_to_sstc_for_all_brands
+  http: GET /agent-performance/brand/time-to-sell-all-brands
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+  title: Difference in Sold price for a Property for a Specific Brand and all other Brands
+  description: The /agent-performance/brand/property-sale-differenceendpoint in TwentyAPI is designed
+    to calculate the difference between the average sale price from a Property for a given brand and the
+    average sale price of all brands with the specified filter. The volume attribute is in GBP. A positive
+    value ind
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+  http: GET /agent-performance/brand/property-sale-difference
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+  title: Difference in PIPA for a Property for a Specific Brand and all other Brands
+  description: The /api/v2/agent-performance/brand/initial-price-achieve endpoint in TwentyAPI is designed
+    to calculate the difference between the Percentage of Initial Price Achieved (PIPA)) for a given brand
+    and the PIPA of all brands with the specified filter. The volume attribute is in percentage format
+    but di
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+  http: GET /agent-performance/brand/percentage-of-initial-price-achieved
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: average_listing_price_for_a_brand
+  title: Average Listing Price for a Brand
+  description: The /agent-performance/brand/property-listing-value endpoint in TwentyAPI is designed to
+    retrieve the average listing price of properties for a specific brand. This data can be further filtered
+    by optional parameters, allowing estate agents to gain insights into market trends. If no parameters
+    are s
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#average_listing_price_for_a_brand
+  http: GET /agent-performance/brand/property-sale-value
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: properties_sales_ratio_for_a_given_brand
+  title: Properties Sales Ratio for a Given Brand
+  description: The /agent-performance/brand/sold-percentage endpoint in TwentyAPI is designed to calculate
+    the percentage of properties sold compared to new instructions for a given brand. This ratio indicates
+    the agency's efficiency in converting property instructions into successful sales. A ratio above 100%
+    sig
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#properties_sales_ratio_for_a_given_brand
+  http: GET /agent-performance/brand/sold-percentage
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: properties_sales_ratio_for_all_brands
+  title: Properties Sales Ratio for all Brands
+  description: The /agent-performance/brand/sold-percentage-all-brands endpoint in TwentyAPI is designed
+    to calculate the percentage of properties sold compared to new instructions for all brands within
+    a specified area. If no parameters are provided, the calculation is based nationally. A ratio above
+    100% indicat
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#properties_sales_ratio_for_all_brands
+  http: GET /agent-performance/brand/sold-percentage-all-brands
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: days_to_sstc_for_a_given_brand
+  title: Days to SSTC for a given Brand
+  description: This will give you a volume stat which is the Day to SSTC for a Brand.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#days_to_sstc_for_a_given_brand
+  http: GET /agent-performance/brand/days-to-sstc
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: brands_ranked_by_let_agreed
+  title: Brands ranked by Let Agreed
+  description: The /rentals/agent-performance/rankings/let-agreed endpoint in TwentyAPI is designed to
+    retrieve information on agent performance regarding agreed lets in a specific patch, over the last
+    12 months. This data can be filtered by region, postcode area, postcode district, and postcode sector.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#brands_ranked_by_let_agreed
+  http: GET /rentals/agent-performance/rankings/let-agreed
+  read_only: true
+  inputs:
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: brands_ranked_by_new_instructions_2
+  title: Brands ranked by New Instructions
+  description: The /rentals/agent-performance/rankings/new-instructions endpoint in TwentyAPI is tailored
+    to retrieve crucial insights on an agent's proficiency in securing new property instructions for lettings
+    within a specified patch. This resource aims to empower estate agents by aiding them in discerning
+    top-
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#brands_ranked_by_new_instructions_2
+  http: GET /rentals/agent-performance/rankings/new-instructions
+  read_only: true
+  inputs:
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: let_agreed_statistics_for_a_brand
+  title: Let Agreed statistics for a Brand
+  description: The /rentals/agent-performance/brand/let-agreed endpoint in TwentyAPI is designed to retrieve
+    information on the number of properties let by a brand in the last 12 months. This API (Application
+    Programming Interface) call assists estate agents in evaluating their performance and making informed
+    deci
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#let_agreed_statistics_for_a_brand
+  http: GET /rentals/agent-performance/brand/let-agreed
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: new_instructions_statistics_for_a_brand_2
+  title: New Instructions statistics for a Brand
+  description: 'The /rentals/agent-performance/brand/new-instructions endpoint in TwentyAPI is designed
+    to retrieve information on the number of properties instructed for rental by a brand in the last 12
+    months. This API (Application Programming Interface) call assists estate agents in evaluating their
+    performance '
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#new_instructions_statistics_for_a_brand_2
+  http: GET /rentals/agent-performance/brand/new-instructions
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: properties_let_ratio_for_a_given_brand
+  title: Properties Let Ratio for a Given Brand
+  description: The rentals/agent-performance/brand/let-percentage endpoint in TwentyAPI is designed to
+    calculate the percentage of properties let compared to new instructions for a given brand. This ratio
+    indicates the agency's efficiency in converting property instructions into successful sales. A ratio
+    above 100
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#properties_let_ratio_for_a_given_brand
+  http: GET /rentals/agent-performance/brand/let-percentage
+  read_only: true
+  inputs:
+  - name: brand_id
+    in: query
+    required: true
+    type: integer
+  - name: min_price
+    in: query
+    required: false
+    type: integer
+  - name: max_price
+    in: query
+    required: false
+    type: integer
+  - name: price_bands
+    in: query
+    required: false
+    type: string
+  - name: postcode_sectors
+    in: query
+    required: false
+    type: string
+  - name: postcode_areas
+    in: query
+    required: false
+    type: string
+  - name: postcode_districts
+    in: query
+    required: false
+    type: string
+  - name: regions
+    in: query
+    required: false
+    type: string
+  - name: property_types
+    in: query
+    required: false
+    type: string
+  - name: limit
+    in: query
+    required: false
+    type: integer
+- name: address_match
+  title: Address Match
+  description: '- Partial Address Matching'
+  category: Address Match
+  source_operation: openapi/twentyci-twentyapi-openapi.json#address_match
+  http: POST /match-address-processes
+  read_only: true
+- name: schools
+  title: Schools
+  description: '- Nearby Schools by Postcode'
+  category: Schools
+  source_operation: openapi/twentyci-twentyapi-openapi.json#schools
+  http: GET /nearby-places/schools
+  read_only: true
+- name: uk_housing_market_metrics
+  title: UK Housing Market Metrics
+  description: '- New Instructions, SSTC''s and PCD''s for a Specific Timeframe'
+  category: UK Housing Market Metrics
+  source_operation: openapi/twentyci-twentyapi-openapi.json#uk_housing_market_metrics
+  http: GET /market/initial-metrics
+  read_only: true
+- name: local_search
+  title: Local Search
+  description: 'The /this-is-now/search endpoint in TwentyAPI is designed to retrieve the likelihood of
+    a household within a specified area purchasing specific goods, based on their position in the timeline
+    of their homemover journey. Purpose Targetted Marketing: To enable retailers to target marketing efforts
+    effe'
+  category: This is Now | Retail Propensity To Buy Goods
+  source_operation: openapi/twentyci-twentyapi-openapi.json#local_search
+  http: GET /this-is-now/search
+  read_only: true
+  inputs:
+  - name: postcode
+    in: query
+    required: true
+    type: string
+  - name: product_type
+    in: query
+    required: true
+    type: string
+  - name: radius
+    in: query
+    required: false
+    type: string
+- name: get_properties
+  title: /properties
+  description: Listed as an available route on the TwentyAPI "Properties" section page, but TwentyCi does
+    not publish a dedicated parameter or response block for it. Recorded here verbatim from the section
+    index; no parameters are asserted.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_properties
+  http: GET /properties
+  read_only: true
+- name: get_properties_property_category_category
+  title: /properties/{property}/category/{category}
+  description: Listed as an available route on the TwentyAPI "Properties" section page, but TwentyCi does
+    not publish a dedicated parameter or response block for it. Recorded here verbatim from the section
+    index; no parameters are asserted.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_properties_property_category_category
+  http: GET /properties/{property}/category/{category}
+  read_only: true
+  inputs:
+  - name: property
+    in: path
+    required: true
+    type: string
+  - name: category
+    in: path
+    required: true
+    type: string
+- name: get_properties_uprn_floor_plans
+  title: /properties/{uprn}/floor-plans
+  description: Listed as an available route on the TwentyAPI "Properties" section page, but TwentyCi does
+    not publish a dedicated parameter or response block for it. Recorded here verbatim from the section
+    index; no parameters are asserted.
+  category: Properties
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_properties_uprn_floor_plans
+  http: GET /properties/{uprn}/floor-plans
+  read_only: true
+  inputs:
+  - name: uprn
+    in: path
+    required: true
+    type: string
+- name: get_trigger_trigger
+  title: /trigger/{trigger}
+  description: Listed as an available route on the TwentyAPI "Trigger Information" section page, but TwentyCi
+    does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section
+    index; no parameters are asserted.
+  category: Trigger Information
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_trigger_trigger
+  http: GET /trigger/{trigger}
+  read_only: true
+  inputs:
+  - name: trigger
+    in: path
+    required: true
+    type: string
+- name: get_agent_performance_rankings_exchange
+  title: /agent-performance/rankings/exchange
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section
+    page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here
+    verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_agent_performance_rankings_exchange
+  http: GET /agent-performance/rankings/exchange
+  read_only: true
+- name: get_agent_performance_brand_exchange
+  title: /agent-performance/brand/exchange
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section
+    page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here
+    verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_agent_performance_brand_exchange
+  http: GET /agent-performance/brand/exchange
+  read_only: true
+- name: get_agent_performance_brand_property_sale_value_all_brands
+  title: /agent-performance/brand/property-sale-value-all-brands
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section
+    page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here
+    verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_agent_performance_brand_property_sale_value_all_brands
+  http: GET /agent-performance/brand/property-sale-value-all-brands
+  read_only: true
+- name: get_agent_performance_brand_initial_price_achieve
+  title: /agent-performance/brand/initial-price-achieve
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section
+    page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here
+    verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_agent_performance_brand_initial_price_achieve
+  http: GET /agent-performance/brand/initial-price-achieve
+  read_only: true
+- name: get_agent_performance_brand_property_listing_value
+  title: /agent-performance/brand/property-listing-value
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section
+    page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here
+    verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_agent_performance_brand_property_listing_value
+  http: GET /agent-performance/brand/property-listing-value
+  read_only: true
+- name: get_rentals_agent_performance_brand_time_to_let
+  title: /rentals/agent-performance/brand/time-to-let
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Rental Data"
+    section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded
+    here verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_rentals_agent_performance_brand_time_to_let
+  http: GET /rentals/agent-performance/brand/time-to-let
+  read_only: true
+- name: get_rentals_agent_performance_brand_time_to_let_all_brands
+  title: /rentals/agent-performance/brand/time-to-let-all-brands
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Rental Data"
+    section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded
+    here verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_rentals_agent_performance_brand_time_to_let_all_brands
+  http: GET /rentals/agent-performance/brand/time-to-let-all-brands
+  read_only: true
+- name: get_rentals_agent_performance_brand_let_percentage_all_brands
+  title: /rentals/agent-performance/brand/let-percentage-all-brands
+  description: Listed as an available route on the TwentyAPI "Agent Performance based on Rental Data"
+    section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded
+    here verbatim from the section index; no parameters are asserted.
+  category: Agent Performance
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_rentals_agent_performance_brand_let_percentage_all_brands
+  http: GET /rentals/agent-performance/brand/let-percentage-all-brands
+  read_only: true
+- name: get_this_is_now_search_national
+  title: /this-is-now/search-national
+  description: Listed as an available route on the TwentyAPI "This is Now | Retail Propensity To Buy Goods"
+    section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded
+    here verbatim from the section index; no parameters are asserted.
+  category: This is Now | Retail Propensity To Buy Goods
+  source_operation: openapi/twentyci-twentyapi-openapi.json#get_this_is_now_search_national
+  http: GET /this-is-now/search-national
+  read_only: true
+- name: issueTwentyApiToken
+  title: Issue a TwentyAPI bearer token
+  description: 'Exchanges TwentyCi-issued credentials for a bearer access token. TwentyCi''s documentation
+    states: ''To ensure that the necessary fields are entered, one must include the Client ID, Client
+    Secret, Username, Password, Grant Type (with a value set as password), and Scope (valid with an asterisk
+    *) withi'
+  category: Authorisation
+  source_operation: openapi/twentyci-twentyapi-oauth-openapi.json#issueTwentyApiToken
+  http: POST /oauth/token
+  read_only: false
+  request_body: true

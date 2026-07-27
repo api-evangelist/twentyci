@@ -1,0 +1,196 @@
+generated: '2026-07-26'
+method: searched
+source: https://api.twentyci.co.uk/api/documentation/markdocs
+source_status: 200
+derived_from:
+- openapi/twentyci-twentyapi-openapi.json
+- openapi/twentyci-twentyapi-oauth-openapi.json
+note: >-
+  Which cross-cutting and industry standards TwentyAPI actually conforms to, asserted from
+  TwentyCi's own documentation and from the harvested contract. Negative assertions carry the
+  evidence that produced them. The sector answer is the notable one: there is no RESO/MLS regime
+  in the United Kingdom, so RESO conformance is not a gap - it is not applicable, and TwentyCi
+  uses the UK government's UPRN where a US system would carry a RESO identifier.
+
+standards:
+- id: rest
+  conforms: partial
+  evidence: >-
+    TwentyCi states "TAPI was designed based on RESTful Standard" on the Overview page. Resource-
+    oriented URIs and JSON representations are genuinely present, but five read-shaped queries are
+    modelled as POST, route prefixes are declared inconsistently across the documentation, and no
+    hypermedia controls exist.
+- id: oauth2
+  conforms: true
+  evidence: >-
+    OpenAPI securityScheme type oauth2 on the twentyapiOAuth scheme; live token endpoint POST
+    https://api.twentyci.co.uk/oauth/token (GET returns 405 "Supported methods: POST"), returning
+    {token_type: Bearer, expires_in, access_token, refresh_token}.
+  detail: authentication/twentyci-authentication.yml
+- id: oauth2-password-grant
+  conforms: true
+  evidence: >-
+    RFC 6749 section 4.3 resource-owner password credentials. TwentyCi documents client_id,
+    client_secret, username, password, grant_type=password and scope=* in the token request body.
+  note: >-
+    The password grant is deprecated by the OAuth 2.0 Security Best Current Practice (RFC 9700) and
+    removed from OAuth 2.1. TwentyCi's own security table simultaneously labels the scheme "Implicit",
+    which is also removed from OAuth 2.1. The label and the documented request contradict each other.
+- id: oauth2-bearer-rfc6750
+  conforms: true
+  evidence: 'Documented header usage "Authorization: Bearer <token-key>".'
+- id: oauth2-refresh-token
+  conforms: true
+  evidence: A refresh_token is returned alongside the access token in TwentyCi's documented example.
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: GET https://api.twentyci.co.uk/.well-known/oauth-authorization-server returned 404.
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: false
+  evidence: GET https://api.twentyci.co.uk/.well-known/oauth-protected-resource returned 404.
+- id: openid-connect
+  conforms: false
+  evidence: GET https://api.twentyci.co.uk/.well-known/openid-configuration returned 404. No OIDC discovery document is served.
+- id: oauth2-granular-scopes
+  conforms: false
+  evidence: >-
+    A single wildcard scope "*" is the only value TwentyCi publishes. No per-product or per-operation
+    scope vocabulary exists.
+  detail: scopes/twentyci-scopes.yml
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Responses are application/json with a bespoke {message, error:{status, messages}} envelope (and a
+    second inconsistent {message, success, errors} variant). No application/problem+json, no type URI,
+    no title/detail/instance members.
+  detail: errors/twentyci-problem-types.yml
+- id: json-api
+  conforms: false
+  evidence: >-
+    Resembles but does not conform. Response payloads carry JSON:API-shaped resource objects
+    ({"id":1,"type":"category","attributes":{...}}) inside a "data" member, but the media type is
+    application/json rather than application/vnd.api+json, the envelope adds a non-JSON:API "message"
+    member, errors do not use the JSON:API errors object, and there are no links/relationships/included
+    members.
+- id: pagination
+  conforms: true
+  style: page-number
+  evidence: >-
+    Documented `page` query parameter and a meta.pagination block carrying total, last_page, per_page
+    and current_page. No cursor pagination, no Link header.
+  detail: conventions/twentyci-conventions.yml
+- id: idempotency
+  conforms: false
+  evidence: >-
+    Zero occurrences of "idempotent"/"idempotency" in the documentation corpus; no Idempotency-Key
+    parameter in either harvested spec.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: No Sunset or Deprecation header support and no deprecation policy documented.
+  detail: lifecycle/twentyci-lifecycle.yml
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on api.twentyci.co.uk and 403 on www.twentyci.co.uk.
+  detail: well-known/twentyci-well-known.yml
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns 404 (api host) and 403 (www host).
+- id: openapi
+  conforms: partial
+  evidence: >-
+    TwentyCi ADVERTISES a downloadable specification at https://api.twentyci.co.uk/docs/v2/spec.json
+    and serves an nginx 404 there. The two OpenAPI 3.1 documents in this repo were derived by API
+    Evangelist from TwentyCi's own public documentation corpus and carry x-provenance with
+    providerPublished:false.
+- id: asyncapi
+  conforms: false
+  applicable: false
+  evidence: >-
+    No event, streaming, webhook, callback or subscription surface exists anywhere in the documentation
+    corpus (zero occurrences of "webhook"). "Trigger Information" is event LANGUAGE over a POLLED REST
+    resource, not an event delivery mechanism. Not applicable rather than missing.
+- id: graphql
+  conforms: false
+  evidence: Zero occurrences of "GraphQL" in the corpus; https://api.twentyci.co.uk/graphql returns 404.
+- id: odata
+  conforms: false
+  evidence: 'Zero occurrences of "OData"/"$metadata" in the corpus; GET https://api.twentyci.co.uk/$metadata returns 404.'
+- id: reso-data-dictionary
+  conforms: false
+  applicable: false
+  evidence: >-
+    Zero word-boundary matches for RESO, MLS, IDX, VOW, Data Dictionary, Universal Property Identifier
+    or UPI across the full 247,074-byte documentation corpus. The United Kingdom has no MLS and no RESO
+    regime; RESO certification is administered under US NAR/MLS governance. Not applicable.
+- id: reso-web-api
+  conforms: false
+  applicable: false
+  evidence: See reso-data-dictionary. TwentyAPI is plain JSON REST, not an OData-based RESO Web API.
+- id: uprn-os-geoplace
+  conforms: true
+  evidence: >-
+    Property identity throughout TwentyAPI is the UPRN, the Ordnance Survey / GeoPlace Unique Property
+    Reference Number and the de facto UK national property key. It is the primary path parameter across
+    the Properties family and is defined in TwentyCi's own glossary. This is the UK structural
+    counterpart to a RESO Universal Property Identifier - a government addressing key, not an
+    industry listing contract.
+  detail: vocabulary/twentyci-vocabulary.yml
+- id: fhir
+  conforms: false
+  applicable: false
+- id: fapi
+  conforms: false
+  applicable: false
+- id: scim
+  conforms: false
+  applicable: false
+- id: psd2
+  conforms: false
+  applicable: false
+- id: tls-1-3
+  conforms: true
+  evidence: api.twentyci.co.uk and www.twentyci.co.uk both negotiate TLSv1.3.
+  detail: security/twentyci-domain-security.yml
+- id: hsts
+  conforms: partial
+  evidence: >-
+    www.twentyci.co.uk sends Strict-Transport-Security with max-age 31536000; the API host
+    api.twentyci.co.uk sends none.
+
+compliance:
+  published: true
+  published_on: https://www.twentyci.co.uk/privacy-policy/
+  note: >-
+    TwentyCi publishes no security certification (no SOC 2, no ISO 27001, no Cyber Essentials badge,
+    no trust centre - all probed and absent). What it does publish, verifiably and with registration
+    numbers, is the UK data-protection posture that actually governs a residential-data broker.
+  programs:
+  - id: uk-gdpr-data-protection-act-2018
+    status: claimed
+    evidence: >-
+      "We comply with the relevant data protection regulations" (Privacy Policy, last updated April 2023,
+      version 2.4). The homepage markets "100% GDPR compliant audiences".
+  - id: ico-registration
+    status: registered
+    registrar: UK Information Commissioner's Office
+    registration_numbers: ['Z9319492', 'Z2201604']
+    entities: ['TwentyCi Ltd (06943607)', 'TwentyCi Data Ltd (05672869)']
+    evidence: >-
+      "we are registered with the Information Commissioners Office under numbers Z9319492 and Z2201604"
+      (Privacy Policy).
+  - id: dma-membership
+    status: member
+    body: Direct Marketing Association (UK)
+    evidence: '"we are members of the Direct Marketing Association" (Privacy Policy).'
+  data_protection_officer:
+    name: Colin Bradshaw
+    role: Group Data Protection Officer
+    email: dataprotection@twentyci.co.uk
+    telephone: '01908 829300'
+    address: 8 Whittle Court, Knowlhill, Milton Keynes, MK5 8FT
+  absent:
+  - {id: soc2, evidence: not published anywhere on twentyci.co.uk}
+  - {id: iso-27001, evidence: not published anywhere on twentyci.co.uk}
+  - {id: cyber-essentials, evidence: not published anywhere on twentyci.co.uk}
+  - {id: pci-dss, evidence: 'not applicable - TwentyAPI processes no payments'}
+  - {id: trust-center, evidence: 'trust./security./compliance probes all missed; see probe-security-programs run 2026-07-26'}

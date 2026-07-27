@@ -1,0 +1,81 @@
+generated: '2026-07-26'
+method: probed
+source: live anonymous HTTP probes, 2026-07-26
+note: >-
+  TwentyCi publishes no /.well-known/ discovery surface on any of its hosts. Every
+  probe below is recorded because absence is data: there is no security.txt (RFC 9116),
+  no OpenID Connect discovery document, no RFC 8414 OAuth authorization-server metadata
+  and no RFC 9727 api-catalog, even though TwentyAPI is an OAuth 2.0 protected API with
+  a live token endpoint at https://api.twentyci.co.uk/oauth/token. Because no document
+  returned 200, no raw files were saved and NO `WellKnown` pointer is wired in apis.yml -
+  wiring one would assert a discovery surface that does not exist.
+hosts:
+- host: https://api.twentyci.co.uk
+  note: >-
+    TwentyAPI host. The React/Markdoc documentation SPA is a catch-all under
+    /documentation, so status alone is not trustworthy on this host; every response below
+    was content-verified. The 404s returning 6603 bytes are the site's HTML 404 page and
+    the 404 returning 128 bytes is an nginx 404 - neither is a well-known document.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    content: text/html
+  - path: /.well-known/openid-configuration
+    status: 404
+    content: text/html
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    content: text/html
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    content: text/html
+  - path: /.well-known/api-catalog
+    status: 404
+    content: text/html
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    content: text/html (nginx)
+  - path: /security.txt
+    status: 404
+    content: text/html
+- host: https://www.twentyci.co.uk
+  note: >-
+    Corporate WordPress site. The /.well-known/ prefix is blocked at the edge and returns
+    403 Forbidden rather than 404 - the directory is refused, not merely empty.
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+  - path: /.well-known/openid-configuration
+    status: 403
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+  - path: /.well-known/oauth-protected-resource
+    status: 403
+  - path: /.well-known/api-catalog
+    status: 403
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /security.txt
+    status: 404
+- host: https://news.twentyci.co.uk
+  note: TwentyCi news/blog host. All probes return the site's HTML 404 page.
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+summary:
+  documents_found: 0
+  security_txt: false
+  openid_configuration: false
+  oauth_authorization_server_metadata: false
+  api_catalog: false
+  ai_plugin: false

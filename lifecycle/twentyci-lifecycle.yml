@@ -1,0 +1,101 @@
+generated: '2026-07-26'
+method: searched
+source: https://api.twentyci.co.uk/api/documentation/markdocs
+source_status: 200
+derived_from: openapi/twentyci-twentyapi-openapi.json
+note: >-
+  TwentyCi publishes a versioned API but no lifecycle policy of any kind. Every field below was
+  searched for in the full 66-node documentation corpus and on the corporate site; the negatives
+  are recorded as findings rather than left blank. Because there is no status page and no
+  deprecation policy, NO `StatusPage` and NO `Deprecation` pointers are wired in apis.yml.
+
+versioning:
+  scheme: uri-path
+  current: v2
+  segment: /api/v2
+  root_url: https://api.twentyci.co.uk/api/v2
+  root_url_evidence: >-
+    Published verbatim in a "Root URL" box on the TwentyAPI Overview page. GET on the prefix itself
+    returns 404 ("The route api/v2 could not be found.") - there is no index resource - while
+    GET /api/v2/properties returns 401, confirming the prefix is live and gated.
+  documentation_tree_root: V2
+  policy_url: null
+  supported_versions: [v2]
+  previous_versions:
+    known: [v1]
+    evidence: >-
+      Inferred only from the v2 label and from the 404 on /docs/v1/spec.json probed during harvest.
+      TwentyCi publishes no v1 documentation, no v1 sunset notice and no migration guide.
+  version_negotiation_header: false
+  policy_documented: false
+
+deprecation:
+  policy_url: null
+  policy_documented: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  evidence: >-
+    Zero occurrences of "deprecated", "deprecation" or "sunset" across the documentation corpus, and
+    no `deprecated: true` operation in either harvested OpenAPI document.
+deprecated_operations: []
+
+changelog:
+  url: null
+  published: false
+  evidence: >-
+    Zero occurrences of "changelog", "release notes" or "what's new" in the corpus. The documentation
+    nodes do carry created_at/updated_at timestamps in the backing JSON (the tree was created
+    2024-02-12 and last touched 2024-06-20), but TwentyCi surfaces no dated change history to
+    developers.
+
+sla:
+  url: null
+  published: false
+  uptime_target: null
+  evidence: >-
+    No SLA, uptime commitment or support-response target is published on api.twentyci.co.uk or
+    www.twentyci.co.uk. Terms are negotiated in the commercial data agreement, which is not public.
+
+status_page:
+  url: null
+  published: false
+  probes:
+  - {url: 'https://status.twentyci.co.uk', status: 000, note: DNS does not resolve}
+  - {url: 'https://twentyci.statuspage.io', status: 200, note: 'FALSE POSITIVE - redirects to
+      atlassian.com/software/statuspage marketing; zero occurrences of "twentyci" in the body. Discarded.'}
+  - {url: 'https://status.twentyci.com', status: 000, note: DNS does not resolve}
+  evidence: >-
+    No status page, no incident history and no maintenance calendar. TwentyCi's own HTTP status table
+    folds planned work into HTTP 502 ("System is down or being upgraded"), which is the only
+    maintenance signal a consumer gets - delivered at request time, after the fact.
+
+support:
+  channels:
+  - {type: contact-form, url: 'https://www.twentyci.co.uk/contact/'}
+  - {type: email, value: dataprotection@twentyci.co.uk, scope: data-protection only}
+  - {type: telephone, value: '01908 829300', scope: 'published in the privacy policy for the Group DPO'}
+  developer_support_channel: false
+  evidence: >-
+    No developer support portal, no ticketing system, no community forum, no Slack/Discord and no
+    published support email for API consumers. The documentation says "Our support team is just a
+    message away" without naming a channel. Support runs through the commercial account relationship.
+
+roadmap:
+  url: null
+  published: false
+
+api_lifecycle_stage: generally-available
+api_lifecycle_evidence: >-
+  TwentyAPI v2 is a live production API sold under commercial agreement. It is not labelled beta,
+  preview or experimental anywhere in the documentation.
+
+contract_lifecycle:
+  advertised_spec_download: https://api.twentyci.co.uk/docs/v2/spec.json
+  advertised_spec_status: 404
+  note: >-
+    The Overview page states "We have developed this API collection with the ability to download it's
+    specification, click here to download it" and links to a URL that returns an nginx 404. TwentyCi
+    advertises a machine-readable contract and does not serve one; the two OpenAPI documents in this
+    repo were derived by API Evangelist from TwentyCi's own public documentation corpus and carry
+    x-provenance with providerPublished:false.

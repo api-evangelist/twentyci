@@ -1,0 +1,75 @@
+# TwentyCi
+
+> TwentyCi is a United Kingdom residential property data and home-mover intelligence company. It aggregates roughly 31.5 million UK addresses and tens of billions of data points from hundreds of primary sources into the DOMUS property database, and sells that data to estate agents, lenders, insurers, conveyancers, house builders, retailers and media agencies. Its developer surface is TwentyAPI v2 — a read-only REST API at https://api.twentyci.co.uk/api/v2 covering 57 documented operations across properties, AVM valuation, home-mover transaction triggers, agent performance, address matching, schools, housing-market metrics and retail propensity.
+
+Read this first, because it changes how you should plan any integration:
+
+- **The documentation is open; the data is not.** Every endpoint under `/api/v2` returns HTTP 401 `{"message":"Unauthenticated."}` to anonymous callers. There is no self-serve signup (`/register`, `/signup`, `/sign-up` all 404), no published pricing, no free tier and no sandbox. TwentyCi issues a `client_id`, `client_secret`, `username` and `password` under a commercial data agreement reached through sales.
+- **TwentyCi advertises a downloadable OpenAPI and does not serve one.** The Overview page links to `https://api.twentyci.co.uk/docs/v2/spec.json`, which returns an nginx 404. The two OpenAPI 3.1 documents in this repo were derived by API Evangelist from TwentyCi's own public documentation corpus and carry `x-provenance` with `providerPublished: false`. Treat them as a faithful transcription, not as a vendor contract.
+- **Property identity is UPRN, not RESO/MLS.** The UK has no MLS and no RESO regime. TwentyAPI keys on the Ordnance Survey / GeoPlace Unique Property Reference Number. There are zero occurrences of RESO, MLS, IDX, VOW, OData or Universal Property Identifier in TwentyCi's entire documentation corpus.
+- **There is no event surface.** "Trigger Information" is event language over a polled REST resource. No webhooks, no callbacks, no subscriptions, no AsyncAPI, no streaming.
+- **There is no idempotency contract, no request-id tracing, no published rate limit, no changelog, no status page, no SDK and no MCP server.** Each of those was searched for and is genuinely absent, not merely undiscovered.
+
+## APIs
+
+- [TwentyAPI OAuth Token API](https://api.twentyci.co.uk/documentation#authorisation-for-api-requests): POST https://api.twentyci.co.uk/oauth/token — exchange client_id, client_secret, username, password, grant_type=password and scope=* for a Bearer access token (expires_in 1296000 = 15 days) plus a refresh token.
+- [TwentyAPI Properties API](https://api.twentyci.co.uk/documentation#properties): property record and detail by UPRN, recent sales and comparables in the area, AVM valuation, postcode/radius search, attributes, Street View URL, transactions, transport links, planning, floor plans, price-per-square-foot comparables, likely-to-sell propensity.
+- [TwentyAPI Agent Performance API](https://api.twentyci.co.uk/documentation#agent-performance): sales and rental brand benchmarking — SSTC, new instructions, exchange, PIPA, days-to-SSTC, listing value, sold percentage, let-agreed, time-to-let, let ratios.
+- [TwentyAPI Trigger Information API](https://api.twentyci.co.uk/documentation#trigger-information): home-mover lifecycle events — a specific trigger, properties by trigger type (including properties with no UPRN), trigger history for a property.
+- [TwentyAPI Categories API](https://api.twentyci.co.uk/documentation#categories): the attribute-category vocabulary the property attribute endpoints are organised around.
+- [TwentyAPI Address Match API](https://api.twentyci.co.uk/documentation#address-match): resolve a fragmentary or unstructured UK address against TwentyCi's addressing layer (Inscriptio / AddressMaster).
+- [TwentyAPI Schools API](https://api.twentyci.co.uk/documentation#schools): schools near a UK postcode.
+- [TwentyAPI UK Housing Market Metrics API](https://api.twentyci.co.uk/documentation#uk-housing-market-metrics): new instructions, SSTCs and PCDs for a timeframe.
+- [TwentyAPI This is Now API](https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods): retail propensity to buy, local and national, derived from home-mover events.
+
+## Specs
+
+- [TwentyAPI v2 OpenAPI 3.1](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/openapi/twentyci-twentyapi-openapi.json): 57 operations, 8 tags, one oauth2 security scheme. Derived from the provider's documentation corpus; providerPublished false.
+- [TwentyAPI OAuth Token OpenAPI 3.1](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/openapi/twentyci-twentyapi-oauth-openapi.json): the single token-issuance operation, with TokenRequest and TokenResponse schemas.
+
+## Artifacts
+
+- [Authentication profile](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/authentication/twentyci-authentication.yml): the oauth2 scheme, password flow, token URL.
+- [OAuth scopes](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/scopes/twentyci-scopes.yml): a single wildcard scope `*`. No granular scope vocabulary exists.
+- [API conventions](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/conventions/twentyci-conventions.yml): auth style, page-number pagination and the `meta.pagination` block, the two competing error envelopes, epoch dates, and the documented absences.
+- [Error catalog](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/errors/twentyci-problem-types.yml): TwentyCi's 11-row HTTP status table plus the live 401 body and the envelope divergence.
+- [Request/response examples](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/examples/twentyci-examples.yml): 120 example bodies transcribed verbatim from the provider's docs, bound to 51 of 58 operations.
+- [Vocabulary](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/vocabulary/twentyci-vocabulary.yml): TwentyCi's published glossary — UPRN, AVM, SSTC, PIPA, PCD, postcode, epoch date — and where each term is load-bearing in the contract.
+- [Data model](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/data-model/twentyci-data-model.yml): the UPRN- and postcode-joined entity graph.
+- [Lifecycle](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/lifecycle/twentyci-lifecycle.yml): URI-path versioning at v2, and the absence of any deprecation policy, SLA, status page or changelog.
+- [Conformance](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/conformance/twentyci-conformance.yml): OAuth 2.0 yes, OIDC/RFC 9457/JSON:API/OData/RESO no, plus the published UK compliance posture (ICO registrations Z9319492 and Z2201604, DMA membership, Group DPO).
+- [Domain security](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/security/twentyci-domain-security.yml): TLS 1.3 on both hosts; HSTS on the website but not on the API host; no DNSSEC, no CAA, DMARC policy `none`.
+- [Well-known probe log](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/well-known/twentyci-well-known.yml): zero `/.well-known/` documents on any host.
+- [Candidate MCP tool surface](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/mcp/twentyci-mcp.yml): 58 derived candidate tools. TwentyCi publishes no MCP server.
+- [Agent skills](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/skills/_index.yml): packaged operating instructions grounded in real operationIds.
+- [Agentic access profile](https://raw.githubusercontent.com/api-evangelist/twentyci/refs/heads/main/agentic-access/twentyci-agentic-access.yml): recommended `x-agentic-access` execution contracts per operation.
+
+## Docs
+
+- [TwentyAPI documentation portal](https://api.twentyci.co.uk/documentation): React/Markdoc SPA. Publicly readable with no login.
+- [Documentation corpus (JSON)](https://api.twentyci.co.uk/api/documentation/markdocs): the 66-node, 247KB tree that backs the portal. HTTP 200, anonymous. This is the machine-readable source of everything TwentyCi documents.
+- [Authorisation for API requests](https://api.twentyci.co.uk/documentation#authorisation-for-api-requests)
+- [HTTP status response codes](https://api.twentyci.co.uk/documentation#http-status-response-codes)
+- [Glossary of terms](https://api.twentyci.co.uk/documentation#glossary-of-terms)
+
+## Company
+
+- [TwentyCi](https://www.twentyci.co.uk/)
+- [About](https://www.twentyci.co.uk/about-us/)
+- [DOMUS property database](https://www.twentyci.co.uk/products-services/domus-property-database/): delivered by SFTP, by API, and through a SaaS search UI.
+- [Automated Valuation Model](https://www.twentyci.co.uk/products-services/automated-valuation-model-avm/)
+- [Inscriptio address enhancement](https://www.twentyci.co.uk/products-services/inscriptio-address-enhancement-service/)
+- [Property and Homemover Report](https://www.twentyci.co.uk/property-homemover-report/): a periodic free market publication, not an open dataset.
+- [Blog](https://news.twentyci.co.uk/blog)
+- [Contact](https://www.twentyci.co.uk/contact/)
+- [Privacy policy](https://www.twentyci.co.uk/privacy-policy/): carries the ICO registration numbers and the Group DPO contact.
+
+## Notes for agents
+
+- Mint a token before anything else, and cache it: `expires_in` is 1,296,000 seconds (15 days) and a `refresh_token` is returned. Re-minting per request is wasteful and TwentyCi publishes no rate-limit guidance to tell you what is safe.
+- Send `Authorization: Bearer <token-key>`, `Content-Type: application/json` and `Accept: application/json` on every call.
+- Expect two different error envelopes in the same API: `{"message":..., "error":{"status":true,"messages":...}}` and `{"message":..., "success":false,"errors":[]}`. Handle both. The live 401 types `messages` as an array while the documented 422 types it as an object.
+- Paginate with `page` and read `meta.pagination.last_page`; the Agent Performance family uses `limit` instead. Neither has a documented maximum.
+- Dates are epoch seconds.
+- TwentyCi's documentation contains real defects that were transcribed rather than corrected: the AVM route is published as `propertiesavm2/{property}` (missing slash), Likely To Sell as `{uprn}/likely-to-sell` (no resource segment), and three pages declare a route belonging to a different endpoint. Where this repo binds an example to an operation despite such a defect, the binding is marked `medium` confidence.
+- This is a read-only data API. Nothing you call creates, updates or deletes provider-side state; the risk to manage is data egress and commercial cost, not mutation.

@@ -1,0 +1,632 @@
+generated: '2026-07-26'
+method: generated
+source: openapi/twentyci-twentyapi-oauth-openapi.json, openapi/twentyci-twentyapi-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 58
+  by_action_class:
+    acting: 6
+    connected: 52
+  by_consequence:
+    write: 6
+    read: 52
+  human_in_the_loop_required: 0
+operations:
+- path: /oauth/token
+  method: post
+  operationId: issueTwentyApiToken
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /categories
+  method: get
+  operationId: obtain_a_list_of_categories_for_a_property
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /categories/{category}
+  method: get
+  operationId: obtain_a_specific_category_for_a_property
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{uprn}
+  method: get
+  operationId: property_information_by_uprn
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/details
+  method: get
+  operationId: property_details_by_uprn
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/recent-sale-in-the-area
+  method: get
+  operationId: recent_property_sales_in_the_area
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/for-sale-in-the-area
+  method: get
+  operationId: similar_properties_for_sale_in_area
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/area-value-price
+  method: post
+  operationId: average_property_values_by_postcode
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /propertiesavm2/{property}
+  method: post
+  operationId: valuation_of_property_by_uprn_avm
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /properties/area-search
+  method: post
+  operationId: searching_properties_by_postcode_and_radius
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /properties/postcode-search
+  method: post
+  operationId: searching_properties_by_postcode_and_address
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /properties/{property}/category/_all
+  method: get
+  operationId: property_attributes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/image
+  method: get
+  operationId: obtaining_a_google_maps_url_for_a_property
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/transactions
+  method: get
+  operationId: obtain_all_transactions_for_property_via_uprn
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/transport-links
+  method: get
+  operationId: obtain_transport_links_near_a_property
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{uprn}/plannings
+  method: get
+  operationId: obtain_planning_permission_data_near_a_property
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /{uprn}/likely-to-sell
+  method: get
+  operationId: likely_to_sell
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /price-per-square/comparables
+  method: get
+  operationId: comparables
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /trigger-type/{typeId}/properties
+  method: get
+  operationId: get_properties_by_trigger_type
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /trigger-type/{typeId}/no-uprn-properties
+  method: get
+  operationId: get_no_uprn_properties_by_trigger_type
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/triggers
+  method: get
+  operationId: trigger_history
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent/best
+  method: get
+  operationId: list_of_best_agents
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/rankings/sstc
+  method: get
+  operationId: brands_ranked_by_sstc_s
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/rankings/new-instructions
+  method: get
+  operationId: brands_ranked_by_new_instructions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/rankings/percentage-of-initial-price-achieved
+  method: get
+  operationId: brands_ranked_by_pipa
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/rankings/days-to-sstc
+  method: get
+  operationId: brands_ranked_by_days_from_new_instruction_to_sstc
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/new-instructions
+  method: get
+  operationId: new_instructions_statistics_for_a_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/sstc
+  method: get
+  operationId: sstc_statistics_for_a_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/time-to-sell
+  method: get
+  operationId: days_to_sstc_for_a_specific_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/time-to-sell-all-brands
+  method: get
+  operationId: days_to_sstc_for_all_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/property-sale-difference
+  method: get
+  operationId: difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/percentage-of-initial-price-achieved
+  method: get
+  operationId: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/property-sale-value
+  method: get
+  operationId: average_listing_price_for_a_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/sold-percentage
+  method: get
+  operationId: properties_sales_ratio_for_a_given_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/sold-percentage-all-brands
+  method: get
+  operationId: properties_sales_ratio_for_all_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/days-to-sstc
+  method: get
+  operationId: days_to_sstc_for_a_given_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/rankings/let-agreed
+  method: get
+  operationId: brands_ranked_by_let_agreed
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/rankings/new-instructions
+  method: get
+  operationId: brands_ranked_by_new_instructions_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/brand/let-agreed
+  method: get
+  operationId: let_agreed_statistics_for_a_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/brand/new-instructions
+  method: get
+  operationId: new_instructions_statistics_for_a_brand_2
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/brand/let-percentage
+  method: get
+  operationId: properties_let_ratio_for_a_given_brand
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /match-address-processes
+  method: post
+  operationId: address_match
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /nearby-places/schools
+  method: get
+  operationId: schools
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /market/initial-metrics
+  method: get
+  operationId: uk_housing_market_metrics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /this-is-now/search
+  method: get
+  operationId: local_search
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties
+  method: get
+  operationId: get_properties
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{property}/category/{category}
+  method: get
+  operationId: get_properties_property_category_category
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /properties/{uprn}/floor-plans
+  method: get
+  operationId: get_properties_uprn_floor_plans
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /trigger/{trigger}
+  method: get
+  operationId: get_trigger_trigger
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/rankings/exchange
+  method: get
+  operationId: get_agent_performance_rankings_exchange
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/exchange
+  method: get
+  operationId: get_agent_performance_brand_exchange
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/property-sale-value-all-brands
+  method: get
+  operationId: get_agent_performance_brand_property_sale_value_all_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/initial-price-achieve
+  method: get
+  operationId: get_agent_performance_brand_initial_price_achieve
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /agent-performance/brand/property-listing-value
+  method: get
+  operationId: get_agent_performance_brand_property_listing_value
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/brand/time-to-let
+  method: get
+  operationId: get_rentals_agent_performance_brand_time_to_let
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/brand/time-to-let-all-brands
+  method: get
+  operationId: get_rentals_agent_performance_brand_time_to_let_all_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /rentals/agent-performance/brand/let-percentage-all-brands
+  method: get
+  operationId: get_rentals_agent_performance_brand_let_percentage_all_brands
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /this-is-now/search-national
+  method: get
+  operationId: get_this_is_now_search_national
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

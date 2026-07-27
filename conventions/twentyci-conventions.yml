@@ -1,0 +1,213 @@
+generated: '2026-07-26'
+method: searched
+source: https://api.twentyci.co.uk/api/documentation/markdocs
+source_status: 200
+docs:
+- https://api.twentyci.co.uk/documentation#overview
+- https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+- https://api.twentyci.co.uk/documentation#http-status-response-codes
+note: >-
+  Cross-cutting request/response semantics for TwentyAPI v2, read from TwentyCi's own public
+  documentation corpus and cross-checked against the harvested OpenAPI. Where TwentyCi documents
+  nothing, this file says so explicitly rather than assuming a default - the absences (no
+  idempotency contract, no request-id tracing, no published rate limits, no versioning policy
+  beyond the URI segment) are the substantive finding.
+api: TwentyAPI v2
+root_url: https://api.twentyci.co.uk/api/v2
+
+authentication:
+  style: OAuth 2.0 bearer token
+  header: 'Authorization: Bearer <token-key>'
+  token_endpoint: https://api.twentyci.co.uk/oauth/token
+  grant: >-
+    Resource-owner password credentials. The documented body carries client_id, client_secret,
+    username, password, grant_type=password and scope=*. TwentyCi's own security-scheme table
+    labels the scheme "OAuth2" with "OAuth2 Flow: Implicit", which contradicts the password-grant
+    body documented on the same page; both facts are recorded rather than reconciled.
+  token_lifetime_seconds: 1296000
+  token_lifetime_note: 15 days in TwentyCi's documented example response, with a refresh_token returned alongside.
+  scopes: ['*']
+  scope_note: A single wildcard scope. There is no granular scope vocabulary.
+  credential_issuance: >-
+    Sales-led. There is no self-serve signup route (/register, /signup, /sign-up all 404), no
+    published pricing and no free tier. TwentyCi issues client_id, client_secret, username and
+    password under a commercial data agreement.
+  detail: authentication/twentyci-authentication.yml
+
+required_headers:
+- header: Content-Type
+  value: application/json
+  documented: true
+- header: Accept
+  value: application/json
+  documented: true
+content_negotiation:
+  request: application/json
+  response: application/json
+  note: >-
+    JSON only. HTTP 406 is documented as "Returned by the Search API when an invalid format is
+    specified in the request", which is the only hint of alternative representations; none is
+    documented.
+
+response_envelope:
+  success:
+    shape: '{ "message": "...", "data": [ ... ] }'
+    fields:
+    - field: message
+      description: Human-readable status string, e.g. "Your request has been proceed successfully!" (TwentyCi's own spelling).
+    - field: data
+      description: The payload - an object or an array of objects, each typically carrying id / type / attributes.
+    - field: meta
+      description: Present only on paginated collections; carries the pagination block.
+  error:
+    shape: '{ "message": "...", "error": { "status": true, "messages": {} } }'
+    fields:
+    - field: message
+      description: Human-readable error message.
+    - field: error.status
+      description: Boolean error flag, true on failure.
+    - field: error.messages
+      description: >-
+        Field-keyed validation detail on 422 - an object whose keys are request field names and
+        whose values are arrays of message strings.
+  variant_envelope:
+    shape: '{ "message": "...", "success": false, "errors": [] }'
+    note: >-
+      A second, inconsistent error envelope appears in the per-endpoint 404 and default-error
+      examples across the corpus ("success": false with an "errors" array) alongside the
+      envelope declared on the HTTP Status Codes page ("error": { "status": true }). TwentyCi
+      publishes both; they are not reconciled anywhere in the documentation.
+  rfc9457: false
+  rfc9457_note: >-
+    TwentyAPI does not use RFC 9457 problem+json. Responses are application/json with a bespoke
+    envelope. No type URI, no title/detail/instance members, no problem registry.
+  detail: errors/twentyci-problem-types.yml
+
+pagination:
+  style: page-number
+  documented: true
+  request_params:
+  - name: page
+    in: query
+    type: integer <int32>
+    description: The page number of the paginated result set you wish to retrieve.
+    documented_on_pages: 7
+  - name: per_page
+    in: query
+    description: Page size. Appears on recent_property_sales_in_the_area in the harvested spec.
+    documented_on_pages: 1
+  - name: limit
+    in: query
+    description: >-
+      Result cap used throughout the Agent Performance family (19 operations in the harvested
+      spec). Documented as a limit rather than as part of the pagination contract.
+  response_block: meta.pagination
+  response_fields: [total, last_page, per_page, current_page]
+  example: |
+    "meta": {
+        "pagination": {
+            "total": 1000,
+            "last_page": 20,
+            "per_page": 50,
+            "current_page": 1
+        }
+    }
+  cursor_support: false
+  link_header: false
+  note: >-
+    Page-number pagination in the Laravel idiom. There is no cursor, no Link header, no next/prev
+    URLs and no documented maximum page size. Pagination is documented globally on the HTTP Status
+    Codes page and applied inconsistently at the operation level.
+
+idempotency:
+  supported: false
+  header: null
+  evidence: >-
+    Zero occurrences of "idempotent" or "idempotency" across the full 66-node documentation corpus,
+    and no Idempotency-Key parameter in either harvested OpenAPI document. The five POST operations
+    (/properties/area-value-price, /propertiesavm2/{property}, /properties/area-search,
+    /properties/postcode-search, /match-address-processes) are read-shaped queries expressed as POST
+    rather than state-changing writes, so there is no create-once contract to be idempotent about -
+    but TwentyCi publishes no retry-safety guidance of any kind.
+  note: >-
+    No `Idempotency` pointer is wired in apis.yml. TwentyAPI has no idempotency contract; asserting
+    one would be false.
+
+request_tracing:
+  supported: false
+  request_id_header: null
+  evidence: >-
+    No X-Request-Id, request-id, correlation-id or trace header appears anywhere in the documentation
+    corpus, and no such header is declared in the harvested OpenAPI. Support escalation is by email /
+    contact form with no documented correlation identifier.
+
+rate_limiting:
+  documented: false
+  headers: null
+  quotas: null
+  evidence: >-
+    Zero occurrences of "rate limit" / "ratelimit" / "quota" / "throttle" in the corpus. HTTP 503 is
+    described generically as "System is still up, but overloaded with requests. Try again later." with
+    no quota, no limit header, no Retry-After guidance and no documented retry policy.
+
+versioning:
+  scheme: uri-path
+  current: v2
+  segment: /api/v2
+  documented_policy: false
+  evidence: >-
+    The version is carried in the URI path and the whole documentation tree is rooted at a node named
+    "V2". TwentyCi publishes no versioning policy, no version-support window, no changelog and no
+    migration guidance. Zero occurrences of "deprecated", "sunset" or "changelog" in the corpus.
+  detail: lifecycle/twentyci-lifecycle.yml
+
+field_expansion:
+  supported: false
+  note: >-
+    No expand / include / fields / sparse-fieldset parameter is documented. Related data is fetched
+    through separate sub-resource operations instead (e.g. /properties/{property}/details,
+    /properties/{property}/transactions, /properties/{property}/transport-links).
+
+metadata:
+  user_metadata: false
+  note: >-
+    TwentyAPI is read-only reference data; there is no writeable metadata surface on any resource.
+
+date_time:
+  format: epoch seconds
+  evidence: >-
+    TwentyCi's own glossary defines "Epoch Date Format" as a first-class API concept, and date
+    parameters across the Agent Performance and Trigger families are documented as epoch integers.
+
+identifiers:
+  primary_key: UPRN
+  primary_key_expansion: Unique Property Reference Number
+  issuer: Ordnance Survey / GeoPlace (UK national addressing)
+  note: >-
+    Property identity is the UK government UPRN, not a vendor-minted or RESO identifier. Secondary
+    keys are UK postcode (outcode/incode) and TwentyCi brand and trigger-type identifiers.
+
+http_methods:
+  read_via_post: true
+  note: >-
+    Five documented operations use POST for read-shaped queries (area value/price, AVM valuation,
+    area search, postcode search, address matching) because the search criteria travel in a JSON
+    body. They are not writes; nothing in TwentyAPI creates, updates or deletes provider-side state.
+
+security_transport:
+  https_only: true
+  tls: TLSv1.3
+  hsts: false
+  hsts_note: >-
+    api.twentyci.co.uk serves no Strict-Transport-Security header (the corporate site
+    www.twentyci.co.uk does, max-age 31536000).
+  detail: security/twentyci-domain-security.yml
+
+cross_links:
+  errors: errors/twentyci-problem-types.yml
+  lifecycle: lifecycle/twentyci-lifecycle.yml
+  authentication: authentication/twentyci-authentication.yml
+  scopes: scopes/twentyci-scopes.yml
+  examples: examples/twentyci-examples.yml
+  vocabulary: vocabulary/twentyci-vocabulary.yml
+  rate_limits: null

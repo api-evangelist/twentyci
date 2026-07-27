@@ -1,0 +1,149 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for TwentyAPI (TwentyCi) v2
+  version: 1.0.0
+x-provenance:
+  generated: '2026-07-26'
+  method: generated
+  source: openapi/twentyci-twentyapi-openapi.json
+  note: >-
+    Captures API Evangelist's enrichment of the harvested TwentyAPI contract without mutating the
+    harvested document. Every value asserted here is sourced from TwentyCi's own public documentation
+    corpus (https://api.twentyci.co.uk/api/documentation/markdocs) or from a live probe recorded in
+    this repo. Nothing is invented; no response schema is fabricated, because TwentyCi publishes none.
+extends: openapi/twentyci-twentyapi-openapi.json
+actions:
+- target: $.info
+  description: Record the provenance of the contract itself and the artifacts derived from it.
+  update:
+    x-apievangelist-provider: twentyci
+    x-apievangelist-provider-published-spec: false
+    x-apievangelist-advertised-spec: https://api.twentyci.co.uk/docs/v2/spec.json
+    x-apievangelist-advertised-spec-status: 404
+    x-apievangelist-harvest-source: https://api.twentyci.co.uk/api/documentation/markdocs
+    x-apievangelist-artifacts:
+      conventions: conventions/twentyci-conventions.yml
+      errors: errors/twentyci-problem-types.yml
+      examples: examples/twentyci-examples.yml
+      vocabulary: vocabulary/twentyci-vocabulary.yml
+      data_model: data-model/twentyci-data-model.yml
+      lifecycle: lifecycle/twentyci-lifecycle.yml
+      conformance: conformance/twentyci-conformance.yml
+      authentication: authentication/twentyci-authentication.yml
+      scopes: scopes/twentyci-scopes.yml
+      security: security/twentyci-domain-security.yml
+      mcp: mcp/twentyci-mcp.yml
+      skills: skills/_index.yml
+- target: $.info
+  description: Record the access gate, which is the single most important integration fact.
+  update:
+    x-access:
+      gate: partner-only
+      self_serve_signup: false
+      free_tier: false
+      sandbox: false
+      published_pricing: false
+      anonymous_response: 401 Unauthenticated.
+      credential_issuance: >-
+        TwentyCi issues client_id, client_secret, username and password under a commercial data
+        agreement. There is no registration route.
+- target: $
+  description: Record the cross-cutting conventions TwentyCi documents globally rather than per operation.
+  update:
+    x-conventions:
+      pagination:
+        style: page-number
+        request_params: [page, per_page, limit]
+        response_block: meta.pagination
+        response_fields: [total, last_page, per_page, current_page]
+      error_envelopes:
+      - '{ message, error: { status, messages } }'
+      - '{ message, success, errors }'
+      error_envelope_note: TwentyCi publishes two competing error envelopes and reconciles neither.
+      rfc9457: false
+      idempotency: false
+      request_id_header: null
+      rate_limit_headers: null
+      date_format: epoch-seconds
+      required_headers:
+        Content-Type: application/json
+        Accept: application/json
+- target: $
+  description: >-
+    Record the API-wide HTTP statuses TwentyCi publishes on its status-code page but does not declare
+    per operation. The harvested spec declares only 200/401/404/422 because that is all TwentyCi
+    declares per endpoint.
+  update:
+    x-http-status-catalog:
+      documented_by_provider: [200, 400, 401, 403, 404, 406, 422, 500, 502, 503, 504]
+      declared_per_operation: [200, 401, 404, 422]
+      source: https://api.twentyci.co.uk/documentation#http-status-response-codes
+      detail: errors/twentyci-problem-types.yml
+- target: $.info
+  description: Record the identity model - UPRN rather than any MLS/RESO identifier.
+  update:
+    x-identity:
+      primary_key: uprn
+      primary_key_name: Unique Property Reference Number
+      issuer: Ordnance Survey / GeoPlace
+      reso_applicable: false
+      reso_note: >-
+        The United Kingdom has no MLS and no RESO regime. Zero word-boundary matches for RESO, MLS,
+        IDX, VOW, OData, Data Dictionary, Universal Property Identifier or UPI across TwentyCi's full
+        247,074-byte documentation corpus.
+- target: $.info
+  description: Record the absent surfaces so a consumer does not go looking for them.
+  update:
+    x-absent-surfaces:
+      webhooks: false
+      asyncapi: false
+      graphql: false
+      grpc: false
+      sdks: false
+      cli: false
+      postman_collection: false
+      sandbox: false
+      status_page: false
+      changelog: false
+      deprecation_policy: false
+      rate_limits_documented: false
+      mcp_server: false
+      well_known_documents: false
+- target: $.tags
+  description: Point each product family at the documentation section that defines it.
+  update:
+    x-tag-docs:
+      Properties: https://api.twentyci.co.uk/documentation#properties
+      Categories: https://api.twentyci.co.uk/documentation#categories
+      Trigger Information: https://api.twentyci.co.uk/documentation#trigger-information
+      Agent Performance: https://api.twentyci.co.uk/documentation#agent-performance
+      Address Match: https://api.twentyci.co.uk/documentation#address-match
+      Schools: https://api.twentyci.co.uk/documentation#schools
+      UK Housing Market Metrics: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+      This is Now | Retail Propensity To Buy Goods: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- target: $.paths['/propertiesavm2/{property}'].post
+  description: Flag the published route defect rather than silently correcting it.
+  update:
+    x-provider-documentation-defect: >-
+      TwentyCi publishes this route as "api/v2/propertiesavm2/{property}" - a missing slash between
+      the collection and the AVM segment. Transcribed verbatim from the provider's documentation; not
+      corrected, because the live behaviour cannot be verified without credentials.
+- target: $.paths['/{uprn}/likely-to-sell'].get
+  description: Flag the published route defect rather than silently correcting it.
+  update:
+    x-provider-documentation-defect: >-
+      TwentyCi publishes this route as "api/v2/{uprn}/likely-to-sell" with no resource segment.
+      Transcribed verbatim; not corrected.
+- target: $.paths['/this-is-now/search-national'].get
+  description: Flag that the provider's own page for this operation declares a different route.
+  update:
+    x-provider-documentation-defect: >-
+      TwentyCi's "National Search" page declares the Local Search route (/api/v2/this-is-now/search).
+      The path here comes from the section index. Example bodies bound to this operation are marked
+      medium confidence in examples/twentyci-examples.yml.
+- target: $.paths['/trigger/{trigger}'].get
+  description: Flag that the provider's own page for this operation declares a different route.
+  update:
+    x-provider-documentation-defect: >-
+      TwentyCi's "Obtain a Specific Trigger" page declares GET /categories, contradicting its own
+      section index route /trigger/{trigger} - a copy-paste defect in the corpus.

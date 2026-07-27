@@ -198,10 +198,54 @@ apis:
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
 common:
+- type: AgenticAccess
+  url: agentic-access/twentyci-agentic-access.yml
+- type: DomainSecurity
+  url: security/twentyci-domain-security.yml
+- type: OAuthScopes
+  url: scopes/twentyci-scopes.yml
+- type: Authentication
+  url: authentication/twentyci-authentication.yml
+- type: Vocabulary
+  url: vocabulary/twentyci-vocabulary.yml
+- type: Conventions
+  url: conventions/twentyci-conventions.yml
+- type: ErrorCatalog
+  url: errors/twentyci-problem-types.yml
+- type: Examples
+  url: examples/twentyci-examples.yml
+- type: DataModel
+  url: data-model/twentyci-data-model.yml
+- type: Lifecycle
+  url: lifecycle/twentyci-lifecycle.yml
+- type: Conformance
+  url: conformance/twentyci-conformance.yml
+- type: Compliance
+  url: https://www.twentyci.co.uk/privacy-policy/
+- type: Packages
+  url: packages/twentyci-packages.yml
+- type: MCPServer
+  url: mcp/twentyci-mcp.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/twentyci-llms.txt
+- type: Overlay
+  name: TwentyAPI v2 enhancements
+  url: overlays/twentyci-twentyapi-overlay.yaml
+- type: Overlay
+  name: TwentyAPI OAuth token enhancements
+  url: overlays/twentyci-twentyapi-oauth-overlay.yaml
 - type: Website
   url: https://www.twentyci.co.uk/
+- type: DeveloperPortal
+  url: https://api.twentyci.co.uk/documentation
 - type: Documentation
   url: https://api.twentyci.co.uk/documentation
+- type: APIReference
+  url: https://api.twentyci.co.uk/documentation#properties
+- type: GettingStarted
+  url: https://api.twentyci.co.uk/documentation#overview
 - type: Contact
   url: https://www.twentyci.co.uk/contact/
 - type: About

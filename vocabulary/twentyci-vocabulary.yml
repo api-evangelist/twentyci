@@ -1,0 +1,150 @@
+generated: '2026-07-26'
+method: searched
+source: https://api.twentyci.co.uk/documentation#glossary-of-terms
+source_corpus: https://api.twentyci.co.uk/api/documentation/markdocs
+source_status: 200
+note: >-
+  TwentyCi publishes a real "Glossary of Terms" page inside the TwentyAPI documentation.
+  The twelve definitions below are TwentyCi's own wording, transcribed verbatim (including
+  its own typographical errors, which are left uncorrected and flagged). The trailing
+  `usage_in_api` block is an API Evangelist derivation showing where each term actually
+  surfaces in the harvested OpenAPI - it is marked as derived and is not a TwentyCi claim.
+publisher: TwentyCi
+scope: TwentyAPI v2, UK residential property data
+terms:
+- term: API
+  expansion: Application Programming Interface
+  definition: >-
+    An Application Programming Interface, is like a waiter in a tech restaurant, taking your
+    order (requests) and delivering the dish (data) from the kitchen (server) to your table
+    (application).
+  provenance: verbatim
+- term: AVM
+  expansion: Automated Valuation Model
+  definition: >-
+    An Automated Valuation Model (AVM) is a software-based tool that's used in residential
+    and commercial real estate to determine property value. The service uses mathematical or
+    statistical modeling with a combination of existing databases to determine the value of a
+    particular property.
+  provenance: verbatim
+- term: Epoch Date Format
+  definition: >-
+    An epoch format is a way of counting time in seconds that has passed since a specific
+    point in history, like counting the seconds on a stopwatch from the moment it started.
+  provenance: verbatim
+- term: PIPA
+  expansion: Percentage of Initial Price Achieved
+  definition: >-
+    Percentage of Initial Price Achieved. This is the percetange change from the inital
+    listing price to the final sales price
+  provenance: verbatim
+  note: TwentyCi's own text contains the misspellings "percetange" and "inital"; left uncorrected.
+- term: Postcode
+  definition: >-
+    A UK postcode is like a special address for a specific area, helping mail and packages get
+    to the right place. It's a combination of letters and numbers, like a secret code for
+    locations. The outcode is the first part, telling you the general area, while the incode is
+    more specific, like the exact street or building in that area.
+  provenance: verbatim
+- term: PCD
+  expansion: Predicted to Complete Date
+  definition: >-
+    Predicted to Complete Date, is modelled date where an accurate estimatation of when a
+    property is liekly to complete it's sale based on various factors within the housing market.
+  provenance: verbatim
+  note: TwentyCi's own text contains the misspellings "estimatation" and "liekly"; left uncorrected.
+- term: JSON
+  expansion: JavaScript Object Notation
+  definition: >-
+    JavaScript Object Notation, is like a digital translator that helps different programs share
+    information by presenting it in a universally understandable and easy-to-read format.
+  provenance: verbatim
+- term: SSTC
+  expansion: Sold Subject to Contract
+  definition: >-
+    Sold Subject to Contract means that an offer has been accepted by the seller, but the sale is
+    not yet legally finalized, and certain conditions still need to be met before completion.
+  provenance: verbatim
+- term: Street View
+  definition: >-
+    Google Street View is a technology featured in Google Maps and Google Earth that provides
+    interactive panoramas from positions along many streets in the world. By using specific lines
+    of code, specific photos of property and area can be called given the user an experience to
+    know what the area looks like from their device.
+  provenance: verbatim
+- term: UPRN
+  expansion: Unique Property Reference Number
+  definition: >-
+    An Unique Property Reference Number, is like a digital fingerprint for a property, providing a
+    distinct and reliable way to identify and locate it.
+  provenance: verbatim
+- term: URI
+  expansion: Uniform Resource Identifier
+  definition: >-
+    An Uniform Resource Identifier is like an address for resources on the internet, such as web
+    pages or files. It's a string of characters that uniquely identifies a particular resource,
+    allowing you to access it using a web browser or other software.
+  provenance: verbatim
+- term: URL
+  expansion: Uniform Resource Locator
+  definition: >-
+    An Uniform Resource Locator is a specific type of URI that provides the address for accessing
+    resources on the internet, like web pages or files, often starting with "http://" or
+    "https://". It's what you type into a web browser to visit a website.
+  provenance: verbatim
+usage_in_api:
+  method: derived
+  source: openapi/twentyci-twentyapi-openapi.json
+  note: Where each glossary term is actually load-bearing in the harvested contract.
+  bindings:
+  - term: UPRN
+    role: primary resource identifier
+    surfaces:
+    - GET /properties/{uprn}
+    - GET /properties/{uprn}/plannings
+    - GET /properties/{uprn}/floor-plans
+    - GET /{uprn}/likely-to-sell
+    - GET /properties/{property}/transactions
+    note: >-
+      TwentyAPI is UPRN-keyed rather than keyed on any MLS or RESO identifier. The UK has no
+      MLS and no RESO regime; the UPRN is the Ordnance Survey / GeoPlace national property key.
+  - term: AVM
+    role: valuation product
+    surfaces:
+    - POST /propertiesavm2/{property}
+    - POST /properties/area-value-price
+    - GET /properties
+  - term: SSTC
+    role: transaction-state metric
+    surfaces:
+    - GET /agent-performance/rankings/sstc
+    - GET /agent-performance/brand/sstc
+    - GET /agent-performance/rankings/days-to-sstc
+    - GET /agent-performance/brand/days-to-sstc
+    - GET /market/initial-metrics
+  - term: PIPA
+    role: agent-performance metric
+    surfaces:
+    - GET /agent-performance/rankings/percentage-of-initial-price-achieved
+    - GET /agent-performance/brand/percentage-of-initial-price-achieved
+    - GET /agent-performance/brand/initial-price-achieve
+  - term: PCD
+    role: market metric
+    surfaces:
+    - GET /market/initial-metrics
+  - term: Postcode
+    role: search key
+    surfaces:
+    - POST /properties/area-search
+    - POST /properties/postcode-search
+    - POST /properties/area-value-price
+    - GET /nearby-places/schools
+  - term: Street View
+    role: media reference
+    surfaces:
+    - GET /properties/{property}/image
+absent_terms:
+  note: >-
+    Searched across the full 66-node, 247,074-byte documentation corpus and found zero matches.
+    Recorded because their absence characterises the UK market position.
+  terms: [RESO, MLS, IDX, VOW, OData, Data Dictionary, Universal Property Identifier, UPI]

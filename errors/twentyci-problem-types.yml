@@ -1,0 +1,171 @@
+generated: '2026-07-26'
+method: searched
+source: https://api.twentyci.co.uk/documentation#http-status-response-codes
+source_corpus: https://api.twentyci.co.uk/api/documentation/markdocs
+source_status: 200
+derived_from: openapi/twentyci-twentyapi-openapi.json
+format: custom-json-envelope
+rfc9457: false
+note: >-
+  TwentyCi publishes a single API-wide "HTTP Status Codes" table plus per-endpoint error examples;
+  it does not publish a coded error registry, error identifiers, or RFC 9457 problem types. The
+  eleven statuses below are TwentyCi's own table transcribed verbatim (its `text` and `description`
+  columns), enriched with which of them the harvested OpenAPI actually declares per operation and
+  with the live anonymous 401 body observed on the wire. There is no error `code` vocabulary to
+  catalogue - that absence is the finding.
+
+envelopes:
+- name: primary
+  documented_on: https://api.twentyci.co.uk/documentation#http-status-response-codes
+  shape: |
+    {
+        "message": "A message about this error",
+        "error": {
+            "status": true,
+        }
+    }
+  fields:
+    message: Human-readable error message.
+    error.status: Boolean flag, true on failure.
+- name: validation
+  documented_on: https://api.twentyci.co.uk/documentation#http-status-response-codes
+  applies_to: 422
+  shape: |
+    {
+        "message": "A message about this error",
+        "error": {
+            "status": true,
+            "messages": {
+                "field_1": [
+                    "Error 1 of field 1",
+                    "Error 2 of field 1"
+                ],
+                "field_2": [
+                    "Error 1 of field 2"
+                ]
+            }
+        }
+    }
+  fields:
+    error.messages: Object keyed by request field name; each value is an array of message strings.
+- name: variant
+  documented_on: per-endpoint response examples across the corpus
+  shape: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+  note: >-
+    A second, inconsistent envelope used in the 404 and default-error examples of most endpoint
+    pages. TwentyCi publishes both this and the primary envelope and never reconciles them. A
+    consumer must tolerate `error.status` and `success`/`errors` in the same API.
+
+problems:
+- status: 400
+  title: Bad Request
+  description: The request was invalid or cannot be otherwise served.
+  provenance: verbatim
+  declared_in_openapi: false
+- status: 401
+  title: Unauthorized
+  description: Authentication credentials were missing or incorrect.
+  provenance: verbatim
+  declared_in_openapi: true
+  operations_declaring: 57
+  observed_live: true
+  observed_body: '{"message":"Unauthenticated.","error":{"status":true,"messages":[]}}'
+  observed_note: >-
+    Returned by anonymous GET https://api.twentyci.co.uk/api/v2/properties on 2026-07-26. Note the
+    live body types `messages` as an empty ARRAY while the documented validation envelope types it
+    as an OBJECT - a real shape divergence a consumer must handle.
+  remediation: >-
+    Mint a token at POST https://api.twentyci.co.uk/oauth/token with client_id, client_secret,
+    username, password, grant_type=password, scope=* and send it as `Authorization: Bearer <token-key>`.
+    Credentials are issued by TwentyCi commercially; there is no self-serve signup.
+- status: 403
+  title: Forbidden
+  description: The request is understood, but it has been refused or access is not allowed.
+  provenance: verbatim
+  declared_in_openapi: false
+  remediation: >-
+    Entitlement rather than authentication. TwentyAPI products are licensed per agreement; a valid
+    token does not imply access to every product family. Escalate to your TwentyCi account contact.
+- status: 404
+  title: Not Found
+  description: The URI requested is invalid or the resource requested, such as a user, does not exists.
+  provenance: verbatim
+  declared_in_openapi: true
+  operations_declaring: 57
+  example: |
+    {
+      "message": "Not found",
+      "success": false,
+      "errors": []
+    }
+  remediation: >-
+    Check the UPRN or postcode exists in DOMUS before assuming a routing error - TwentyAPI returns
+    404 both for unknown routes (Laravel's "The route ... could not be found.") and for absent records.
+- status: 406
+  title: Not Acceptable
+  description: Returned by the Search API when an invalid format is specified in the request.
+  provenance: verbatim
+  declared_in_openapi: false
+  remediation: 'Send Accept: application/json and Content-Type: application/json.'
+- status: 422
+  title: Unprocessable Entity
+  description: Returned when request is invalid or unable to be validated
+  provenance: verbatim
+  declared_in_openapi: true
+  operations_declaring: 57
+  envelope: validation
+  remediation: >-
+    Read error.messages, which is keyed by the offending request field, and correct the named
+    parameters. Epoch-format date parameters and integer UPRNs are the common failures.
+- status: 500
+  title: Internal Server Error
+  description: Something is broken. Please contact us.
+  provenance: verbatim
+  declared_in_openapi: false
+  remediation: Contact TwentyCi. No status page and no incident feed is published.
+- status: 502
+  title: Bad Gateway
+  description: System is down or being upgraded.
+  provenance: verbatim
+  declared_in_openapi: false
+  note: TwentyCi's own wording explicitly folds planned upgrades into 502; there is no maintenance-window feed.
+- status: 503
+  title: Service Unavailable
+  description: System is still up, but overloaded with requests. Try again later.
+  provenance: verbatim
+  declared_in_openapi: false
+  note: >-
+    This is the closest TwentyAPI comes to a rate-limit signal. No quota, no limit header, no
+    Retry-After and no documented backoff policy exist.
+- status: 504
+  title: Gateway timeout
+  description: >-
+    System is still up, but the request couldn't be serviced due to some failure within our stack.
+    Try again later.
+  provenance: verbatim
+  declared_in_openapi: false
+- status: 200
+  title: OK
+  description: Success! Works as Expected
+  provenance: verbatim
+  declared_in_openapi: true
+  operations_declaring: 57
+  note: Included because it is a row in TwentyCi's own published table; not an error.
+
+coverage:
+  statuses_published_by_provider: 11
+  statuses_declared_in_openapi: [200, 401, 404, 422]
+  statuses_published_but_not_in_openapi: [400, 403, 406, 500, 502, 503, 504]
+  error_code_registry: false
+  error_code_registry_note: >-
+    TwentyCi publishes no machine-readable error codes, no error identifiers and no per-error
+    documentation URIs. Errors are distinguishable only by HTTP status plus a free-text message.
+  gap: >-
+    The harvested OpenAPI declares only the four statuses TwentyCi documents per endpoint
+    (200/401/404/422). The other seven statuses from the API-wide table are real but unmodelled
+    per operation, because TwentyCi does not declare them per operation either.

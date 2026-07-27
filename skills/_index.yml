@@ -1,0 +1,87 @@
+generated: '2026-07-26'
+method: generated
+source: >-
+  Generated from the two OpenAPI 3.1 documents in openapi/ plus TwentyCi's own public documentation
+  corpus (https://api.twentyci.co.uk/api/documentation/markdocs). TwentyCi publishes no agent skills,
+  no AGENTS.md and no MCP server. Every operationId referenced below was verified verbatim against the
+  specs; none is invented. Every skill is grounded in the conventions, error and lifecycle artifacts in
+  this repo.
+provider: TwentyCi
+api: TwentyAPI v2
+access_note: >-
+  None of these skills can be executed without TwentyCi-issued credentials. The data plane returns
+  HTTP 401 to anonymous callers, there is no self-serve signup, no free tier and no sandbox.
+skills:
+- file: twentyci-authenticate.md
+  name: Authenticate against TwentyAPI and make a first call
+  api: openapi/twentyci-twentyapi-oauth-openapi.json
+  operations: [issueTwentyApiToken, property_information_by_uprn]
+- file: twentyci-value-a-property.md
+  name: Value a UK property with the TwentyCi AVM
+  api: openapi/twentyci-twentyapi-openapi.json
+  operations:
+  - address_match
+  - property_information_by_uprn
+  - property_details_by_uprn
+  - valuation_of_property_by_uprn_avm
+  - comparables
+  - recent_property_sales_in_the_area
+  - similar_properties_for_sale_in_area
+  - average_property_values_by_postcode
+- file: twentyci-benchmark-agent-brands.md
+  name: Benchmark estate and letting agent brands
+  api: openapi/twentyci-twentyapi-openapi.json
+  operations:
+  - list_of_best_agents
+  - brands_ranked_by_sstc_s
+  - brands_ranked_by_new_instructions
+  - brands_ranked_by_pipa
+  - brands_ranked_by_days_from_new_instruction_to_sstc
+  - sstc_statistics_for_a_brand
+  - new_instructions_statistics_for_a_brand
+  - days_to_sstc_for_a_specific_brand
+  - days_to_sstc_for_all_brands
+  - difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+  - difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+  - properties_sales_ratio_for_a_given_brand
+  - brands_ranked_by_let_agreed
+  - let_agreed_statistics_for_a_brand
+  - properties_let_ratio_for_a_given_brand
+- file: twentyci-track-homemover-triggers.md
+  name: Track home-mover triggers
+  api: openapi/twentyci-twentyapi-openapi.json
+  operations:
+  - get_properties_by_trigger_type
+  - get_no_uprn_properties_by_trigger_type
+  - trigger_history
+  - get_trigger_trigger
+  - property_information_by_uprn
+  - obtain_all_transactions_for_property_via_uprn
+  - uk_housing_market_metrics
+- file: twentyci-enrich-a-property-record.md
+  name: Enrich a property record with neighbourhood context
+  api: openapi/twentyci-twentyapi-openapi.json
+  operations:
+  - obtain_a_list_of_categories_for_a_property
+  - obtain_a_specific_category_for_a_property
+  - property_attributes
+  - get_properties_property_category_category
+  - obtain_transport_links_near_a_property
+  - obtain_planning_permission_data_near_a_property
+  - schools
+  - obtaining_a_google_maps_url_for_a_property
+  - get_properties_uprn_floor_plans
+  - likely_to_sell
+- file: twentyci-market-and-propensity.md
+  name: Read the UK housing market and retail propensity
+  api: openapi/twentyci-twentyapi-openapi.json
+  operations:
+  - uk_housing_market_metrics
+  - local_search
+  - get_this_is_now_search_national
+  - average_property_values_by_postcode
+  - searching_properties_by_postcode_and_radius
+coverage:
+  skills: 6
+  distinct_operations_referenced: 43
+  product_families_covered: [Properties, Agent Performance, Trigger Information, Categories, Address Match, Schools, UK Housing Market Metrics, This is Now, Authorisation]
