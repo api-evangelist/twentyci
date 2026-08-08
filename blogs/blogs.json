@@ -2,6 +2,20 @@
   "repo": "twentyci",
   "feeds": [
     {
+      "source": "https://www.twentyci.co.uk/feed/",
+      "feed_url": "https://www.twentyci.co.uk/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://news.twentyci.co.uk/blog/rss.xml",
+      "feed_url": "https://news.twentyci.co.uk/blog/rss.xml",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
       "source": "https://www.twentyci.co.uk/about-us/",
       "feed_url": "https://www.twentyci.co.uk/feed/",
       "title": "",
@@ -16,6 +30,6 @@
       "method": "discovered"
     }
   ],
-  "post_count": 0,
-  "fetched": "2026-08-01T15:49:00Z"
+  "post_count": 10,
+  "fetched": "2026-08-06T14:08:46Z"
 }
