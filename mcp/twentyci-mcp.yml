@@ -1552,3 +1552,9 @@ tools:
   http: POST /oauth/token
   read_only: false
   request_body: true
+deployment:
+  mode: none
+  verified: derived
+  tools: 58
+  checked: '2026-08-12'
+  source: catalog MCP census

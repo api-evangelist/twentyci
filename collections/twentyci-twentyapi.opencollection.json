@@ -1,0 +1,2194 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TwentyAPI (TwentyCi) v2",
+    "version": "v2"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "resource_owner_password_credentials",
+      "accessTokenUrl": "https://api.twentyci.co.uk/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Categories",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Obtain a List of Categories for a Property",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/categories",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The page number of the paginated result set you wish to retrieve"
+              }
+            ]
+          },
+          "docs": "The /categories endpoint in TwentyAPI allows developers to retrieve essential property category data, emphasizing efficient organisation and seamless API integration. This endpoint's output, including Category ID and Category information, proves invaluable for streamlined communication and improved development processes."
+        },
+        {
+          "info": {
+            "name": "Obtain a Specific Category for a Property",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/categories/:category",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of category to fetch"
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /categories/{category} in TwentyAPI is designed to return a specific category and its relevant data using information from the output of /categories. This targeted data retrieval enhances efficiency, optimizes performance, and supports modular development."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Properties",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Property Information by UPRN",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:uprn",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "This is the UPRN for the property that the infromation is required for."
+              },
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The properties/{uprn} endpoint in TwentyAPI retrieves results by using a specific UPRN (Unique Property Reference Number) provided in the URL. This endpoint offers detailed information, including the full address, postcode, coordinates, AVM (Automated Valuation Model) price, AVM minimum and maximum prices, and the confidence interval of the model on the specified property."
+        },
+        {
+          "info": {
+            "name": "Property Details by UPRN",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/details",
+            "params": [
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "query",
+                "description": "The UPRN of the property in which the details are required for"
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{uprn}/details endpoint in TwentyAPI provides detailed property information by utilising a specific UPRN - Unique Property Reference Number passed through the URL. This includes the full address, postcode, coordinates, and a wealth of property details such as bedrooms, garden presence, parking availability, area information, infrastructure details, running costs, and demographics."
+        },
+        {
+          "info": {
+            "name": "Recent Property Sales in the Area",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/recent-sale-in-the-area",
+            "params": [
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "query",
+                "description": "This is the UPRN of the property in which the details are required for."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "The amount of records that you want to limit the payload to provide"
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{property}/recent-sale-in-the-area endpoint in TwentyAPI is designed to retrieve information about similar properties that have been sold within the last 12 months in the vicinity of a property by utilising a specific UPRN - Unique Property Reference Number. This information is based on factors such as Postcode District, Property Type, and the number of bedrooms. It is recommended to use the perpage parameter followed by an integer to limit the number of properties within the pay"
+        },
+        {
+          "info": {
+            "name": "Similar Properties For Sale in Area",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/for-sale-in-the-area",
+            "params": [
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "query",
+                "description": "This is the UPRN of the property in which the details are required for."
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{uprn}/for-sale-in-the-area endpoint in TwentyAPI is designed to call similar properties currently for sale in the local area of a specified property. This is based on Postcode District, Property Type, and bedrooms."
+        },
+        {
+          "info": {
+            "name": "Average Property Values by Postcode",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/area-value-price",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Description The /properties/area-value-price endpoint in TwentyAPI is designed to retrieve prices generated by an AVM (Automated Valuation Model) for the postcode sector. The results include the average price for all properties and individual averages for different property types within the specified area."
+        },
+        {
+          "info": {
+            "name": "Valuation of Property by UPRN | AVM",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.twentyci.co.uk/api/v2/propertiesavm2/:property",
+            "params": [
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "The UPRN for which the property valuation is required. Example: 38288388"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The TwentyCi Decision Automated Valuation Model (AVM) endpoint is a Data as a Service (DaaS) API that provides an AVM value range and accuracy for a single property at a point of need. It can be used to obtain the current AVM value and accuracy rating of a property, enabling users to perform on-demand property valuations efficiently. This endpoint provides valuable information for making informed decisions in property transactions, risk management, and market analysis. The data output includes t"
+        },
+        {
+          "info": {
+            "name": "Searching Properties by Postcode and Radius",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/area-search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The /properties/area-search endpoint in TwentyAPI is designed to retrieve AVM (Automated Valuation Model) prices for properties within a specified radius in miles from a given location. The results include the average price for all properties and individual averages for different property types."
+        },
+        {
+          "info": {
+            "name": "Searching Properties by Postcode and Address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/postcode-search",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The /properties/postcode-search endpoint in TwentyAPI is designed to retrieve properties matching a specific postcode and address. The results include the average price for all properties and individual averages for different property types within the specified postcode."
+        },
+        {
+          "info": {
+            "name": "Property Attributes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/category/_all",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "This is the UPRN of the property in which the details are required for."
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{uprn}/category/all endpoint in TwentyAPI is designed to retrieve various property attributes for a given UPRN (Unique Property Reference Number). Leveraging this API for obtaining property attributes can streamline processes, improve efficiency, and enhance the overall quality of service provided by estate agents. It enables them to stay competitive in the real estate market by leveraging technology for better data management and decision-making."
+        },
+        {
+          "info": {
+            "name": "Obtaining a Google Maps URL for a Property",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/image",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "UPRN of property to use to generate the Google Maps URL"
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{property}/image endpoint in TwentyAPI is designed to retrieve the specific Street View image from Google Maps for a property."
+        },
+        {
+          "info": {
+            "name": "Obtain all Transactions for Property via UPRN",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/transactions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "ID of property to fetch"
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{property}/transactions endpoint in TwentyAPI is designed to retrieve all transactions associated with a property, displaying its pricing history. This lightweight endpoint provides information on transaction values and dates."
+        },
+        {
+          "info": {
+            "name": "Obtain Transport Links near a Property",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/transport-links",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "UPRN of the property to fetch the data for"
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /api/v2/properties/{property}/transport-links endpoint in TwentyAPI is designed to retrieve information about the nearest rail stations and airports in proximity to a property based on its UPRN (Unique Property Reference Number). This endpoint provides valuable insights into the property's accessibility and convenience for potential buyers. The data output includes key data elements such as the name of the rail station or airport, the distance from the UPRN, and the type of terminal (airport"
+        },
+        {
+          "info": {
+            "name": "Obtain Planning Permission Data near a Property",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:uprn/plannings",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "UPRN of property to fetch the data for"
+              },
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /properties/{uprn}/plannings endpoint in TwentyAPI is designed to retrieve information about planning permissions associated with a property based on its Unique Property Reference Number (UPRN). This endpoint provides valuable insights into the property's planning history, which is essential for estate agents when selling properties. The data output includes key data elements such as Planning ID, Address, Received Date, and Decision. Purpose Full Picture of the Area: To assist developers in "
+        },
+        {
+          "info": {
+            "name": "Likely To Sell",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/:uprn/likely-to-sell",
+            "params": [
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "path",
+                "description": "The UPRN of the property in which the details are required for"
+              }
+            ]
+          },
+          "docs": "Likely To Sell (LTS) score for a property Returns the Likely To Sell percentile for a given UPRN. The score shows how likely a property is to sell compared to all other UK residential properties. Lower percentile = higher likelihood to sell. Example: 10 = top 10 percent most likely to sell 30 = top 30 percent most likely to sell"
+        },
+        {
+          "info": {
+            "name": "Comparables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/price-per-square/comparables",
+            "params": [
+              {
+                "name": "postcode",
+                "value": "",
+                "type": "query",
+                "description": "The postcode used as the centre point for comparable selection. Example: AB12 3CD"
+              },
+              {
+                "name": "property_type",
+                "value": "",
+                "type": "query",
+                "description": "Property type of the comparable properties. Example: Terraced"
+              },
+              {
+                "name": "bedrooms",
+                "value": "",
+                "type": "query",
+                "description": "Number of bedrooms in the comparable properties. Example: 2"
+              },
+              {
+                "name": "bathrooms",
+                "value": "",
+                "type": "query",
+                "description": "Number of bathrooms in the comparable properties. Example: 2"
+              },
+              {
+                "name": "garage",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether the filtered properties should have a garage (1 = Yes, 0 = No)."
+              },
+              {
+                "name": "driveway",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether the filtered properties should have a driveway (1 = Yes, 0 = No)."
+              },
+              {
+                "name": "ensuite",
+                "value": "",
+                "type": "query",
+                "description": "Indicates whether the filtered properties should have an ensuite bathroom (1 = Yes, 0 = No)."
+              },
+              {
+                "name": "energy_rating",
+                "value": "",
+                "type": "query",
+                "description": "Energy Performance Certificate rating filter. Multiple ratings can be supplied using a pipe separator (|). Example: C|A"
+              },
+              {
+                "name": "floor_area_band",
+                "value": "",
+                "type": "query",
+                "description": "Predefined floor area band classification used to match similar-sized properties."
+              },
+              {
+                "name": "eaa_or_rics",
+                "value": "",
+                "type": "query",
+                "description": "Defines the valuation methodology standard to apply. Example: EAA"
+              }
+            ]
+          },
+          "docs": "The /price-per-square/comparables endpoint in TwentyAPI is designed to return comparable property transactions and calculated price-per-square-foot (PPSF) metrics based on postcode and property characteristics."
+        },
+        {
+          "info": {
+            "name": "/properties",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Properties\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/properties/{property}/category/{category}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/category/:category",
+            "params": [
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              },
+              {
+                "name": "category",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Properties\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/properties/{uprn}/floor-plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:uprn/floor-plans",
+            "params": [
+              {
+                "name": "uprn",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Properties\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Trigger Information",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Properties by Trigger Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/trigger-type/:typeId/properties",
+            "params": [
+              {
+                "name": "postcode_district",
+                "value": "",
+                "type": "query",
+                "description": "Postcode District for where the data is to be retrived from"
+              },
+              {
+                "name": "max_days",
+                "value": "",
+                "type": "query",
+                "description": "Valid values are between 7 and 30"
+              },
+              {
+                "name": "postcode_sector",
+                "value": "",
+                "type": "query",
+                "description": "Postcode Sector for where the data is to be retrived from"
+              },
+              {
+                "name": "typeId",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /trigger-type/{typeId}/properties endpoint in TwentyAPI is designed to retrieve properties with the same trigger type within a specific postcode over a defined day range between 7 and 30 days in the past. This endpoint provides valuable insights into recent transactions in the real estate industry, including sales prices, property types, and neighbourhood trends. Purpose Obtaining Transactional Data To assist developers in retrieving recent transaction data within a specific postcode area an"
+        },
+        {
+          "info": {
+            "name": "Get no UPRN Properties by Trigger Type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/trigger-type/:typeId/no-uprn-properties",
+            "params": [
+              {
+                "name": "postcode_district",
+                "value": "",
+                "type": "query",
+                "description": "Postcode District of the areas you would like to obtain the data for."
+              },
+              {
+                "name": "max_days",
+                "value": "",
+                "type": "query",
+                "description": "Min is 7 and Max is 30"
+              },
+              {
+                "name": "postcode_sector",
+                "value": "",
+                "type": "query",
+                "description": "Postcode Sector of the areas you would like to obtain the data for, if the data needs to be more granular that Districts"
+              },
+              {
+                "name": "typeId",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /api/v2/trigger-type/{typeId}/no-uprn-properties endpoint in TwentyAPI is designed to retrieve a count of properties with the same trigger type within a specific postcode over a defined day range, ranging from 7 to 30 days in the past. Purpose Historical Data with Limited Information: To assist developers in retrieving a count of properties with the same trigger type within a specific postcode over a defined day range, facilitating analysis of market trends and comparable sales in the real e"
+        },
+        {
+          "info": {
+            "name": "Trigger History",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/properties/:property/triggers",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "query",
+                "description": "UPRN of property to fetch the data for"
+              },
+              {
+                "name": "property",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "The /api/v2/properties/[uprn]/triggers endpoint in TwentyAPI retrieves the previous listing history for a given UPRN (Unique Property Reference Number). This endpoint covers both sale and rental tenures. Understanding a property's sales history is essential for estate agents, providing a dynamic tool that seamlessly integrates historical data. This integration transforms each property listing into a comprehensive narrative, streamlining the selling process and fostering transparency and trust wi"
+        },
+        {
+          "info": {
+            "name": "/trigger/{trigger}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/trigger/:trigger",
+            "params": [
+              {
+                "name": "trigger",
+                "value": "",
+                "type": "path",
+                "description": "Path parameter as documented by TwentyCi."
+              }
+            ]
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Trigger Information\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Agent Performance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List of Best Agents",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent/best",
+            "params": [
+              {
+                "name": "postcode",
+                "value": "",
+                "type": "query",
+                "description": "This is the postcode unit for where the user would like to find the list of Best Agents. This will be in the standard UK Postcode format. For further information, click here"
+              },
+              {
+                "name": "bedroom",
+                "value": "",
+                "type": "query",
+                "description": "This is the number of bedrooms withn specific properties"
+              },
+              {
+                "name": "propsubtype",
+                "value": "",
+                "type": "query",
+                "description": "Refers to what type of Property can be filtered by. Only the following parameters can be used: - Flat / Apartment - Bungalow - Houses"
+              },
+              {
+                "name": "achieve_asking_price",
+                "value": "",
+                "type": "query",
+                "description": "The paramter refers to whether or not an agent has acheived the listed asking price. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - fastestsale - experiencedagent"
+              },
+              {
+                "name": "fastest_sale",
+                "value": "",
+                "type": "query",
+                "description": "The paramter refers to whether or not an agent can record a quick sale. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - achieveaskingprice - experiencedagent"
+              },
+              {
+                "name": "experienced_agent",
+                "value": "",
+                "type": "query",
+                "description": "The paramter refers to whether or not an agent is a known agent with extensive experince. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - fastestsale - achieveaskingprice"
+              }
+            ]
+          },
+          "docs": "The /agent/best endpoint in TwentyAPI is designed to retrieve valuable data for identifying the best estate agents within a specified area. Leveraging proprietary algorithms, this endpoint calculates a score for each agent, offering a comprehensive ranking based on multiple data points. Users gain actionable insights for performance evaluation, client satisfaction monitoring, market trend analysis, strategic planning, and benchmarking against industry standards and competitors. This real-time sn"
+        },
+        {
+          "info": {
+            "name": "Brands Ranked by SSTC's",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/rankings/sstc",
+            "params": [
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/rankings/sstc endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by agreed property sales. This API (Application Programming Interface) endpoint assists estate agents in gaining valuable market intelligence, understanding their competitiveness, and identifying opportunities for growth."
+        },
+        {
+          "info": {
+            "name": "Brands Ranked by New Instructions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/rankings/new-instructions",
+            "params": [
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/rankings/new-instructions endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by new instructions. This API call is crucial for estate agents, providing insights into market trends, facilitating competitive analysis, and supporting strategic planning."
+        },
+        {
+          "info": {
+            "name": "Brands Ranked by PIPA",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/rankings/percentage-of-initial-price-achieved",
+            "params": [
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/rankings/percentage-of-initial-price-achieved endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by the percentage change of the initial listing price (PIPA). This API call is crucial for estate agents, providing insights into market pricing trends, facilitating competitive analysis, and supporting strategic positioning."
+        },
+        {
+          "info": {
+            "name": "Brands Ranked by Days from New Instruction to SSTC",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/rankings/days-to-sstc",
+            "params": [
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/rankings/days-to-sstc endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by how quickly properties transition from for sale to sold subject to contract (SSTC). This API call is essential for estate agents, providing insights into market efficiency and sales processes."
+        },
+        {
+          "info": {
+            "name": "New Instructions Statistics for a Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/new-instructions",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve the volume of new instructions for a specific estate agency within the last 12 months. Additionally, it provides the agency's overall rank based on optional parameters. If no parameters are set, the ranking is done on a national level."
+        },
+        {
+          "info": {
+            "name": "SSTC statistics for a Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/sstc"
+          },
+          "docs": "The /agent-performance/brand/sstc endpoint in TwentyAPI is designed to retrieve information on properties sold subject to contract (SSTC) by a specific estate agency within the last 12 months. Additionally, it provides the agency's overall rank based on optional parameters. If no parameters are set, the ranking is done on a national level."
+        },
+        {
+          "info": {
+            "name": "Days to SSTC for a Specific Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/time-to-sell",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/time-to-sell endpoint in TwentyAPI is designed to retrieve the average time it takes for a property to be sold after being instructed for a specific brand. This data is based on optional parameters, allowing for a customised analysis. If no parameters are set, the calculation is done on a national level."
+        },
+        {
+          "info": {
+            "name": "Days to SSTC for all Brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/time-to-sell-all-brands",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/time-to-sell-all-brands endpoint in TwentyAPI is designed to retrieve the average time it takes for a property to be sold after being instructed by all brands within a specific area defined by additional parameters. If no parameters are set, the calculation is done on a national level."
+        },
+        {
+          "info": {
+            "name": "Difference in Sold price for a Property for a Specific Brand and all other Brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/property-sale-difference",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/property-sale-differenceendpoint in TwentyAPI is designed to calculate the difference between the average sale price from a Property for a given brand and the average sale price of all brands with the specified filter. The volume attribute is in GBP. A positive value indicates the brand sells properties above the average, while a negative value signifies sales below the average. This calculation is performed within a specific area defined by additional parameters. If"
+        },
+        {
+          "info": {
+            "name": "Difference in PIPA for a Property for a Specific Brand and all other Brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/percentage-of-initial-price-achieved",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /api/v2/agent-performance/brand/initial-price-achieve endpoint in TwentyAPI is designed to calculate the difference between the Percentage of Initial Price Achieved (PIPA)) for a given brand and the PIPA of all brands with the specified filter. The volume attribute is in percentage format but displayed as a decimal. A positive value indicates the brand achieves a higher rate of sales price compared to its initial listing price, while a negative value indicates the opposite. This analysis is "
+        },
+        {
+          "info": {
+            "name": "Average Listing Price for a Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/property-sale-value",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/property-listing-value endpoint in TwentyAPI is designed to retrieve the average listing price of properties for a specific brand. This data can be further filtered by optional parameters, allowing estate agents to gain insights into market trends. If no parameters are set, the analysis encompasses all property types nationally."
+        },
+        {
+          "info": {
+            "name": "Properties Sales Ratio for a Given Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/sold-percentage",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/sold-percentage endpoint in TwentyAPI is designed to calculate the percentage of properties sold compared to new instructions for a given brand. This ratio indicates the agency's efficiency in converting property instructions into successful sales. A ratio above 100% signifies that the agency is selling properties more quickly than new instructions are received."
+        },
+        {
+          "info": {
+            "name": "Properties Sales Ratio for all Brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/sold-percentage-all-brands",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /agent-performance/brand/sold-percentage-all-brands endpoint in TwentyAPI is designed to calculate the percentage of properties sold compared to new instructions for all brands within a specified area. If no parameters are provided, the calculation is based nationally. A ratio above 100% indicates that the agency is selling properties more quickly than instructing new ones."
+        },
+        {
+          "info": {
+            "name": "Days to SSTC for a given Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/days-to-sstc",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "This will give you a volume stat which is the Day to SSTC for a Brand."
+        },
+        {
+          "info": {
+            "name": "Brands ranked by Let Agreed",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/rankings/let-agreed",
+            "params": [
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /rentals/agent-performance/rankings/let-agreed endpoint in TwentyAPI is designed to retrieve information on agent performance regarding agreed lets in a specific patch, over the last 12 months. This data can be filtered by region, postcode area, postcode district, and postcode sector."
+        },
+        {
+          "info": {
+            "name": "Brands ranked by New Instructions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/rankings/new-instructions",
+            "params": [
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /rentals/agent-performance/rankings/new-instructions endpoint in TwentyAPI is tailored to retrieve crucial insights on an agent's proficiency in securing new property instructions for lettings within a specified patch. This resource aims to empower estate agents by aiding them in discerning top-performing agents based on their instructions over the last 12 months. Additional parameters, such as minimal and maximal rental value, rental price bands, postcode areas, districts or sectors, region"
+        },
+        {
+          "info": {
+            "name": "Let Agreed statistics for a Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/brand/let-agreed",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /rentals/agent-performance/brand/let-agreed endpoint in TwentyAPI is designed to retrieve information on the number of properties let by a brand in the last 12 months. This API (Application Programming Interface) call assists estate agents in evaluating their performance and making informed decisions based on rental statistics."
+        },
+        {
+          "info": {
+            "name": "New Instructions statistics for a Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/brand/new-instructions",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The /rentals/agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve information on the number of properties instructed for rental by a brand in the last 12 months. This API (Application Programming Interface) call assists estate agents in evaluating their performance and making informed decisions based on new instruction statistics."
+        },
+        {
+          "info": {
+            "name": "Properties Let Ratio for a Given Brand",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/brand/let-percentage",
+            "params": [
+              {
+                "name": "brand_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the brand/agent you want the stats for"
+              },
+              {
+                "name": "min_price",
+                "value": "",
+                "type": "query",
+                "description": "Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "max_price",
+                "value": "",
+                "type": "query",
+                "description": "Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands."
+              },
+              {
+                "name": "price_bands",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of price bands."
+              },
+              {
+                "name": "postcode_sectors",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode sectors."
+              },
+              {
+                "name": "postcode_areas",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode areas."
+              },
+              {
+                "name": "postcode_districts",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of postcode districts."
+              },
+              {
+                "name": "regions",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of regions."
+              },
+              {
+                "name": "property_types",
+                "value": "",
+                "type": "query",
+                "description": "Only evaluate properties within the given list (comma separated) of property types."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5"
+              }
+            ]
+          },
+          "docs": "The rentals/agent-performance/brand/let-percentage endpoint in TwentyAPI is designed to calculate the percentage of properties let compared to new instructions for a given brand. This ratio indicates the agency's efficiency in converting property instructions into successful sales. A ratio above 100% signifies that the agency is selling properties more quickly than new instructions are received."
+        },
+        {
+          "info": {
+            "name": "/agent-performance/rankings/exchange",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/rankings/exchange"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/agent-performance/brand/exchange",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/exchange"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/agent-performance/brand/property-sale-value-all-brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/property-sale-value-all-brands"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/agent-performance/brand/initial-price-achieve",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/initial-price-achieve"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/agent-performance/brand/property-listing-value",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/agent-performance/brand/property-listing-value"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Sales Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/rentals/agent-performance/brand/time-to-let",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/brand/time-to-let"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Rental Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/rentals/agent-performance/brand/time-to-let-all-brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/brand/time-to-let-all-brands"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Rental Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        },
+        {
+          "info": {
+            "name": "/rentals/agent-performance/brand/let-percentage-all-brands",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/rentals/agent-performance/brand/let-percentage-all-brands"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"Agent Performance based on Rental Data\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Address Match",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Address Match",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.twentyci.co.uk/api/v2/match-address-processes"
+          },
+          "docs": "- Partial Address Matching"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Schools",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Schools",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/nearby-places/schools"
+          },
+          "docs": "- Nearby Schools by Postcode"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "UK Housing Market Metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "UK Housing Market Metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/market/initial-metrics"
+          },
+          "docs": "- New Instructions, SSTC's and PCD's for a Specific Timeframe"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "This is Now | Retail Propensity To Buy Goods",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Local Search",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/this-is-now/search",
+            "params": [
+              {
+                "name": "postcode",
+                "value": "",
+                "type": "query",
+                "description": "This will be in the standard UK Postcode format. For further information, click here"
+              },
+              {
+                "name": "product_type",
+                "value": "",
+                "type": "query",
+                "description": "Valid values include the following: - electricals, - departmentstores, - furniture, - bedretailers, - homefurnishings, - kitchen, - diy, - garden"
+              },
+              {
+                "name": "radius",
+                "value": "",
+                "type": "query",
+                "description": "Valid values include the following: - 10, - 15, - 20, - 25"
+              }
+            ]
+          },
+          "docs": "The /this-is-now/search endpoint in TwentyAPI is designed to retrieve the likelihood of a household within a specified area purchasing specific goods, based on their position in the timeline of their homemover journey. Purpose Targetted Marketing: To enable retailers to target marketing efforts effectively by understanding the likelihood of households purchasing specific goods. Performance Management: To provide insights for inventory management, customer retention, personalized customer experie"
+        },
+        {
+          "info": {
+            "name": "/this-is-now/search-national",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.twentyci.co.uk/api/v2/this-is-now/search-national"
+          },
+          "docs": "Listed as an available route on the TwentyAPI \"This is Now | Retail Propensity To Buy Goods\" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

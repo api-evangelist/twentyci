@@ -1,0 +1,383 @@
+{
+  "item": [
+    {
+      "id": "36397d95-76e1-42a9-a136-e2b79df9df65",
+      "name": "Authorisation",
+      "description": {
+        "content": "Bearer-token issuance for TwentyAPI.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1baacdef-bf6e-4955-b516-44301db0f15e",
+          "name": "Issue a TwentyAPI bearer token",
+          "request": {
+            "name": "Issue a TwentyAPI bearer token",
+            "description": {
+              "content": "Exchanges TwentyCi-issued credentials for a bearer access token. TwentyCi's documentation states: 'To ensure that the necessary fields are entered, one must include the Client ID, Client Secret, Username, Password, Grant Type (with a value set as password), and Scope (valid with an asterisk *) within the body of the request.'",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "oauth",
+                "token"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "disabled": false,
+                  "key": "client_id",
+                  "value": "<string>",
+                  "description": "(Required) Your Client ID, issued by TwentyCi."
+                },
+                {
+                  "disabled": false,
+                  "key": "client_secret",
+                  "value": "<string>",
+                  "description": "(Required) Client Secret, issued by TwentyCi."
+                },
+                {
+                  "disabled": false,
+                  "key": "username",
+                  "value": "<string>",
+                  "description": "(Required) Username for access to TwentyAPI."
+                },
+                {
+                  "disabled": false,
+                  "key": "password",
+                  "value": "<password>",
+                  "description": "(Required) Password for the username."
+                },
+                {
+                  "disabled": false,
+                  "key": "grant_type",
+                  "value": "<string>",
+                  "description": "(Required) Valid value: password."
+                },
+                {
+                  "disabled": false,
+                  "key": "scope",
+                  "value": "<string>",
+                  "description": "Valid value: *. Documented as nullable; * is the only value TwentyCi publishes."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "9c5f9a3a-faa3-4e86-968d-da472adf5483",
+              "name": "Token issued.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Your Client ID, issued by TwentyCi.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Client Secret, issued by TwentyCi.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_secret",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Username for access to TwentyAPI.",
+                        "type": "text/plain"
+                      },
+                      "key": "username",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Password for the username.",
+                        "type": "text/plain"
+                      },
+                      "key": "password",
+                      "value": "<password>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Valid value: password.",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Valid value: *. Documented as nullable; * is the only value TwentyCi publishes.",
+                        "type": "text/plain"
+                      },
+                      "key": "scope",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 1296000,\n  \"access_token\": \"your_access_token\",\n  \"refresh_token\": \"your_refresh_token\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "60bcb798-c555-46a2-9acb-e9d7e4c09a63",
+              "name": "Unauthorized - authentication credentials were missing or incorrect.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Your Client ID, issued by TwentyCi.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Client Secret, issued by TwentyCi.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_secret",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Username for access to TwentyAPI.",
+                        "type": "text/plain"
+                      },
+                      "key": "username",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Password for the username.",
+                        "type": "text/plain"
+                      },
+                      "key": "password",
+                      "value": "<password>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Valid value: password.",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Valid value: *. Documented as nullable; * is the only value TwentyCi publishes.",
+                        "type": "text/plain"
+                      },
+                      "key": "scope",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "194a3e36-31a5-4aff-b5bb-11933fb51004",
+              "name": "Unprocessable Entity - request is invalid or unable to be validated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "oauth",
+                    "token"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "urlencoded",
+                  "urlencoded": [
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Your Client ID, issued by TwentyCi.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_id",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Client Secret, issued by TwentyCi.",
+                        "type": "text/plain"
+                      },
+                      "key": "client_secret",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Username for access to TwentyAPI.",
+                        "type": "text/plain"
+                      },
+                      "key": "username",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Password for the username.",
+                        "type": "text/plain"
+                      },
+                      "key": "password",
+                      "value": "<password>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "(Required) Valid value: password.",
+                        "type": "text/plain"
+                      },
+                      "key": "grant_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "disabled": false,
+                      "description": {
+                        "content": "Valid value: *. Documented as nullable; * is the only value TwentyCi publishes.",
+                        "type": "text/plain"
+                      },
+                      "key": "scope",
+                      "value": "<string>"
+                    }
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.twentyci.co.uk",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "459673e0-1191-462d-92d6-e07c638606c1",
+    "name": "TwentyAPI (TwentyCi) OAuth 2.0 Token API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The single documented authentication endpoint for TwentyCi's TwentyAPI. A caller exchanges a client_id, client_secret, username and password - all issued by TwentyCi under a commercial data agreement, not by self-serve signup - for a bearer access token and refresh token. The access token is then presented as 'Authorization: Bearer <token-key>' against https://api.twentyci.co.uk/api/v2.\n\nTwentyCi's documentation labels the security scheme 'OAuth2' with an 'Implicit' flow, while the request body it documents is a resource-owner password-credentials grant (grant_type=password). Both facts are recorded here rather than reconciled. The only documented scope value is '*'. No OpenID Connect discovery document is served: https://api.twentyci.co.uk/.well-known/openid-configuration returned HTTP 404 on 2026-07-26.\n\nPROVENANCE: harvested by API Evangelist on 2026-07-26 from TwentyCi's own published documentation node 'Authorisation for API Requests' in the public JSON corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200). The endpoint's existence was independently confirmed: GET https://api.twentyci.co.uk/oauth/token returned HTTP 405 with {\"message\":\"The GET method is not supported for route oauth/token. Supported methods: POST.\"}. This is an API Evangelist derivation, not a provider-published artifact.\n\nContact Support:\n Name: TwentyCi",
+      "type": "text/plain"
+    }
+  }
+}

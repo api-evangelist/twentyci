@@ -1,0 +1,33 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "TwentyAPI (TwentyCi) OAuth 2.0 Token API",
+    "version": "v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Authorisation",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Issue a TwentyAPI bearer token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.twentyci.co.uk/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Exchanges TwentyCi-issued credentials for a bearer access token. TwentyCi's documentation states: 'To ensure that the necessary fields are entered, one must include the Client ID, Client Secret, Username, Password, Grant Type (with a value set as password), and Scope (valid with an asterisk *) within the body of the request.'"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
