@@ -39,7 +39,7 @@ tags:
 - Data as a Service
 created: '2026-07-26'
 modified: '2026-07-26'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: twentyci:twentyapi-oauth-token-api
   name: TwentyAPI OAuth Token API
