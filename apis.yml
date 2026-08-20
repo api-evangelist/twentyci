@@ -25,6 +25,19 @@ description: TwentyCi is a United Kingdom residential property data and home-mov
   Identifier.
 image: https://www.twentyci.co.uk/favicon.ico
 tags:
+- Real-Estate
+- United Kingdom
+- PropTech
+- Property Data
+- Valuation
+- AVM
+- Rentals
+- Address Data
+- Conveyancing
+- Homemover Data
+- Agent Performance
+- Data as a Service
+tags_raw:
 - Real Estate
 - United Kingdom
 - PropTech
@@ -54,6 +67,9 @@ apis:
   humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
   baseURL: https://api.twentyci.co.uk
   tags:
+  - Authentication
+  - Bearer Token
+  tags_raw:
   - Authentication
   - OAuth
   - Bearer Token
@@ -110,6 +126,10 @@ apis:
   humanURL: https://api.twentyci.co.uk/documentation#trigger-information
   baseURL: https://api.twentyci.co.uk/api/v2
   tags:
+  - Homemover Data
+  - Triggers
+  - Event
+  tags_raw:
   - Homemover Data
   - Triggers
   - Events
