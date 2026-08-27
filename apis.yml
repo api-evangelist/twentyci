@@ -54,167 +54,263 @@ created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.23'
 apis:
-- aid: twentyci:twentyapi-oauth-token-api
-  name: TwentyAPI OAuth Token API
-  description: >-
-    The single documented authentication endpoint for TwentyAPI. Exchanges a
-    TwentyCi-issued client_id, client_secret, username and password for a bearer
-    access token and refresh token, which is then presented in an Authorization
-    header as "Bearer <token-key>". TwentyCi labels the scheme OAuth2 with an
-    Implicit flow while documenting a resource-owner password-credentials request
-    body; the only documented scope value is "*". No OpenID Connect discovery
-    document is served.
+- aid: twentyci:twentyci-address-match-api
+  name: TwentyCi Address Match API
+  description: '- Partial Address Matching'
   humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
   baseURL: https://api.twentyci.co.uk
   tags:
-  - Authentication
-  - Bearer Token
-  tags_raw:
-  - Authentication
-  - OAuth
-  - Bearer Token
+  - Address Match
   properties:
   - type: OpenAPI
-    url: openapi/twentyci-twentyapi-oauth-openapi.json
+    url: openapi/twentyci-address-match-api-openapi.yml
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
-- aid: twentyci:twentyapi-properties-api
-  name: TwentyAPI Properties API
-  description: The core DOMUS property surface of TwentyAPI. Retrieves property
-    information and detail by UPRN, recent sales and comparable properties for sale
-    in the area, average property values and AVM valuation for a single property,
-    postcode and radius search, property attributes, Google Maps imagery URLs,
-    transaction history, transport links, planning permission data, floor plans,
-    price-per-square-foot comparables and a likely-to-sell propensity signal.
-  humanURL: https://api.twentyci.co.uk/documentation#properties
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Property Data
-  - Valuation
-  - AVM
-  - UPRN
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#properties
-- aid: twentyci:twentyapi-agent-performance-api
-  name: TwentyAPI Agent Performance API
-  description: Estate-agent and letting-agent benchmarking built on TwentyCi sales
-    and rental data. Ranks brands by SSTC, new instructions, exchange, PIPA
-    (percentage of initial price achieved) and days from new instruction to SSTC,
-    and returns per-brand statistics for listing value, sold percentage, sale-price
-    difference against all other brands, time to sell, let-agreed volumes, time to
-    let and let ratios.
-  humanURL: https://api.twentyci.co.uk/documentation#agent-performance
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Agent Performance
-  - Benchmarking
-  - Rentals
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#agent-performance
-- aid: twentyci:twentyapi-trigger-information-api
-  name: TwentyAPI Trigger Information API
-  description: Home-mover event triggers - the transaction-lifecycle signals TwentyCi
-    is built on. Retrieves a specific trigger, lists properties by trigger type
-    (including properties with no UPRN), and returns the trigger history for a
-    property.
-  humanURL: https://api.twentyci.co.uk/documentation#trigger-information
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Homemover Data
-  - Triggers
-  - Event
-  tags_raw:
-  - Homemover Data
-  - Triggers
-  - Events
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#trigger-information
-- aid: twentyci:twentyapi-categories-api
-  name: TwentyAPI Categories API
-  description: Lists the attribute categories available for a property and returns a
-    specific category, providing the vocabulary that the Properties API's attribute
-    endpoints are organised around.
-  humanURL: https://api.twentyci.co.uk/documentation#categories
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Categories
-  - Metadata
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#categories
-- aid: twentyci:twentyapi-address-match-api
-  name: TwentyAPI Address Match API
-  description: Partial address matching. Submits a fragmentary or unstructured UK
-    address to a match-address process and resolves it against TwentyCi's addressing
-    layer, the capability marketed as AddressMaster / Inscriptio address enhancement.
-  humanURL: https://api.twentyci.co.uk/documentation#address-match
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Address Data
-  - Matching
-  - Data Quality
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#address-match
-- aid: twentyci:twentyapi-schools-api
-  name: TwentyAPI Schools API
-  description: Returns nearby schools for a given UK postcode, one of the
-    neighbourhood-context datasets TwentyCi layers onto a property record.
-  humanURL: https://api.twentyci.co.uk/documentation#schools
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Schools
-  - Location Data
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#schools
-- aid: twentyci:twentyapi-uk-housing-market-metrics-api
-  name: TwentyAPI UK Housing Market Metrics API
-  description: Aggregate UK housing market metrics for a specified timeframe -
-    new instructions, SSTCs (sold subject to contract) and PCDs (predicted to
-    complete date) - the market-level view behind TwentyCi's published Property and
-    Homemover Report.
-  humanURL: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
-  baseURL: https://api.twentyci.co.uk/api/v2
-  tags:
-  - Market Data
-  - Housing Market
-  - Analytics
-  properties:
-  - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
-- aid: twentyci:twentyapi-this-is-now-api
-  name: TwentyAPI This is Now API
-  description: "\"This is Now\" retail propensity to buy goods. Local and national
-    search endpoints returning consumer propensity signal derived from home-mover
-    events, aimed at retailers and media agencies targeting people who have just
-    moved."
-  humanURL: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
-  baseURL: https://api.twentyci.co.uk/api/v2
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-agent-performance-api
+  name: TwentyCi Agent Performance API
+  description: '- Agent Performance based on Sales Data - Agent Performance based on Rental Data'
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
   tags:
-  - Retail
-  - Propensity
-  - Marketing Data
+  - Agent Performance
   properties:
   - type: OpenAPI
-    url: openapi/twentyci-twentyapi-openapi.json
+    url: openapi/twentyci-agent-performance-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-authorisation-api
+  name: TwentyCi Authorisation API
+  description: Bearer-token issuance for TwentyAPI.
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - Authorisation
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-authorisation-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-categories-api
+  name: TwentyCi Categories API
+  description: >-
+    - Obtain a List of Categories for a Property - Obtain a Specific Categories for a Property
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - Categories
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-categories-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-properties-api
+  name: TwentyCi Properties API
+  description: >-
+    - Property Information by Pagination - Properties Information by UPRN - Properties Details by UPRN
+    - Recent Property Sales in the Area - Similar properties for sale in the area - Average Property Values
+    by Postcode - Searching Properties by Postcode and Radius - Searching Properties by Postcode and Address
+    - Property Attributes - Property Attributes for a Given Category - Obtaining a Google Map UR
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - Properties
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-properties-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-schools-api
+  name: TwentyCi Schools API
+  description: '- Nearby Schools by Postcode'
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - Schools
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-schools-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-this-is-now-retail-propensity-to-buy-goods-api
+  name: TwentyCi This is Now | Retail Propensity To Buy Goods API
+  description: '- Local Search - National Search'
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - This is Now | Retail Propensity To Buy Goods
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-this-is-now-retail-propensity-to-buy-goods-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-trigger-information-api
+  name: TwentyCi Trigger Information API
+  description: >-
+    - Obtain a Specific Trigger - Get Properties by Trigger Type - Get no UPRN Properties by Trigger Type
+    - Trigger History
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - Trigger Information
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-trigger-information-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
+- aid: twentyci:twentyci-uk-housing-market-metrics-api
+  name: TwentyCi UK Housing Market Metrics API
+  description: '- New Instructions, SSTC''s and PCD''s for a Specific Timeframe'
+  humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  baseURL: https://api.twentyci.co.uk
+  tags:
+  - UK Housing Market Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/twentyci-uk-housing-market-metrics-api-openapi.yml
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#properties
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#agent-performance
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#trigger-information
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#categories
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#address-match
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#schools
+  - type: Documentation
+    url: https://api.twentyci.co.uk/documentation#uk-housing-market-metrics
   - type: Documentation
     url: https://api.twentyci.co.uk/documentation#this-is-now-retail-propensity-to-buy-goods
 common:
