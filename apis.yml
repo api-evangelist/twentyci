@@ -23,6 +23,17 @@ description: TwentyCi is a United Kingdom residential property data and home-mov
   regime and TwentyCi identifies property by UPRN, the Ordnance Survey/GeoPlace
   Unique Property Reference Number, rather than by any RESO Universal Property
   Identifier.
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: true
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 image: https://www.twentyci.co.uk/favicon.ico
 tags:
 - Real-Estate
