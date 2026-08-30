@@ -1,0 +1,1830 @@
+openapi: 3.2.0
+info:
+  title: TwentyAPI (TwentyCi) v2 Agent Performance API
+  version: v2
+  summary: UK residential property, valuation (AVM), transaction-trigger and agent-performance data from TwentyCi.
+  description: 'TwentyAPI is TwentyCi''s RESTful data-as-a-service API over the DOMUS UK residential property database. Properties are addressed by UPRN (Unique Property Reference Number), the UK national property identifier, rather than by any MLS or RESO identifier. Access is credentialed: an OAuth 2.0 password-grant token is minted at POST https://api.twentyci.co.uk/oauth/token using a client_id, client_secret, username and password issued by TwentyCi under a commercial data agreement. There is no self-serve developer signup.
+
+
+    PROVENANCE: This document was harvested by API Evangelist on 2026-07-26 from TwentyCi''s own published documentation corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200, application/json, 247,074 bytes), which is served publicly without authentication and backs the TwentyAPI documentation SPA at https://api.twentyci.co.uk/documentation. Every path, method, parameter name, parameter type and required flag below is transcribed from that corpus''s own "{% route %}" and "{% param %}" declarations. Response schemas beyond HTTP status codes are NOT modelled, because TwentyCi does not publish them in machine-readable form. TwentyCi advertises a downloadable specification at https://api.twentyci.co.uk/docs/v2/spec.json, but that URL returned HTTP 404 on 2026-07-26; this document is an API Evangelist derivation, not a provider-published artifact.'
+  contact:
+    name: TwentyCi
+    url: https://www.twentyci.co.uk/contact-us/
+servers:
+- url: https://api.twentyci.co.uk/api/v2
+  description: TwentyAPI v2 root URL, as published in the TwentyAPI Overview.
+security:
+- twentyapiOAuth: []
+tags:
+- name: Agent Performance
+  description: '- Agent Performance based on Sales Data - Agent Performance based on Rental Data'
+paths:
+  /agent/best:
+    get:
+      operationId: list_of_best_agents
+      summary: List of Best Agents
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#list-of-best-agents
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent/best
+      description: The /agent/best endpoint in TwentyAPI is designed to retrieve valuable data for identifying the best estate agents within a specified area. Leveraging proprietary algorithms, this endpoint calculates a score for each agent, offering a comprehensive ranking based on multiple data points. Users gain actionable insights for performance evaluation, client satisfaction monitoring, market trend analysis, strategic planning, and benchmarking against industry standards and competitors. This real-time snapshot ensures informed decision-making with accurate and unbiased data.
+      parameters:
+      - name: postcode
+        in: query
+        required: true
+        description: This is the postcode unit for where the user would like to find the list of Best Agents. This will be in the standard UK Postcode format. For further information, click here
+        schema:
+          type: string
+      - name: bedroom
+        in: query
+        required: false
+        description: This is the number of bedrooms withn specific properties
+        schema:
+          type: integer
+      - name: propsubtype
+        in: query
+        required: false
+        description: 'Refers to what type of Property can be filtered by. Only the following parameters can be used: - Flat / Apartment - Bungalow - Houses'
+        schema:
+          type: string
+      - name: achieve_asking_price
+        in: query
+        required: false
+        description: 'The paramter refers to whether or not an agent has acheived the listed asking price. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - fastestsale - experiencedagent'
+        schema:
+          type: boolean
+      - name: fastest_sale
+        in: query
+        required: false
+        description: 'The paramter refers to whether or not an agent can record a quick sale. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - achieveaskingprice - experiencedagent'
+        schema:
+          type: boolean
+      - name: experienced_agent
+        in: query
+        required: false
+        description: 'The paramter refers to whether or not an agent is a known agent with extensive experince. This is a boolean value (e.g. 1 or 0) to ultilise this parameter or not. If the following parameters are not used, this parameter is required: - fastestsale - achieveaskingprice'
+        schema:
+          type: boolean
+  /agent-performance/rankings/sstc:
+    get:
+      operationId: brands_ranked_by_sstc_s
+      summary: Brands Ranked by SSTC's
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#brands-ranked-by-sstc-s
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/rankings/sstc
+      description: The /agent-performance/rankings/sstc endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by agreed property sales. This API (Application Programming Interface) endpoint assists estate agents in gaining valuable market intelligence, understanding their competitiveness, and identifying opportunities for growth.
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/rankings/new-instructions:
+    get:
+      operationId: brands_ranked_by_new_instructions
+      summary: Brands Ranked by New Instructions
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/rankings/new-instructions
+      description: The /agent-performance/rankings/new-instructions endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by new instructions. This API call is crucial for estate agents, providing insights into market trends, facilitating competitive analysis, and supporting strategic planning.
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/rankings/percentage-of-initial-price-achieved:
+    get:
+      operationId: brands_ranked_by_pipa
+      summary: Brands Ranked by PIPA
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#brands-ranked-by-pipa
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/rankings/percentage-of-initial-price-achieved
+      description: The /agent-performance/rankings/percentage-of-initial-price-achieved endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by the percentage change of the initial listing price (PIPA). This API call is crucial for estate agents, providing insights into market pricing trends, facilitating competitive analysis, and supporting strategic positioning.
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/rankings/days-to-sstc:
+    get:
+      operationId: brands_ranked_by_days_from_new_instruction_to_sstc
+      summary: Brands Ranked by Days from New Instruction to SSTC
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#brands-ranked-by-days-from-new-instruction-to-sstc
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/rankings/days-to-sstc
+      description: The /agent-performance/rankings/days-to-sstc endpoint in TwentyAPI is designed to retrieve data on the top five estate agencies ranked by how quickly properties transition from for sale to sold subject to contract (SSTC). This API call is essential for estate agents, providing insights into market efficiency and sales processes.
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/new-instructions:
+    get:
+      operationId: new_instructions_statistics_for_a_brand
+      summary: New Instructions Statistics for a Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/new-instructions
+      description: The /agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve the volume of new instructions for a specific estate agency within the last 12 months. Additionally, it provides the agency's overall rank based on optional parameters. If no parameters are set, the ranking is done on a national level.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/sstc:
+    get:
+      operationId: sstc_statistics_for_a_brand
+      summary: SSTC statistics for a Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#sstc-statistics-for-a-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/sstc
+      description: The /agent-performance/brand/sstc endpoint in TwentyAPI is designed to retrieve information on properties sold subject to contract (SSTC) by a specific estate agency within the last 12 months. Additionally, it provides the agency's overall rank based on optional parameters. If no parameters are set, the ranking is done on a national level.
+  /agent-performance/brand/time-to-sell:
+    get:
+      operationId: days_to_sstc_for_a_specific_brand
+      summary: Days to SSTC for a Specific Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-specific-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/time-to-sell
+      description: The /agent-performance/brand/time-to-sell endpoint in TwentyAPI is designed to retrieve the average time it takes for a property to be sold after being instructed for a specific brand. This data is based on optional parameters, allowing for a customised analysis. If no parameters are set, the calculation is done on a national level.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/time-to-sell-all-brands:
+    get:
+      operationId: days_to_sstc_for_all_brands
+      summary: Days to SSTC for all Brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-all-brands
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/time-to-sell-all-brands
+      description: The /agent-performance/brand/time-to-sell-all-brands endpoint in TwentyAPI is designed to retrieve the average time it takes for a property to be sold after being instructed by all brands within a specific area defined by additional parameters. If no parameters are set, the calculation is done on a national level.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/property-sale-difference:
+    get:
+      operationId: difference_in_sold_price_for_a_property_for_a_specific_brand_and_all_other_brands
+      summary: Difference in Sold price for a Property for a Specific Brand and all other Brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#difference-in-sold-price-for-a-property-for-a-specific-brand-and-all-other-brands
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/property-sale-difference
+      description: The /agent-performance/brand/property-sale-differenceendpoint in TwentyAPI is designed to calculate the difference between the average sale price from a Property for a given brand and the average sale price of all brands with the specified filter. The volume attribute is in GBP. A positive value indicates the brand sells properties above the average, while a negative value signifies sales below the average. This calculation is performed within a specific area defined by additional parameters. If no parameters are set, the analysis is done on a national level.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/percentage-of-initial-price-achieved:
+    get:
+      operationId: difference_in_pipa_for_a_property_for_a_specific_brand_and_all_other_brands
+      summary: Difference in PIPA for a Property for a Specific Brand and all other Brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#difference-in-pipa-for-a-property-for-a-specific-brand-and-all-other-brands
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/agent-performance/brand/percentage-of-initial-price-achieved
+      description: The /api/v2/agent-performance/brand/initial-price-achieve endpoint in TwentyAPI is designed to calculate the difference between the Percentage of Initial Price Achieved (PIPA)) for a given brand and the PIPA of all brands with the specified filter. The volume attribute is in percentage format but displayed as a decimal. A positive value indicates the brand achieves a higher rate of sales price compared to its initial listing price, while a negative value indicates the opposite. This analysis is performed within a specific area defined by additional parameters. If no parameters are set, the analysis is done on a national level.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/property-sale-value:
+    get:
+      operationId: average_listing_price_for_a_brand
+      summary: Average Listing Price for a Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#average-listing-price-for-a-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/property-sale-value
+      description: The /agent-performance/brand/property-listing-value endpoint in TwentyAPI is designed to retrieve the average listing price of properties for a specific brand. This data can be further filtered by optional parameters, allowing estate agents to gain insights into market trends. If no parameters are set, the analysis encompasses all property types nationally.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/sold-percentage:
+    get:
+      operationId: properties_sales_ratio_for_a_given_brand
+      summary: Properties Sales Ratio for a Given Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-a-given-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/sold-percentage
+      description: The /agent-performance/brand/sold-percentage endpoint in TwentyAPI is designed to calculate the percentage of properties sold compared to new instructions for a given brand. This ratio indicates the agency's efficiency in converting property instructions into successful sales. A ratio above 100% signifies that the agency is selling properties more quickly than new instructions are received.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/sold-percentage-all-brands:
+    get:
+      operationId: properties_sales_ratio_for_all_brands
+      summary: Properties Sales Ratio for all Brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#properties-sales-ratio-for-all-brands
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/sold-percentage-all-brands
+      description: The /agent-performance/brand/sold-percentage-all-brands endpoint in TwentyAPI is designed to calculate the percentage of properties sold compared to new instructions for all brands within a specified area. If no parameters are provided, the calculation is based nationally. A ratio above 100% indicates that the agency is selling properties more quickly than instructing new ones.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/brand/days-to-sstc:
+    get:
+      operationId: days_to_sstc_for_a_given_brand
+      summary: Days to SSTC for a given Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#days-to-sstc-for-a-given-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/days-to-sstc
+      description: This will give you a volume stat which is the Day to SSTC for a Brand.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /rentals/agent-performance/rankings/let-agreed:
+    get:
+      operationId: brands_ranked_by_let_agreed
+      summary: Brands ranked by Let Agreed
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#brands-ranked-by-let-agreed
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/rankings/let-agreed
+      description: The /rentals/agent-performance/rankings/let-agreed endpoint in TwentyAPI is designed to retrieve information on agent performance regarding agreed lets in a specific patch, over the last 12 months. This data can be filtered by region, postcode area, postcode district, and postcode sector.
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /rentals/agent-performance/rankings/new-instructions:
+    get:
+      operationId: brands_ranked_by_new_instructions_2
+      summary: Brands ranked by New Instructions
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#brands-ranked-by-new-instructions-2
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/rankings/new-instructions
+      description: The /rentals/agent-performance/rankings/new-instructions endpoint in TwentyAPI is tailored to retrieve crucial insights on an agent's proficiency in securing new property instructions for lettings within a specified patch. This resource aims to empower estate agents by aiding them in discerning top-performing agents based on their instructions over the last 12 months. Additional parameters, such as minimal and maximal rental value, rental price bands, postcode areas, districts or sectors, regions, property types, and result limits, enhance the precision of the results.
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /rentals/agent-performance/brand/let-agreed:
+    get:
+      operationId: let_agreed_statistics_for_a_brand
+      summary: Let Agreed statistics for a Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#let-agreed-statistics-for-a-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/brand/let-agreed
+      description: The /rentals/agent-performance/brand/let-agreed endpoint in TwentyAPI is designed to retrieve information on the number of properties let by a brand in the last 12 months. This API (Application Programming Interface) call assists estate agents in evaluating their performance and making informed decisions based on rental statistics.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /rentals/agent-performance/brand/new-instructions:
+    get:
+      operationId: new_instructions_statistics_for_a_brand_2
+      summary: New Instructions statistics for a Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#new-instructions-statistics-for-a-brand-2
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/brand/new-instructions
+      description: The /rentals/agent-performance/brand/new-instructions endpoint in TwentyAPI is designed to retrieve information on the number of properties instructed for rental by a brand in the last 12 months. This API (Application Programming Interface) call assists estate agents in evaluating their performance and making informed decisions based on new instruction statistics.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /rentals/agent-performance/brand/let-percentage:
+    get:
+      operationId: properties_let_ratio_for_a_given_brand
+      summary: Properties Let Ratio for a Given Brand
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#properties-let-ratio-for-a-given-brand
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/brand/let-percentage
+      description: The rentals/agent-performance/brand/let-percentage endpoint in TwentyAPI is designed to calculate the percentage of properties let compared to new instructions for a given brand. This ratio indicates the agency's efficiency in converting property instructions into successful sales. A ratio above 100% signifies that the agency is selling properties more quickly than new instructions are received.
+      parameters:
+      - name: brand_id
+        in: query
+        required: true
+        description: The ID of the brand/agent you want the stats for
+        schema:
+          type: integer
+      - name: min_price
+        in: query
+        required: false
+        description: Minimum price of the properties to evaluate (rounded down to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: max_price
+        in: query
+        required: false
+        description: Maximum price of the properties to evaluate (rounded up to the nearest £50k). Cannot not be used with pricebrands.
+        schema:
+          type: integer
+      - name: price_bands
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of price bands.
+        schema:
+          type: string
+      - name: postcode_sectors
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode sectors.
+        schema:
+          type: string
+      - name: postcode_areas
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode areas.
+        schema:
+          type: string
+      - name: postcode_districts
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of postcode districts.
+        schema:
+          type: string
+      - name: regions
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of regions.
+        schema:
+          type: string
+      - name: property_types
+        in: query
+        required: false
+        description: Only evaluate properties within the given list (comma separated) of property types.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Dictates which ranked brands to return. By default it returns the top 5. Note, this does not limit the result set to 5, if 2 Brands are ranked at 5 for example, then the result set would be 6 long, not 5
+        schema:
+          type: integer
+  /agent-performance/rankings/exchange:
+    get:
+      operationId: get_agent_performance_rankings_exchange
+      summary: /agent-performance/rankings/exchange
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/rankings/exchange
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /agent-performance/brand/exchange:
+    get:
+      operationId: get_agent_performance_brand_exchange
+      summary: /agent-performance/brand/exchange
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/exchange
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /agent-performance/brand/property-sale-value-all-brands:
+    get:
+      operationId: get_agent_performance_brand_property_sale_value_all_brands
+      summary: /agent-performance/brand/property-sale-value-all-brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/property-sale-value-all-brands
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /agent-performance/brand/initial-price-achieve:
+    get:
+      operationId: get_agent_performance_brand_initial_price_achieve
+      summary: /agent-performance/brand/initial-price-achieve
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/initial-price-achieve
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /agent-performance/brand/property-listing-value:
+    get:
+      operationId: get_agent_performance_brand_property_listing_value
+      summary: /agent-performance/brand/property-listing-value
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-sales-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /agent-performance/brand/property-listing-value
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Sales Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /rentals/agent-performance/brand/time-to-let:
+    get:
+      operationId: get_rentals_agent_performance_brand_time_to_let
+      summary: /rentals/agent-performance/brand/time-to-let
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-rental-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/brand/time-to-let
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Rental Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /rentals/agent-performance/brand/time-to-let-all-brands:
+    get:
+      operationId: get_rentals_agent_performance_brand_time_to_let_all_brands
+      summary: /rentals/agent-performance/brand/time-to-let-all-brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-rental-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/brand/time-to-let-all-brands
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Rental Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /rentals/agent-performance/brand/let-percentage-all-brands:
+    get:
+      operationId: get_rentals_agent_performance_brand_let_percentage_all_brands
+      summary: /rentals/agent-performance/brand/let-percentage-all-brands
+      tags:
+      - Agent Performance
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#agent-performance-based-on-rental-data
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /rentals/agent-performance/brand/let-percentage-all-brands
+      description: Listed as an available route on the TwentyAPI "Agent Performance based on Rental Data" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+components:
+  securitySchemes:
+    twentyapiOAuth:
+      type: oauth2
+      description: 'OAuth 2.0 bearer token. TwentyCi''s documentation labels the scheme "OAuth2" with flow "Implicit" but describes a resource-owner password-credentials exchange: POST /oauth/token with client_id, client_secret, username, password, grant_type=password and scope=* returns {token_type: Bearer, expires_in, access_token, refresh_token}. The token is then sent as "Authorization: Bearer <token-key>". Modelled here as the password flow because that is what the documented request body performs. No OpenID Connect discovery document is served (/.well-known/openid-configuration returned 404).'
+      flows:
+        password:
+          tokenUrl: https://api.twentyci.co.uk/oauth/token
+          refreshUrl: https://api.twentyci.co.uk/oauth/token
+          scopes:
+            '*': Full access; the only scope value documented by TwentyCi.
+externalDocs:
+  description: TwentyAPI documentation
+  url: https://api.twentyci.co.uk/documentation
+x-provenance:
+  harvestedBy: API Evangelist
+  harvestDate: '2026-07-26'
+  derived: true
+  providerPublished: false
+  sources:
+  - url: https://api.twentyci.co.uk/api/documentation/markdocs
+    status: 200
+    contentType: application/json
+    bytes: 247074
+    note: Public, unauthenticated JSON documentation corpus (66 nodes) backing the TwentyAPI docs SPA.
+  - url: https://api.twentyci.co.uk/documentation
+    status: 200
+    contentType: text/html
+    note: React/Markdoc single-page app shell; renders the corpus above.
+  - url: https://api.twentyci.co.uk/docs/v2/spec.json
+    status: 404
+    note: Specification download advertised in the TwentyAPI Overview page. NOT served.
+  anomalies:
+  - TwentyCi advertises https://api.twentyci.co.uk/docs/v2/spec.json as a downloadable specification; it returned HTTP 404 on 2026-07-26. No provider-published OpenAPI exists.
+  - Several documented route strings are irregular (e.g. "api/v2/propertiesavm2/{property}", "api/v2/{uprn}/likely-to-sell"). They are transcribed verbatim and flagged with x-documented-route-note rather than corrected.
+  - The documentation page "Obtain a Specific Trigger" declares the route "/categories", which is inconsistent with its own section index route "/trigger/{trigger}".
+  - Several routes are listed only on a section index page with no parameter documentation; they are included with no asserted parameters.
+  - TwentyCi labels the security scheme OAuth2 with the "Implicit" flow while documenting a resource-owner password-credentials request body. Modelled as the password flow.

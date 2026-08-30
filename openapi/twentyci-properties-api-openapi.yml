@@ -1,0 +1,771 @@
+openapi: 3.2.0
+info:
+  title: TwentyAPI (TwentyCi) v2 Properties API
+  version: v2
+  summary: UK residential property, valuation (AVM), transaction-trigger and agent-performance data from TwentyCi.
+  description: 'TwentyAPI is TwentyCi''s RESTful data-as-a-service API over the DOMUS UK residential property database. Properties are addressed by UPRN (Unique Property Reference Number), the UK national property identifier, rather than by any MLS or RESO identifier. Access is credentialed: an OAuth 2.0 password-grant token is minted at POST https://api.twentyci.co.uk/oauth/token using a client_id, client_secret, username and password issued by TwentyCi under a commercial data agreement. There is no self-serve developer signup.
+
+
+    PROVENANCE: This document was harvested by API Evangelist on 2026-07-26 from TwentyCi''s own published documentation corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200, application/json, 247,074 bytes), which is served publicly without authentication and backs the TwentyAPI documentation SPA at https://api.twentyci.co.uk/documentation. Every path, method, parameter name, parameter type and required flag below is transcribed from that corpus''s own "{% route %}" and "{% param %}" declarations. Response schemas beyond HTTP status codes are NOT modelled, because TwentyCi does not publish them in machine-readable form. TwentyCi advertises a downloadable specification at https://api.twentyci.co.uk/docs/v2/spec.json, but that URL returned HTTP 404 on 2026-07-26; this document is an API Evangelist derivation, not a provider-published artifact.'
+  contact:
+    name: TwentyCi
+    url: https://www.twentyci.co.uk/contact-us/
+servers:
+- url: https://api.twentyci.co.uk/api/v2
+  description: TwentyAPI v2 root URL, as published in the TwentyAPI Overview.
+security:
+- twentyapiOAuth: []
+tags:
+- name: Properties
+  description: '- Property Information by Pagination - Properties Information by UPRN - Properties Details by UPRN - Recent Property Sales in the Area - Similar properties for sale in the area - Average Property Values by Postcode - Searching Properties by Postcode and Radius - Searching Properties by Postcode and Address - Property Attributes - Property Attributes for a Given Category - Obtaining a Google Map UR'
+paths:
+  /properties/{uprn}:
+    get:
+      operationId: property_information_by_uprn
+      summary: Property Information by UPRN
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#property-information-by-uprn
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{uprn}
+      description: The properties/{uprn} endpoint in TwentyAPI retrieves results by using a specific UPRN (Unique Property Reference Number) provided in the URL. This endpoint offers detailed information, including the full address, postcode, coordinates, AVM (Automated Valuation Model) price, AVM minimum and maximum prices, and the confidence interval of the model on the specified property.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: This is the UPRN for the property that the infromation is required for.
+        schema:
+          type: integer
+      - name: uprn
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/details:
+    get:
+      operationId: property_details_by_uprn
+      summary: Property Details by UPRN
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#property-details-by-uprn
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{property}/details
+      description: The /properties/{uprn}/details endpoint in TwentyAPI provides detailed property information by utilising a specific UPRN - Unique Property Reference Number passed through the URL. This includes the full address, postcode, coordinates, and a wealth of property details such as bedrooms, garden presence, parking availability, area information, infrastructure details, running costs, and demographics.
+      parameters:
+      - name: uprn
+        in: query
+        required: true
+        description: The UPRN of the property in which the details are required for
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/recent-sale-in-the-area:
+    get:
+      operationId: recent_property_sales_in_the_area
+      summary: Recent Property Sales in the Area
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#recent-property-sales-in-the-area
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{property}/recent-sale-in-the-area
+      description: The /properties/{property}/recent-sale-in-the-area endpoint in TwentyAPI is designed to retrieve information about similar properties that have been sold within the last 12 months in the vicinity of a property by utilising a specific UPRN - Unique Property Reference Number. This information is based on factors such as Postcode District, Property Type, and the number of bedrooms. It is recommended to use the perpage parameter followed by an integer to limit the number of properties within the payload and prevent timeouts.
+      parameters:
+      - name: uprn
+        in: query
+        required: true
+        description: This is the UPRN of the property in which the details are required for.
+        schema:
+          type: integer
+      - name: per_page
+        in: query
+        required: false
+        description: The amount of records that you want to limit the payload to provide
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/for-sale-in-the-area:
+    get:
+      operationId: similar_properties_for_sale_in_area
+      summary: Similar Properties For Sale in Area
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#similar-properties-for-sale-in-area
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{property}/for-sale-in-the-area
+      description: The /properties/{uprn}/for-sale-in-the-area endpoint in TwentyAPI is designed to call similar properties currently for sale in the local area of a specified property. This is based on Postcode District, Property Type, and bedrooms.
+      parameters:
+      - name: uprn
+        in: query
+        required: true
+        description: This is the UPRN of the property in which the details are required for.
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/area-value-price:
+    post:
+      operationId: average_property_values_by_postcode
+      summary: Average Property Values by Postcode
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#average-property-values-by-postcode
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/area-value-price
+      description: Description The /properties/area-value-price endpoint in TwentyAPI is designed to retrieve prices generated by an AVM (Automated Valuation Model) for the postcode sector. The results include the average price for all properties and individual averages for different property types within the specified area.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postcode:
+                  type: string
+                  description: 'The postcode for which the Property Values are to be obtained. Example: MK5 8FT'
+                page:
+                  type: integer
+                  description: The page number of the paginated result set you wish to retrieve
+              required:
+              - postcode
+  /propertiesavm2/{property}:
+    post:
+      operationId: valuation_of_property_by_uprn_avm
+      summary: Valuation of Property by UPRN | AVM
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#valuation-of-property-by-uprn-avm
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: api/v2/propertiesavm2/{property}
+      description: The TwentyCi Decision Automated Valuation Model (AVM) endpoint is a Data as a Service (DaaS) API that provides an AVM value range and accuracy for a single property at a point of need. It can be used to obtain the current AVM value and accuracy rating of a property, enabling users to perform on-demand property valuations efficiently. This endpoint provides valuable information for making informed decisions in property transactions, risk management, and market analysis. The data output includes the property address, UPRN, completion date, completion price, AVM value, AVM accuracy, and property attributes such as type, size, and location.
+      parameters:
+      - name: property
+        in: path
+        required: true
+        description: 'The UPRN for which the property valuation is required. Example: 38288388'
+        schema:
+          type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  description: The page number of the paginated result set you wish to retrieve
+  /properties/area-search:
+    post:
+      operationId: searching_properties_by_postcode_and_radius
+      summary: Searching Properties by Postcode and Radius
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-radius
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/area-search
+      description: The /properties/area-search endpoint in TwentyAPI is designed to retrieve AVM (Automated Valuation Model) prices for properties within a specified radius in miles from a given location. The results include the average price for all properties and individual averages for different property types.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postcode:
+                  type: string
+                  description: 'The postcode for which the centre point would be for the search area. Example: MK5 8FT'
+                radius:
+                  type: integer
+                  description: 'This is the number of miles a property can be from the given postcode. Example: 5'
+                page:
+                  type: integer
+                  description: The page number of the paginated result set you wish to retrieve
+              required:
+              - postcode
+  /properties/postcode-search:
+    post:
+      operationId: searching_properties_by_postcode_and_address
+      summary: Searching Properties by Postcode and Address
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#searching-properties-by-postcode-and-address
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/properties/postcode-search
+      description: The /properties/postcode-search endpoint in TwentyAPI is designed to retrieve properties matching a specific postcode and address. The results include the average price for all properties and individual averages for different property types within the specified postcode.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                postcode:
+                  type: string
+                  description: 'The postcode for which the centre point would be for the search area. Example: MK5 8FT'
+                address:
+                  type: string
+                  description: 'The first line of the address to indentify the property Example: Unit 8'
+                page:
+                  type: integer
+                  description: The page number of the paginated result set you wish to retrieve
+              required:
+              - postcode
+              - address
+  /properties/{property}/category/_all:
+    get:
+      operationId: property_attributes
+      summary: Property Attributes
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#property-attributes
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{property}/category/_all
+      description: The /properties/{uprn}/category/all endpoint in TwentyAPI is designed to retrieve various property attributes for a given UPRN (Unique Property Reference Number). Leveraging this API for obtaining property attributes can streamline processes, improve efficiency, and enhance the overall quality of service provided by estate agents. It enables them to stay competitive in the real estate market by leveraging technology for better data management and decision-making.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: This is the UPRN of the property in which the details are required for.
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/image:
+    get:
+      operationId: obtaining_a_google_maps_url_for_a_property
+      summary: Obtaining a Google Maps URL for a Property
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#obtaining-a-google-maps-url-for-a-property
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/properties/{property}/image
+      description: The /properties/{property}/image endpoint in TwentyAPI is designed to retrieve the specific Street View image from Google Maps for a property.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: UPRN of property to use to generate the Google Maps URL
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/transactions:
+    get:
+      operationId: obtain_all_transactions_for_property_via_uprn
+      summary: Obtain all Transactions for Property via UPRN
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#obtain-all-transactions-for-property-via-uprn
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/properties/{property}/transactions
+      description: The /properties/{property}/transactions endpoint in TwentyAPI is designed to retrieve all transactions associated with a property, displaying its pricing history. This lightweight endpoint provides information on transaction values and dates.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: ID of property to fetch
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/transport-links:
+    get:
+      operationId: obtain_transport_links_near_a_property
+      summary: Obtain Transport Links near a Property
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#obtain-transport-links-near-a-property
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/properties/{property}/transport-links
+      description: 'The /api/v2/properties/{property}/transport-links endpoint in TwentyAPI is designed to retrieve information about the nearest rail stations and airports in proximity to a property based on its UPRN (Unique Property Reference Number). This endpoint provides valuable insights into the property''s accessibility and convenience for potential buyers. The data output includes key data elements such as the name of the rail station or airport, the distance from the UPRN, and the type of terminal (airport or rail). Purpose Objective 1: To assist developers in retrieving information about the nearest transportation hubs to a property, enhancing its marketability and appeal to potential buyers. Objective 2: To provide valuable insights into the convenience and accessibility of a property by highlighting its proximity to rail stations and airports. Use Case Scenario: A developer can use this endpoint to enhance property listings by showcasing the convenience of nearby transportation options, attracting potential buyers who prioritize accessibility. Scenario: By knowing the distance to rail stations and airports, developers can target specific buyer segments, such as commuters or frequent travellers, effectively increasing the property''s marketability. Scenario: This endpoint enables developers to provide valuable information to clients about the lifestyle benefits of living near transportation hubs, aiding in the decision-making process for property purchases. Conclusion In summary, the /'
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: UPRN of the property to fetch the data for
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{uprn}/plannings:
+    get:
+      operationId: obtain_planning_permission_data_near_a_property
+      summary: Obtain Planning Permission Data near a Property
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#obtain-planning-permission-data-near-a-property
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/properties/{uprn}/plannings
+      description: 'The /properties/{uprn}/plannings endpoint in TwentyAPI is designed to retrieve information about planning permissions associated with a property based on its Unique Property Reference Number (UPRN). This endpoint provides valuable insights into the property''s planning history, which is essential for estate agents when selling properties. The data output includes key data elements such as Planning ID, Address, Received Date, and Decision. Purpose Full Picture of the Area: To assist developers in retrieving detailed information about planning permissions for properties, enabling estate agents to provide accurate and transparent information to potential buyers, enhancing trust and transparency in the sales process. Pricing Strategy: To empower estate agents with insights into the planning status of properties, facilitating value assessment, risk management, negotiation, and legal compliance throughout the sales process. Use Case Scenario: Significant Information for Vendors A developer can use this endpoint to retrieve planning permission details for a property, helping estate agents address buyer inquiries effectively and build trust by providing transparent information. Scenario: Advanced Marketing Strategy By leveraging the planning permission data retrieved from this endpoint, developers can assess the marketability of properties and negotiate favorable terms based on the property''s planning status. Scenario: Legal Compilance This endpoint enables developers to ensure legal '
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: UPRN of property to fetch the data for
+        schema:
+          type: integer
+      - name: uprn
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /{uprn}/likely-to-sell:
+    get:
+      operationId: likely_to_sell
+      summary: Likely To Sell
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#likely-to-sell
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: api/v2/{uprn}/likely-to-sell
+      description: 'Likely To Sell (LTS) score for a property Returns the Likely To Sell percentile for a given UPRN. The score shows how likely a property is to sell compared to all other UK residential properties. Lower percentile = higher likelihood to sell. Example: 10 = top 10 percent most likely to sell 30 = top 30 percent most likely to sell'
+      parameters:
+      - name: uprn
+        in: path
+        required: true
+        description: The UPRN of the property in which the details are required for
+        schema:
+          type: integer
+  /price-per-square/comparables:
+    get:
+      operationId: comparables
+      summary: Comparables
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#comparables
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: api/v2/price-per-square/comparables
+      description: The /price-per-square/comparables endpoint in TwentyAPI is designed to return comparable property transactions and calculated price-per-square-foot (PPSF) metrics based on postcode and property characteristics.
+      parameters:
+      - name: postcode
+        in: query
+        required: true
+        description: 'The postcode used as the centre point for comparable selection. Example: AB12 3CD'
+        schema:
+          type: string
+      - name: property_type
+        in: query
+        required: false
+        description: 'Property type of the comparable properties. Example: Terraced'
+        schema:
+          type: string
+      - name: bedrooms
+        in: query
+        required: false
+        description: 'Number of bedrooms in the comparable properties. Example: 2'
+        schema:
+          type: integer
+      - name: bathrooms
+        in: query
+        required: false
+        description: 'Number of bathrooms in the comparable properties. Example: 2'
+        schema:
+          type: integer
+      - name: garage
+        in: query
+        required: false
+        description: Indicates whether the filtered properties should have a garage (1 = Yes, 0 = No).
+        schema:
+          type: integer
+      - name: driveway
+        in: query
+        required: false
+        description: Indicates whether the filtered properties should have a driveway (1 = Yes, 0 = No).
+        schema:
+          type: integer
+      - name: ensuite
+        in: query
+        required: false
+        description: Indicates whether the filtered properties should have an ensuite bathroom (1 = Yes, 0 = No).
+        schema:
+          type: integer
+      - name: energy_rating
+        in: query
+        required: false
+        description: 'Energy Performance Certificate rating filter. Multiple ratings can be supplied using a pipe separator (|). Example: C|A'
+        schema:
+          type: string
+      - name: floor_area_band
+        in: query
+        required: false
+        description: Predefined floor area band classification used to match similar-sized properties.
+        schema:
+          type: integer
+      - name: eaa_or_rics
+        in: query
+        required: false
+        description: 'Defines the valuation methodology standard to apply. Example: EAA'
+        schema:
+          type: string
+  /properties:
+    get:
+      operationId: get_properties
+      summary: /properties
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#properties
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties
+      description: Listed as an available route on the TwentyAPI "Properties" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+  /properties/{property}/category/{category}:
+    get:
+      operationId: get_properties_property_category_category
+      summary: /properties/{property}/category/{category}
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#properties
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{property}/category/{category}
+      description: Listed as an available route on the TwentyAPI "Properties" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+      parameters:
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{uprn}/floor-plans:
+    get:
+      operationId: get_properties_uprn_floor_plans
+      summary: /properties/{uprn}/floor-plans
+      tags:
+      - Properties
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#properties
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /properties/{uprn}/floor-plans
+      description: Listed as an available route on the TwentyAPI "Properties" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+      parameters:
+      - name: uprn
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+components:
+  securitySchemes:
+    twentyapiOAuth:
+      type: oauth2
+      description: 'OAuth 2.0 bearer token. TwentyCi''s documentation labels the scheme "OAuth2" with flow "Implicit" but describes a resource-owner password-credentials exchange: POST /oauth/token with client_id, client_secret, username, password, grant_type=password and scope=* returns {token_type: Bearer, expires_in, access_token, refresh_token}. The token is then sent as "Authorization: Bearer <token-key>". Modelled here as the password flow because that is what the documented request body performs. No OpenID Connect discovery document is served (/.well-known/openid-configuration returned 404).'
+      flows:
+        password:
+          tokenUrl: https://api.twentyci.co.uk/oauth/token
+          refreshUrl: https://api.twentyci.co.uk/oauth/token
+          scopes:
+            '*': Full access; the only scope value documented by TwentyCi.
+externalDocs:
+  description: TwentyAPI documentation
+  url: https://api.twentyci.co.uk/documentation
+x-provenance:
+  harvestedBy: API Evangelist
+  harvestDate: '2026-07-26'
+  derived: true
+  providerPublished: false
+  sources:
+  - url: https://api.twentyci.co.uk/api/documentation/markdocs
+    status: 200
+    contentType: application/json
+    bytes: 247074
+    note: Public, unauthenticated JSON documentation corpus (66 nodes) backing the TwentyAPI docs SPA.
+  - url: https://api.twentyci.co.uk/documentation
+    status: 200
+    contentType: text/html
+    note: React/Markdoc single-page app shell; renders the corpus above.
+  - url: https://api.twentyci.co.uk/docs/v2/spec.json
+    status: 404
+    note: Specification download advertised in the TwentyAPI Overview page. NOT served.
+  anomalies:
+  - TwentyCi advertises https://api.twentyci.co.uk/docs/v2/spec.json as a downloadable specification; it returned HTTP 404 on 2026-07-26. No provider-published OpenAPI exists.
+  - Several documented route strings are irregular (e.g. "api/v2/propertiesavm2/{property}", "api/v2/{uprn}/likely-to-sell"). They are transcribed verbatim and flagged with x-documented-route-note rather than corrected.
+  - The documentation page "Obtain a Specific Trigger" declares the route "/categories", which is inconsistent with its own section index route "/trigger/{trigger}".
+  - Several routes are listed only on a section index page with no parameter documentation; they are included with no asserted parameters.
+  - TwentyCi labels the security scheme OAuth2 with the "Implicit" flow while documenting a resource-owner password-credentials request body. Modelled as the password flow.

@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: TwentyAPI (TwentyCi) v2 Categories API
+  version: v2
+  summary: UK residential property, valuation (AVM), transaction-trigger and agent-performance data from TwentyCi.
+  description: 'TwentyAPI is TwentyCi''s RESTful data-as-a-service API over the DOMUS UK residential property database. Properties are addressed by UPRN (Unique Property Reference Number), the UK national property identifier, rather than by any MLS or RESO identifier. Access is credentialed: an OAuth 2.0 password-grant token is minted at POST https://api.twentyci.co.uk/oauth/token using a client_id, client_secret, username and password issued by TwentyCi under a commercial data agreement. There is no self-serve developer signup.
+
+
+    PROVENANCE: This document was harvested by API Evangelist on 2026-07-26 from TwentyCi''s own published documentation corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200, application/json, 247,074 bytes), which is served publicly without authentication and backs the TwentyAPI documentation SPA at https://api.twentyci.co.uk/documentation. Every path, method, parameter name, parameter type and required flag below is transcribed from that corpus''s own "{% route %}" and "{% param %}" declarations. Response schemas beyond HTTP status codes are NOT modelled, because TwentyCi does not publish them in machine-readable form. TwentyCi advertises a downloadable specification at https://api.twentyci.co.uk/docs/v2/spec.json, but that URL returned HTTP 404 on 2026-07-26; this document is an API Evangelist derivation, not a provider-published artifact.'
+  contact:
+    name: TwentyCi
+    url: https://www.twentyci.co.uk/contact-us/
+servers:
+- url: https://api.twentyci.co.uk/api/v2
+  description: TwentyAPI v2 root URL, as published in the TwentyAPI Overview.
+security:
+- twentyapiOAuth: []
+tags:
+- name: Categories
+  description: '- Obtain a List of Categories for a Property - Obtain a Specific Categories for a Property'
+paths:
+  /categories:
+    get:
+      operationId: obtain_a_list_of_categories_for_a_property
+      summary: Obtain a List of Categories for a Property
+      tags:
+      - Categories
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#obtain-a-list-of-categories-for-a-property
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /categories
+      description: The /categories endpoint in TwentyAPI allows developers to retrieve essential property category data, emphasizing efficient organisation and seamless API integration. This endpoint's output, including Category ID and Category information, proves invaluable for streamlined communication and improved development processes.
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: The page number of the paginated result set you wish to retrieve
+        schema:
+          type: integer
+  /categories/{category}:
+    get:
+      operationId: obtain_a_specific_category_for_a_property
+      summary: Obtain a Specific Category for a Property
+      tags:
+      - Categories
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#obtain-a-specific-category-for-a-property
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /categories/{category}
+      description: The /categories/{category} in TwentyAPI is designed to return a specific category and its relevant data using information from the output of /categories. This targeted data retrieval enhances efficiency, optimizes performance, and supports modular development.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: ID of category to fetch
+        schema:
+          type: integer
+      - name: category
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+components:
+  securitySchemes:
+    twentyapiOAuth:
+      type: oauth2
+      description: 'OAuth 2.0 bearer token. TwentyCi''s documentation labels the scheme "OAuth2" with flow "Implicit" but describes a resource-owner password-credentials exchange: POST /oauth/token with client_id, client_secret, username, password, grant_type=password and scope=* returns {token_type: Bearer, expires_in, access_token, refresh_token}. The token is then sent as "Authorization: Bearer <token-key>". Modelled here as the password flow because that is what the documented request body performs. No OpenID Connect discovery document is served (/.well-known/openid-configuration returned 404).'
+      flows:
+        password:
+          tokenUrl: https://api.twentyci.co.uk/oauth/token
+          refreshUrl: https://api.twentyci.co.uk/oauth/token
+          scopes:
+            '*': Full access; the only scope value documented by TwentyCi.
+externalDocs:
+  description: TwentyAPI documentation
+  url: https://api.twentyci.co.uk/documentation
+x-provenance:
+  harvestedBy: API Evangelist
+  harvestDate: '2026-07-26'
+  derived: true
+  providerPublished: false
+  sources:
+  - url: https://api.twentyci.co.uk/api/documentation/markdocs
+    status: 200
+    contentType: application/json
+    bytes: 247074
+    note: Public, unauthenticated JSON documentation corpus (66 nodes) backing the TwentyAPI docs SPA.
+  - url: https://api.twentyci.co.uk/documentation
+    status: 200
+    contentType: text/html
+    note: React/Markdoc single-page app shell; renders the corpus above.
+  - url: https://api.twentyci.co.uk/docs/v2/spec.json
+    status: 404
+    note: Specification download advertised in the TwentyAPI Overview page. NOT served.
+  anomalies:
+  - TwentyCi advertises https://api.twentyci.co.uk/docs/v2/spec.json as a downloadable specification; it returned HTTP 404 on 2026-07-26. No provider-published OpenAPI exists.
+  - Several documented route strings are irregular (e.g. "api/v2/propertiesavm2/{property}", "api/v2/{uprn}/likely-to-sell"). They are transcribed verbatim and flagged with x-documented-route-note rather than corrected.
+  - The documentation page "Obtain a Specific Trigger" declares the route "/categories", which is inconsistent with its own section index route "/trigger/{trigger}".
+  - Several routes are listed only on a section index page with no parameter documentation; they are included with no asserted parameters.
+  - TwentyCi labels the security scheme OAuth2 with the "Implicit" flow while documenting a resource-owner password-credentials request body. Modelled as the password flow.

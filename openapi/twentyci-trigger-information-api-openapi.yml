@@ -1,0 +1,225 @@
+openapi: 3.2.0
+info:
+  title: TwentyAPI (TwentyCi) v2 Trigger Information API
+  version: v2
+  summary: UK residential property, valuation (AVM), transaction-trigger and agent-performance data from TwentyCi.
+  description: 'TwentyAPI is TwentyCi''s RESTful data-as-a-service API over the DOMUS UK residential property database. Properties are addressed by UPRN (Unique Property Reference Number), the UK national property identifier, rather than by any MLS or RESO identifier. Access is credentialed: an OAuth 2.0 password-grant token is minted at POST https://api.twentyci.co.uk/oauth/token using a client_id, client_secret, username and password issued by TwentyCi under a commercial data agreement. There is no self-serve developer signup.
+
+
+    PROVENANCE: This document was harvested by API Evangelist on 2026-07-26 from TwentyCi''s own published documentation corpus at https://api.twentyci.co.uk/api/documentation/markdocs (HTTP 200, application/json, 247,074 bytes), which is served publicly without authentication and backs the TwentyAPI documentation SPA at https://api.twentyci.co.uk/documentation. Every path, method, parameter name, parameter type and required flag below is transcribed from that corpus''s own "{% route %}" and "{% param %}" declarations. Response schemas beyond HTTP status codes are NOT modelled, because TwentyCi does not publish them in machine-readable form. TwentyCi advertises a downloadable specification at https://api.twentyci.co.uk/docs/v2/spec.json, but that URL returned HTTP 404 on 2026-07-26; this document is an API Evangelist derivation, not a provider-published artifact.'
+  contact:
+    name: TwentyCi
+    url: https://www.twentyci.co.uk/contact-us/
+servers:
+- url: https://api.twentyci.co.uk/api/v2
+  description: TwentyAPI v2 root URL, as published in the TwentyAPI Overview.
+security:
+- twentyapiOAuth: []
+tags:
+- name: Trigger Information
+  description: '- Obtain a Specific Trigger - Get Properties by Trigger Type - Get no UPRN Properties by Trigger Type - Trigger History'
+paths:
+  /trigger-type/{typeId}/properties:
+    get:
+      operationId: get_properties_by_trigger_type
+      summary: Get Properties by Trigger Type
+      tags:
+      - Trigger Information
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#get-properties-by-trigger-type
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/trigger-type/{typeId}/properties
+      description: 'The /trigger-type/{typeId}/properties endpoint in TwentyAPI is designed to retrieve properties with the same trigger type within a specific postcode over a defined day range between 7 and 30 days in the past. This endpoint provides valuable insights into recent transactions in the real estate industry, including sales prices, property types, and neighbourhood trends. Purpose Obtaining Transactional Data To assist developers in retrieving recent transaction data within a specific postcode area and timeframe, enabling real estate professionals to analyze market trends, determine property values, and provide informed guidance to clients. Strategic Marketing To empower real estate professionals with access to specific transaction records, facilitating client education, competitive advantage, networking opportunities, and market updates. Use Case Scenario: Transactional History Aiding Future Analysis A developer can use this endpoint to retrieve recent transaction data for properties with the same trigger type within a specific postcode district, helping real estate professionals stay informed about market trends and provide accurate guidance to clients. Scenario: Partnership Building By leveraging the transaction records retrieved from this endpoint, developers can assist real estate professionals in networking with industry peers, sharing valuable insights, and strengthening partnerships to enhance their business opportunities. Scenario: Detailed Insights This endpoint enables d'
+      parameters:
+      - name: postcode_district
+        in: query
+        required: true
+        description: Postcode District for where the data is to be retrived from
+        schema:
+          type: string
+      - name: max_days
+        in: query
+        required: true
+        description: Valid values are between 7 and 30
+        schema:
+          type: integer
+      - name: postcode_sector
+        in: query
+        required: false
+        description: Postcode Sector for where the data is to be retrived from
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /trigger-type/{typeId}/no-uprn-properties:
+    get:
+      operationId: get_no_uprn_properties_by_trigger_type
+      summary: Get no UPRN Properties by Trigger Type
+      tags:
+      - Trigger Information
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#get-no-uprn-properties-by-trigger-type
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /trigger-type/{typeId}/no-uprn-properties
+      description: 'The /api/v2/trigger-type/{typeId}/no-uprn-properties endpoint in TwentyAPI is designed to retrieve a count of properties with the same trigger type within a specific postcode over a defined day range, ranging from 7 to 30 days in the past. Purpose Historical Data with Limited Information: To assist developers in retrieving a count of properties with the same trigger type within a specific postcode over a defined day range, facilitating analysis of market trends and comparable sales in the real estate industry. Insights for Future Planning: To provide developers with a tool that enables them to gain valuable insights into market dynamics, educate clients, gain a competitive advantage, foster networking opportunities, and stay updated on market trends. Use Case Scenario: Obtaining valuable information with a Partial Address A developer can use this endpoint to retrieve data on properties with the same trigger type within a postcode, helping real estate professionals analyze market trends and provide informed guidance to clients. Scenario: Enhancing Local Market Knowledge By leveraging the data obtained from this endpoint, developers can assist real estate professionals in educating clients about market conditions, identifying competitive advantages, and establishing networking opportunities within the industry. Scenario: Strategic Decision Making rather than Tactical This endpoint simplifies the development process for developers working on real estate applications by offering '
+      parameters:
+      - name: postcode_district
+        in: query
+        required: true
+        description: Postcode District of the areas you would like to obtain the data for.
+        schema:
+          type: string
+      - name: max_days
+        in: query
+        required: true
+        description: Min is 7 and Max is 30
+        schema:
+          type: integer
+      - name: postcode_sector
+        in: query
+        required: false
+        description: Postcode Sector of the areas you would like to obtain the data for, if the data needs to be more granular that Districts
+        schema:
+          type: string
+      - name: typeId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /properties/{property}/triggers:
+    get:
+      operationId: trigger_history
+      summary: Trigger History
+      tags:
+      - Trigger Information
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#trigger-history
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /api/v2/properties/{property}/triggers
+      description: The /api/v2/properties/[uprn]/triggers endpoint in TwentyAPI retrieves the previous listing history for a given UPRN (Unique Property Reference Number). This endpoint covers both sale and rental tenures. Understanding a property's sales history is essential for estate agents, providing a dynamic tool that seamlessly integrates historical data. This integration transforms each property listing into a comprehensive narrative, streamlining the selling process and fostering transparency and trust with potential buyers.
+      parameters:
+      - name: id
+        in: query
+        required: true
+        description: UPRN of property to fetch the data for
+        schema:
+          type: integer
+      - name: property
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+  /trigger/{trigger}:
+    get:
+      operationId: get_trigger_trigger
+      summary: /trigger/{trigger}
+      tags:
+      - Trigger Information
+      externalDocs:
+        description: TwentyAPI documentation
+        url: https://api.twentyci.co.uk/documentation#trigger-information
+      responses:
+        '200':
+          description: Successful response.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Unauthorized - authentication credentials were missing or incorrect.
+        '404':
+          description: Not Found - the URI requested is invalid or the resource does not exist.
+        '422':
+          description: Unprocessable Entity - request is invalid or unable to be validated.
+      x-documented-route: /trigger/{trigger}
+      description: Listed as an available route on the TwentyAPI "Trigger Information" section page, but TwentyCi does not publish a dedicated parameter or response block for it. Recorded here verbatim from the section index; no parameters are asserted.
+      parameters:
+      - name: trigger
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Path parameter as documented by TwentyCi.
+components:
+  securitySchemes:
+    twentyapiOAuth:
+      type: oauth2
+      description: 'OAuth 2.0 bearer token. TwentyCi''s documentation labels the scheme "OAuth2" with flow "Implicit" but describes a resource-owner password-credentials exchange: POST /oauth/token with client_id, client_secret, username, password, grant_type=password and scope=* returns {token_type: Bearer, expires_in, access_token, refresh_token}. The token is then sent as "Authorization: Bearer <token-key>". Modelled here as the password flow because that is what the documented request body performs. No OpenID Connect discovery document is served (/.well-known/openid-configuration returned 404).'
+      flows:
+        password:
+          tokenUrl: https://api.twentyci.co.uk/oauth/token
+          refreshUrl: https://api.twentyci.co.uk/oauth/token
+          scopes:
+            '*': Full access; the only scope value documented by TwentyCi.
+externalDocs:
+  description: TwentyAPI documentation
+  url: https://api.twentyci.co.uk/documentation
+x-provenance:
+  harvestedBy: API Evangelist
+  harvestDate: '2026-07-26'
+  derived: true
+  providerPublished: false
+  sources:
+  - url: https://api.twentyci.co.uk/api/documentation/markdocs
+    status: 200
+    contentType: application/json
+    bytes: 247074
+    note: Public, unauthenticated JSON documentation corpus (66 nodes) backing the TwentyAPI docs SPA.
+  - url: https://api.twentyci.co.uk/documentation
+    status: 200
+    contentType: text/html
+    note: React/Markdoc single-page app shell; renders the corpus above.
+  - url: https://api.twentyci.co.uk/docs/v2/spec.json
+    status: 404
+    note: Specification download advertised in the TwentyAPI Overview page. NOT served.
+  anomalies:
+  - TwentyCi advertises https://api.twentyci.co.uk/docs/v2/spec.json as a downloadable specification; it returned HTTP 404 on 2026-07-26. No provider-published OpenAPI exists.
+  - Several documented route strings are irregular (e.g. "api/v2/propertiesavm2/{property}", "api/v2/{uprn}/likely-to-sell"). They are transcribed verbatim and flagged with x-documented-route-note rather than corrected.
+  - The documentation page "Obtain a Specific Trigger" declares the route "/categories", which is inconsistent with its own section index route "/trigger/{trigger}".
+  - Several routes are listed only on a section index page with no parameter documentation; they are included with no asserted parameters.
+  - TwentyCi labels the security scheme OAuth2 with the "Implicit" flow while documenting a resource-owner password-credentials request body. Modelled as the password flow.
