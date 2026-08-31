@@ -243,7 +243,8 @@ apis:
   description: '- Local Search - National Search'
   humanURL: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
   baseURL: https://api.twentyci.co.uk
-  tags:
+  tags: []
+  tags_raw:
   - This is Now | Retail Propensity To Buy Goods
   properties:
   - type: OpenAPI
