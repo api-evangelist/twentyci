@@ -1,0 +1,38 @@
+{
+  "provider": "twentyci",
+  "sources": [
+    "_original/twentyci-twentyapi-oauth-openapi.json",
+    "_original/twentyci-twentyapi-openapi.json"
+  ],
+  "outputs": [
+    "twentyci-authorisation-api-openapi.yml",
+    "twentyci-address-match-api-openapi.yml",
+    "twentyci-agent-performance-api-openapi.yml",
+    "twentyci-categories-api-openapi.yml",
+    "twentyci-properties-api-openapi.yml",
+    "twentyci-schools-api-openapi.yml",
+    "twentyci-this-is-now-retail-propensity-to-buy-goods-api-openapi.yml",
+    "twentyci-trigger-information-api-openapi.yml",
+    "twentyci-uk-housing-market-metrics-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "twentyci-twentyapi-oauth-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "twentyci-twentyapi-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "twentyci-address-match-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-agent-performance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-authorisation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-categories-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-properties-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-schools-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-this-is-now-retail-propensity-to-buy-goods-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-trigger-information-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "twentyci-uk-housing-market-metrics-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
