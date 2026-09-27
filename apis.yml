@@ -49,7 +49,7 @@ accessModel:
   method: derived
 image: https://www.twentyci.co.uk/favicon.ico
 tags:
-- Real-Estate
+- Real Estate
 - United Kingdom
 - PropTech
 - Property Data
@@ -74,6 +74,7 @@ tags_raw:
 - Homemover Data
 - Agent Performance
 - Data as a Service
+- Real-Estate
 created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.23'
