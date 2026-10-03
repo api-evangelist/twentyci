@@ -49,21 +49,6 @@ paths:
           description: Unprocessable Entity - request is invalid or unable to be validated.
 components:
   schemas:
-    TokenResponse:
-      type: object
-      properties:
-        token_type:
-          type: string
-          description: Always 'Bearer' in the documented example.
-        expires_in:
-          type: integer
-          description: Access-token lifetime in seconds; the documented example shows 1296000 (15 days).
-        access_token:
-          type: string
-          description: 'Send as ''Authorization: Bearer <token-key>''.'
-        refresh_token:
-          type: string
-          description: Refresh token.
     TokenRequest:
       type: object
       required:
@@ -93,6 +78,21 @@ components:
         scope:
           type: string
           description: 'Valid value: *. Documented as nullable; * is the only value TwentyCi publishes.'
+    TokenResponse:
+      type: object
+      properties:
+        token_type:
+          type: string
+          description: Always 'Bearer' in the documented example.
+        expires_in:
+          type: integer
+          description: Access-token lifetime in seconds; the documented example shows 1296000 (15 days).
+        access_token:
+          type: string
+          description: 'Send as ''Authorization: Bearer <token-key>''.'
+        refresh_token:
+          type: string
+          description: Refresh token.
 externalDocs:
   description: Authorisation for API Requests
   url: https://api.twentyci.co.uk/documentation#authorisation-for-api-requests
